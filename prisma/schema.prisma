@@ -1,0 +1,352 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// -----------------------------------------------------------------------------
+// Better Auth Core Tables
+// -----------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  role          String?   @default("user") // "user", "admin", "superadmin"
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
+  
+  // Better Auth core relationships
+  sessions      Session[]
+  accounts      Account[]
+
+  // Strike IQ specific relationships
+  preferences       UserPreference?
+  subscriptions     Subscription[]
+  savedPredictions  SavedPrediction[]
+  payments          Payment[]
+  notifications     Notification[]
+
+  @@map("user")
+}
+
+// -----------------------------------------------------------------------------
+// Strike IQ Specific Domain Tables
+// -----------------------------------------------------------------------------
+
+model UserPreference {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  favoriteSports     String[] // Array of sport IDs
+  favoriteLeagues    String[] // Array of league IDs
+  favoriteTeams      String[] // Array of team IDs
+  emailNotifications Boolean  @default(true)
+  pushNotifications  Boolean  @default(false)
+  
+  @@map("user_preferences")
+}
+
+// --- Sports Domain ---
+
+model Sport {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g. "Football", "Basketball"
+  slug        String   @unique
+  isActive    Boolean  @default(true)
+  leagues     League[]
+  matches     Match[]
+  predictions Prediction[]
+  
+  @@map("sports")
+}
+
+model League {
+  id          String   @id @default(cuid())
+  sportId     String
+  sport       Sport    @relation(fields: [sportId], references: [id])
+  name        String
+  country     String?
+  logo        String?
+  isActive    Boolean  @default(true)
+  matches     Match[]
+  predictions Prediction[]
+  
+  @@map("leagues")
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  shortName   String?
+  logo        String?
+  homeMatches Match[]  @relation("HomeTeam")
+  awayMatches Match[]  @relation("AwayTeam")
+  
+  @@map("teams")
+}
+
+model Match {
+  id          String   @id @default(cuid())
+  sportId     String
+  sport       Sport    @relation(fields: [sportId], references: [id])
+  leagueId    String
+  league      League   @relation(fields: [leagueId], references: [id])
+  
+  homeTeamId  String
+  homeTeam    Team     @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeamId  String
+  awayTeam    Team     @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  
+  matchDate   DateTime
+  status      String   // SCHEDULED, IN_PROGRESS, FINISHED, CANCELLED
+  homeScore   Int?
+  awayScore   Int?
+  externalId  String?  @unique // For API syncing (e.g. TheSportsDB or API-Football)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isDeleted   Boolean  @default(false)
+  
+  predictions Prediction[]
+
+  @@map("matches")
+}
+
+// --- Predictions Domain ---
+
+model Prediction {
+  id             String   @id @default(cuid())
+  matchId        String
+  match          Match    @relation(fields: [matchId], references: [id])
+  sportId        String
+  sport          Sport    @relation(fields: [sportId], references: [id])
+  leagueId       String
+  league         League   @relation(fields: [leagueId], references: [id])
+  
+  predictionType String   // e.g., "MATCH_WINNER", "OVER_UNDER_2.5", "BOTH_TEAMS_TO_SCORE"
+  selection      String   // e.g., "HOME_WIN", "OVER", "YES"
+  odds           Float?
+  confidence     Float    // e.g., 85.5 (%)
+  status         String   // DRAFT, PUBLISHED, WON, LOST, PENDING
+  isPremium      Boolean  @default(false)
+  
+  // Relations to explanations and stats
+  explanation    PredictionExplanation?
+  statistics     PredictionStatistic[]
+  saves          SavedPrediction[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  isDeleted      Boolean  @default(false)
+
+  @@map("predictions")
+}
+
+model PredictionExplanation {
+  id           String     @id @default(cuid())
+  predictionId String     @unique
+  prediction   Prediction @relation(fields: [predictionId], references: [id], onDelete: Cascade)
+  content      String     @db.Text
+  keyFactors   String[]   // e.g., ["Injuries", "Form"]
+  aiModelUsed  String?    // e.g., "deepseek-chat"
+  
+  @@map("prediction_explanations")
+}
+
+model PredictionStatistic {
+  id           String     @id @default(cuid())
+  predictionId String
+  prediction   Prediction @relation(fields: [predictionId], references: [id], onDelete: Cascade)
+  statName     String
+  statValue    String
+  
+  @@map("prediction_statistics")
+}
+
+model SavedPrediction {
+  id           String     @id @default(cuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  predictionId String
+  prediction   Prediction @relation(fields: [predictionId], references: [id], onDelete: Cascade)
+  savedAt      DateTime   @default(now())
+
+  @@unique([userId, predictionId])
+  @@map("saved_predictions")
+}
+
+// --- Subscriptions & Payments Domain ---
+
+model Plan {
+  id            String   @id @default(cuid())
+  name          String   @unique
+  description   String?
+  price         Float
+  currency      String   @default("USD")
+  interval      String   // MONTHLY, YEARLY
+  stripePriceId String?  @unique // If Stripe is ever added
+  flutterwaveId String?  @unique // For Flutterwave
+  isActive      Boolean  @default(true)
+  features      String[] // JSON list of features
+  
+  subscriptions Subscription[]
+  payments      Payment[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id                   String    @id @default(cuid())
+  userId               String
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId               String
+  plan                 Plan      @relation(fields: [planId], references: [id])
+  status               String    // ACTIVE, CANCELLED, PAST_DUE, TRIAL
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean   @default(false)
+  externalSubscriptionId String? @unique
+
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@map("subscriptions")
+}
+
+model Payment {
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id])
+  planId             String?
+  plan               Plan?    @relation(fields: [planId], references: [id])
+  amount             Float
+  currency           String
+  status             String   // PENDING, SUCCESSFUL, FAILED, REFUNDED
+  provider           String   // FLUTTERWAVE
+  transactionId      String?  @unique
+  reference          String   @unique
+  paymentMethod      String?  // card, mobile_money, etc.
+  
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("payments")
+}
+
+model PaymentWebhook {
+  id         String   @id @default(cuid())
+  provider   String
+  eventType  String
+  payload    String   @db.Text
+  status     String   // PROCESSED, FAILED, IGNORED
+  error      String?
+  createdAt  DateTime @default(now())
+
+  @@map("payment_webhooks")
+}
+
+// --- Notifications Domain ---
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String   @db.Text
+  type      String   // e.g., "SYSTEM", "PREDICTION_ALERT", "PAYMENT"
+  isRead    Boolean  @default(false)
+  link      String?  // Optional URL to redirect to when clicked
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
+
+// --- AI Engine & Logs Domain ---
+
+model AiJob {
+  id           String   @id @default(cuid())
+  matchId      String?
+  promptUsed   String   @db.Text
+  model        String   // e.g., deepseek-chat
+  response     String   @db.Text
+  tokensUsed   Int?
+  status       String   // SUCCESS, FAILED
+  errorMessage String?
+  createdAt    DateTime @default(now())
+
+  @@map("ai_jobs")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String   // e.g., USER_REGISTERED, PREDICTION_PUBLISHED
+  entityType String?  // e.g., PREDICTION
+  entityId   String?
+  details    String   @db.Text
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// -----------------------------------------------------------------------------
+// Better Auth Additional Core Tables
+// -----------------------------------------------------------------------------
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}

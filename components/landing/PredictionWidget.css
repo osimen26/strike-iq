@@ -1,0 +1,47 @@
+.prediction-widget {
+  position: absolute;
+  bottom: -40px; /* relative to container, maybe shift it down or up */
+  right: 20px; /* aligns with padding */
+  background-color: #191919;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.match-title {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 30px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.prediction-detail {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 30px;
+  margin: 0;
+  width: 268px;
+}
+
+@media (max-width: 1024px) {
+  .prediction-widget {
+    position: static;
+    margin-top: 40px;
+    width: 100%;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .prediction-detail {
+    width: auto;
+    font-size: 16px;
+  }
+}

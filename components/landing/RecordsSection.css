@@ -1,0 +1,140 @@
+.records-section {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  background: url('/texture.png') repeat, linear-gradient(0deg, #1b1b1b 0%, #1b1b1b 100%);
+  background-color: #1b1b1b;
+  overflow: hidden;
+}
+
+.records-container {
+  width: 100%;
+  max-width: 1440px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.records-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  margin-bottom: 58px; /* Based on Figma gap-[58px] */
+}
+
+.records-kicker {
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.records-heading {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -2.02px;
+  margin: 0;
+}
+
+/* 4 Column Layout */
+.records-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  gap: 40px;
+}
+
+.record-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.record-number-wrapper {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.record-number {
+  color: var(--color-mint);
+  /* The design uses Sora, falling back to Inter/var(--font-main) */
+  font-family: 'Sora', var(--font-main);
+  font-size: 80.82px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -3.23px;
+}
+
+.record-suffix {
+  color: rgba(214, 241, 202, 0.1);
+  font-family: 'Sora', var(--font-main);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.suffix-large {
+  font-size: 34.64px;
+}
+
+.suffix-small {
+  font-size: 28.6px;
+  letter-spacing: -1.14px;
+}
+
+.record-subtitle {
+  color: var(--color-mint); /* Maps to #D6F1CA */
+  font-family: var(--font-main); /* Maps to Inter */
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 26px; /* 144.444% */
+  text-align: center;
+  margin: 0;
+  max-width: 250px; /* Constrains the subtitle to two lines like the design */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .records-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .records-section {
+    padding: 60px 0;
+  }
+  
+  .records-grid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  
+  .record-number {
+    font-size: 70px;
+  }
+  
+  .records-heading {
+    font-size: 28px;
+    letter-spacing: -1.5px;
+  }
+}

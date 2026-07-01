@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800;900&family=Tilt+Warp&display=swap');
+/* Removed design.tokens.css import to avoid resolving issues */
+
+:root {
+  --color-mint: #d6f1ca;
+  --color-emerald: #138561; /* Match the exact button color from Figma */
+  --color-dark-bg: rgba(255, 255, 255, 0.15);
+  --color-dark-border: rgba(255, 255, 255, 0.1);
+  --font-main: 'Inter', sans-serif;
+  --font-geist: 'Geist Mono', monospace;
+  --font-heading: 'Tilt Warp', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: #111;
+  color: var(--color-mint);
+  min-height: 100vh;
+}

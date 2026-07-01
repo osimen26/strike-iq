@@ -1,0 +1,19 @@
+@theme {
+  --color-brand-mint: #d6f1ca;
+  --color-brand-emerald: #108960;
+  --color-brand-actionGreen: #138561;
+  --color-brand-actionGreenHover: #0f694d;
+  
+  --color-background-app: #050B14;
+  --color-background-surface: rgba(255, 255, 255, 0.03);
+  --color-background-glass: rgba(255, 255, 255, 0.08);
+  
+  --color-border-glass: rgba(255, 255, 255, 0.10);
+  
+  --color-accent-dimGray: #3b3b3b;
+  --color-accent-mutedSage: #697564;
+
+  --font-heading: "Tilt Warp", sans-serif;
+  --font-main: "Inter", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+}

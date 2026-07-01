@@ -1,0 +1,275 @@
+.about-section {
+  position: relative;
+  width: 100%;
+  background: url('/texture.png') repeat, linear-gradient(0deg, #191919 0%, #191919 100%);
+  display: flex;
+  justify-content: center;
+  padding: 100px 5%;
+}
+
+.about-container {
+  width: 100%;
+  max-width: 1440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 58px;
+}
+
+/* Header Area */
+.about-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+}
+
+.about-pill {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 23px 34px 21px 34px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-pill p {
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  line-height: 16px;
+  margin: 0;
+}
+
+.about-eyebrow {
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.about-heading {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.2;
+  letter-spacing: -2.02px;
+  text-align: center;
+  max-width: 850px;
+  margin: 0;
+}
+
+/* Grid Area */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .about-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    padding: 60px 5%;
+  }
+  
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 60px 0;
+  }
+}
+
+/* Feature Cards */
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.feature-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.feature-text h3 {
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.feature-text p {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.feature-graphic {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Graphics Specifics */
+
+.graphic-network img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Donut Chart */
+.donut-wrapper {
+  position: relative;
+  width: 273px;
+  height: 273px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* Start at top */
+}
+
+.donut-bg {
+  fill: none;
+  stroke: #31342f; /* Dark ring */
+  stroke-width: 20;
+}
+
+.donut-fill {
+  fill: none;
+  stroke: var(--color-mint);
+  stroke-width: 20;
+  stroke-dasharray: 251.2; /* 2 * pi * 40 */
+  stroke-dashoffset: 55.26; /* 251.2 * (1 - 0.78) */
+  stroke-linecap: round;
+}
+
+.donut-text {
+  position: absolute;
+  color: var(--color-mint);
+  font-family: var(--font-heading);
+  font-size: 56px;
+  text-transform: uppercase;
+}
+
+/* Heatmap Grid */
+.heatmap-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8.5px;
+  width: 100%;
+  align-items: center;
+}
+
+.heatmap-row {
+  display: flex;
+  gap: 8.5px;
+}
+
+.heatmap-cell {
+  width: 34px;
+  height: 62px;
+  background-color: #3b3b3b; /* default dim */
+  border-radius: 2.15px;
+}
+
+.heatmap-cell.cell-mid {
+  background-color: #697564;
+}
+
+.heatmap-cell.cell-bright {
+  background-color: var(--color-mint);
+}
+
+/* Bankroll Chart */
+.bankroll-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.bankroll-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+.bankroll-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.bankroll-point {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-mint);
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.point-1 { left: calc(0.55% - 10px); top: calc(99.15% - 10px); }
+.point-2 { left: calc(25.27% - 10px); top: calc(74.57% - 10px); }
+.point-3 { left: calc(50% - 10px); top: calc(50% - 10px); }
+.point-4 { left: calc(74.72% - 10px); top: calc(25.42% - 10px); }
+.point-5 { left: calc(99.44% - 10px); top: calc(0.85% - 10px); }
+
+/* Adjust layout on small screens for graphics */
+@media (max-width: 768px) {
+  .feature-graphic {
+    height: 250px;
+  }
+  .graphic-network img {
+    max-height: 240px;
+  }
+  .donut-wrapper {
+    transform: scale(0.8);
+  }
+  .heatmap-cell {
+    width: 24px;
+    height: 45px;
+  }
+}

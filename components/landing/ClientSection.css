@@ -1,0 +1,131 @@
+.client-section {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  /* Use the global dark texture background */
+  background: url('/texture.png') repeat, linear-gradient(0deg, #191919 0%, #191919 100%);
+  background-color: var(--color-dark-bg);
+  overflow: hidden;
+}
+
+.client-container {
+  width: 100%;
+  max-width: 1440px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center everything */
+  padding: 0 20px;
+}
+
+.client-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  margin-bottom: 56px; /* Gap between header and grid */
+}
+
+.client-kicker {
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.client-heading {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -2.02px;
+  margin: 0;
+}
+
+/* Responsive CSS Grid */
+.client-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.client-card {
+  background-color: #252525;
+  border-radius: 2px;
+  padding: 20px 20px 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.client-card:hover {
+  transform: translateY(-4px);
+  background-color: #2a2a2a;
+}
+
+.client-card-top {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.client-name {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -1.02px;
+  margin: 0;
+}
+
+.client-meta {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.client-quote {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-size: 18px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 24px; /* 1.33 */
+  margin: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .client-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .client-section {
+    padding: 60px 0;
+  }
+  
+  .client-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .client-heading {
+    font-size: 28px;
+    letter-spacing: -1.5px;
+  }
+}

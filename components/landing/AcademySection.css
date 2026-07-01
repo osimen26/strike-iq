@@ -1,0 +1,118 @@
+.academy-section {
+  position: relative;
+  width: 100%;
+  min-height: 80vh; 
+  display: flex;
+  align-items: center; 
+  justify-content: center; /* This centers the max-width container on wide screens! */
+  padding: 100px 0; 
+  background-color: var(--color-dark-bg);
+  overflow: hidden; 
+}
+
+/* Background wrappers */
+.academy-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.academy-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/football.png');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+}
+
+/* Linear Gradient Overlay matching Figma: to bottom from #191919 */
+.academy-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #191919 0%, rgba(25, 25, 25, 0) 100%);
+  z-index: 1;
+}
+
+.academy-container {
+  width: 100%;
+  max-width: 1440px;
+  position: relative;
+  z-index: 2; 
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 20px;
+}
+
+.academy-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 27px; /* Matches gap-[27px] from Figma */
+  max-width: 550px; 
+}
+
+.academy-kicker {
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.48px; /* Adjusted to Figma */
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.academy-heading {
+  color: var(--color-mint);
+  font-family: var(--font-main); /* Sora / Inter equivalent */
+  font-size: clamp(40px, 5vw, 56px); /* Exact 56px max */
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -2.24px; /* Exact from Figma */
+  margin: 0;
+}
+
+.academy-btn {
+  background-color: var(--color-emerald); /* Exact from Figma */
+  color: var(--color-mint); /* Text color #d6f1ca */
+  font-family: var(--font-geist);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.48px; /* Match kicker */
+  padding: 23px 34px 21px 34px; /* Match other pills */
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  text-transform: uppercase;
+}
+
+.academy-btn:hover {
+  background-color: #0f694d;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .academy-section {
+    min-height: 60vh;
+    padding: 60px 0;
+    background-position: 70% bottom; 
+  }
+  
+  .academy-overlay {
+    background: linear-gradient(to bottom, #191919 0%, rgba(25, 25, 25, 0.8) 50%, rgba(25,25,25, 0.4) 100%);
+  }
+
+  .academy-heading {
+    letter-spacing: -1.5px;
+  }
+}

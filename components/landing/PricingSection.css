@@ -1,0 +1,310 @@
+.pricing-section {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  background: url('/texture.png') repeat, linear-gradient(0deg, #1b1b1b 0%, #1b1b1b 100%);
+  background-color: #1b1b1b;
+  overflow: hidden;
+}
+
+.pricing-container {
+  width: 100%;
+  max-width: 1440px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 130px;
+  padding: 0 20px;
+}
+
+.pricing-header {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+}
+
+/* Massive Watermark Text */
+.pricing-title-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-tilt);
+  font-size: 150px;
+  color: var(--color-mint);
+  text-transform: uppercase;
+  letter-spacing: -6px;
+  opacity: 0.2;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  /* Add slight blur effect mentioned in Figma spec */
+  filter: blur(3px); 
+}
+
+.pricing-subtitle {
+  position: relative;
+  z-index: 1;
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+}
+
+/* Cards Grid */
+.pricing-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  max-width: 950px;
+}
+
+.pricing-card {
+  background-color: #252525;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 30px 20px;
+}
+
+.pricing-card-top {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  justify-content: space-between;
+  padding-bottom: 30px;
+}
+
+.pricing-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pricing-card-title {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.pricing-card-desc {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+  max-width: 260px;
+}
+
+.pricing-price-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.pricing-price {
+  color: var(--color-mint);
+  font-family: var(--font-tilt);
+  font-size: 80px;
+  letter-spacing: -4px;
+  line-height: 73.6px;
+  text-transform: uppercase;
+  margin-top: 30px;
+}
+
+.pricing-period {
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  margin-bottom: 6px; /* align with baseline of large text */
+}
+
+.pricing-btn {
+  background-color: var(--color-emerald);
+  color: var(--color-mint);
+  border: none;
+  border-radius: 50px;
+  padding: 23px 34px 21px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 30px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.pricing-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.pricing-btn span {
+  font-family: var(--font-geist);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+}
+
+.pricing-btn-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.pricing-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(214, 241, 202, 0.2);
+  margin-bottom: 30px;
+}
+
+/* Features List */
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pricing-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pricing-check-icon {
+  color: var(--color-mint);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.pricing-feature span {
+  color: var(--color-mint);
+  font-family: var(--font-geist);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  line-height: 22.4px;
+}
+
+/* Talk To Us Banner */
+.pricing-talk-banner {
+  display: flex;
+  width: 100%;
+  max-width: 926px;
+  padding: 40px 24px;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(214, 241, 202, 0.10);
+  background: #252525;
+  margin-top: 24px;
+}
+
+.talk-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.talk-title {
+  color: var(--color-mint);
+  font-family: var(--font-main);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.talk-desc {
+  color: #888888;
+  font-family: var(--font-main);
+  font-size: 14px;
+  max-width: 500px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.talk-btn {
+  background: #138561;
+  color: hsla(102, 58%, 87%, 1);
+  font-family: var(--font-geist);
+  border: none;
+  border-radius: 50px;
+  padding: 16px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.talk-btn:hover {
+  background: #0d704e;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .pricing-container {
+    gap: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-section {
+    padding: 60px 0;
+  }
+
+  .pricing-grid {
+    flex-direction: column;
+  }
+  
+  .pricing-title-bg {
+    font-size: 100px;
+  }
+  
+  .pricing-talk-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pricing-title-bg {
+    font-size: 70px;
+    letter-spacing: -2px;
+  }
+  
+  .pricing-price {
+    font-size: 60px;
+  }
+}
