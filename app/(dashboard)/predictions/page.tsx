@@ -2,27 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { getLeagueLogo } from "@/lib/logos";
 
 // Mock Data
 const MOCK_PREDICTIONS = [
   {
     id: "1",
-    homeTeam: "Arsenal",
-    awayTeam: "Chelsea",
-    league: "Premier League",
+    homeTeam: "Brazil",
+    awayTeam: "France",
+    league: "World Cup 2026",
     kickoff: "Today, 20:00",
     predictionType: "Match Winner",
-    prediction: "Arsenal",
-    confidence: 85,
+    prediction: "Brazil",
+    confidence: 88,
     confidenceLabel: "High",
     isPremium: false,
   },
   {
     id: "2",
-    homeTeam: "Real Madrid",
-    awayTeam: "Barcelona",
-    league: "La Liga",
-    kickoff: "Tomorrow, 21:00",
+    homeTeam: "Argentina",
+    awayTeam: "Germany",
+    league: "World Cup 2026",
+    kickoff: "Tomorrow, 15:30",
     predictionType: "Both Teams To Score",
     prediction: "Yes",
     confidence: 92,
@@ -31,10 +32,10 @@ const MOCK_PREDICTIONS = [
   },
   {
     id: "3",
-    homeTeam: "Bayern Munich",
-    awayTeam: "Dortmund",
-    league: "Bundesliga",
-    kickoff: "Sat, 15:30",
+    homeTeam: "Real Madrid",
+    awayTeam: "Barcelona",
+    league: "La Liga",
+    kickoff: "Sat, 21:00",
     predictionType: "Over/Under Goals",
     prediction: "Over 2.5",
     confidence: 72,
@@ -43,12 +44,12 @@ const MOCK_PREDICTIONS = [
   },
   {
     id: "4",
-    homeTeam: "Juventus",
-    awayTeam: "AC Milan",
-    league: "Serie A",
-    kickoff: "Sun, 19:45",
+    homeTeam: "Manchester City",
+    awayTeam: "Arsenal",
+    league: "Premier League",
+    kickoff: "Sun, 16:30",
     predictionType: "Double Chance",
-    prediction: "Juventus or Draw",
+    prediction: "Man City or Draw",
     confidence: 88,
     confidenceLabel: "High",
     isPremium: false,
@@ -93,15 +94,17 @@ export default function PredictionsFeed() {
       <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-hide">
         <button 
           onClick={() => setActiveSport("Football")}
-          className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeSport === "Football" ? "bg-white text-black" : "bg-[var(--color-background-surface)] text-gray-400 border border-[var(--color-border-glass)] hover:text-white"}`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeSport === "Football" ? "bg-white text-black" : "bg-[var(--color-background-surface)] text-gray-400 border border-[var(--color-border-glass)] hover:text-white"}`}
         >
-          ⚽ Football
+          <img src="https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg" alt="Football" className="w-4 h-4 object-contain" />
+          Football
         </button>
         <button 
           onClick={() => setActiveSport("Basketball")}
-          className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeSport === "Basketball" ? "bg-white text-black" : "bg-[var(--color-background-surface)] text-gray-400 border border-[var(--color-border-glass)] hover:text-white"}`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeSport === "Basketball" ? "bg-white text-black" : "bg-[var(--color-background-surface)] text-gray-400 border border-[var(--color-border-glass)] hover:text-white"}`}
         >
-          🏀 Basketball
+          <img src="https://upload.wikimedia.org/wikipedia/en/0/03/National_Basketball_Association_logo.svg" alt="Basketball" className="w-4 h-4 object-contain" />
+          Basketball
         </button>
         <div className="w-px h-6 bg-[var(--color-border-glass)] mx-2"></div>
         <button className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap bg-[var(--color-background-surface)] text-gray-400 border border-[var(--color-border-glass)] hover:text-white transition-colors">

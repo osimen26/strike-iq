@@ -88,7 +88,7 @@ export default function AddPredictionPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-2">Home Team</label>
-            <input required name="homeTeam" value={formData.homeTeam} onChange={handleChange} placeholder="e.g. Arsenal" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+            <input required name="homeTeam" value={formData.homeTeam} onChange={handleChange} placeholder="e.g. Brazil" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-2">Away Team</label>
@@ -123,7 +123,7 @@ export default function AddPredictionPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/10">
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-2">AI Verdict / Prediction Pick</label>
-            <input required name="prediction" value={formData.prediction} onChange={handleChange} placeholder="e.g. Arsenal to Win" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+            <input required name="prediction" value={formData.prediction} onChange={handleChange} placeholder="e.g. Brazil to Win" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-2">Confidence Score (1-100)</label>

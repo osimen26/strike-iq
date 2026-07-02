@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { getLeagueLogo } from "@/lib/logos";
 
 export default function PredictionsList({ initialPredictions }: { initialPredictions: any[] }) {
   const [predictions, setPredictions] = useState(initialPredictions);
@@ -61,7 +62,9 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
               <tr key={p.id} className="hover:bg-white/5 transition-colors">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">{p.sport === 'football' ? '⚽' : '🏀'}</span>
+                    <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                      <img src={getLeagueLogo(p.league, p.sport)} alt={p.league} className="max-w-full max-h-full object-contain opacity-80" />
+                    </div>
                     <span className="font-semibold text-white whitespace-nowrap">{p.home_team} vs {p.away_team}</span>
                   </div>
                 </td>

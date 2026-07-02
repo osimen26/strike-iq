@@ -3,34 +3,34 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
-import { getTeamLogo } from "@/lib/logos";
+import { getTeamLogo, getLeagueLogo } from "@/lib/logos";
 
 // Fallback Mock Data in case API is unavailable or rate-limited
 const FALLBACK_MATCHES = [
   {
     id: "mock1",
-    league: "Premier League",
-    homeTeam: "Arsenal",
-    awayTeam: "Chelsea",
+    league: "World Cup 2026",
+    homeTeam: "Brazil",
+    awayTeam: "France",
     date: "Today",
     time: "20:00 GMT",
-    prediction: "Arsenal to Win",
-    confidence: 91,
-    analysis: "Arsenal has won their last 5 home games with an xG difference of +2.1. Chelsea's away form has been erratic, conceding early goals. The model strongly favors a dominant home performance.",
+    prediction: "Brazil to Win",
+    confidence: 88,
+    analysis: "Brazil has won their last 5 games with an xG difference of +2.1. France's away form has been erratic, conceding early goals. The model strongly favors a dominant home performance.",
     sport: "football",
     tags: ["Hot Tip", "High Value"]
   },
   {
     id: "mock2",
-    league: "NBA",
-    homeTeam: "Lakers",
-    awayTeam: "Warriors",
+    league: "World Cup 2026",
+    homeTeam: "Argentina",
+    awayTeam: "Germany",
     date: "Tomorrow",
-    time: "03:30 GMT",
-    prediction: "Over 225.5 Points",
+    time: "15:30 GMT",
+    prediction: "Over 2.5 Goals",
     confidence: 82,
-    analysis: "Both teams play at a high pace (Top 5 in pace factor). With key defensive stoppers out for the Lakers, expect a high-scoring shootout favoring transition offense.",
-    sport: "basketball",
+    analysis: "Both teams play an attacking style. Germany has scored in every match this tournament, while Argentina's defense has shown vulnerabilities against high press.",
+    sport: "football",
     tags: ["High Variance"]
   }
 ];
@@ -60,7 +60,9 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
             {/* Meta Info */}
             <div className="w-full md:w-32 shrink-0 flex flex-row md:flex-col items-center md:items-start justify-between border-b md:border-b-0 md:border-r border-white/10 pb-4 md:pb-0 md:pr-4">
               <div className="flex items-center gap-2 mb-0 md:mb-2">
-                <span className="text-xl">{match.sport === 'football' ? '⚽' : '🏀'}</span>
+                <div className="w-5 h-5 flex items-center justify-center opacity-80">
+                  <img src={getLeagueLogo(match.league, match.sport)} alt={match.league} className="max-w-full max-h-full object-contain" />
+                </div>
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider line-clamp-1">{match.league}</span>
               </div>
               <div className="text-right md:text-left">

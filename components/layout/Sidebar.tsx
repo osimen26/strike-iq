@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 
 const navigation = [
   { name: "Predictions Feed", href: "/dashboard", icon: "🎯" },
-  { name: "Leagues", href: "/dashboard/leagues", icon: "⚽" },
+  { name: "AI Performance", href: "/analytics", icon: "📊" },
+  { name: "Leagues", href: "/dashboard/leagues", icon: <img src="https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg" alt="Premier League" className="w-5 h-5 object-contain opacity-90" /> },
   { name: "My Profile", href: "/dashboard/profile", icon: "👤" },
   { name: "Subscription", href: "/dashboard/subscription", icon: "⭐" },
   { name: "Settings", href: "/dashboard/settings", icon: "⚙️" },

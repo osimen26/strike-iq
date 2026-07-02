@@ -46,6 +46,38 @@ export function getTeamLogo(teamName: string): string {
     return TEAM_LOGOS[key];
   }
 
-  // Fallback to UI-Avatars with our dark theme colors
+// Fallback to UI-Avatars with our dark theme colors
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(teamName)}&background=0D1117&color=fff&bold=true&rounded=true`;
+}
+
+export const LEAGUE_LOGOS: Record<string, string> = {
+  "Premier League": "https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg",
+  "soccer_epl": "https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg",
+  "La Liga": "https://upload.wikimedia.org/wikipedia/commons/0/0f/LaLiga_logo_2023.svg",
+  "soccer_spain_la_liga": "https://upload.wikimedia.org/wikipedia/commons/0/0f/LaLiga_logo_2023.svg",
+  "World Cup 2026": "https://upload.wikimedia.org/wikipedia/en/thumb/2/23/2026_FIFA_World_Cup_logo.svg/512px-2026_FIFA_World_Cup_logo.svg.png",
+  "soccer_fifa_world_cup": "https://upload.wikimedia.org/wikipedia/en/thumb/2/23/2026_FIFA_World_Cup_logo.svg/512px-2026_FIFA_World_Cup_logo.svg.png",
+  "NBA": "https://upload.wikimedia.org/wikipedia/en/0/03/National_Basketball_Association_logo.svg",
+  "basketball_nba": "https://upload.wikimedia.org/wikipedia/en/0/03/National_Basketball_Association_logo.svg",
+  "Serie A": "https://upload.wikimedia.org/wikipedia/en/e/e1/Serie_A_logo_%282021%29.svg",
+  "soccer_italy_serie_a": "https://upload.wikimedia.org/wikipedia/en/e/e1/Serie_A_logo_%282021%29.svg",
+  "Bundesliga": "https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg",
+  "soccer_germany_bundesliga": "https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg",
+  "Ligue 1": "https://upload.wikimedia.org/wikipedia/en/c/c5/Ligue_1_logo.svg",
+  "soccer_france_ligue_one": "https://upload.wikimedia.org/wikipedia/en/c/c5/Ligue_1_logo.svg",
+  "Champions League": "https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg",
+  "soccer_uefa_champs_league": "https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg",
+};
+
+export function getLeagueLogo(leagueName: string, sport: string): string {
+  if (LEAGUE_LOGOS[leagueName]) {
+    return LEAGUE_LOGOS[leagueName];
+  }
+  
+  // Default fallbacks if exact league isn't matched
+  if (sport === 'football') {
+    return "https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg";
+  } else {
+    return "https://upload.wikimedia.org/wikipedia/en/0/03/National_Basketball_Association_logo.svg";
+  }
 }

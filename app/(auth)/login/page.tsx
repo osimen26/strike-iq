@@ -105,7 +105,7 @@ export default function Login() {
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center justify-between">
             <label className="text-brand-mint/90 text-sm font-medium">Password</label>
-            <Link href="#" className="text-brand-mint/60 hover:text-brand-mint text-sm hover:underline">Forgot password?</Link>
+            <Link href="/forgot-password" className="text-brand-mint/60 hover:text-brand-mint text-sm hover:underline">Forgot password?</Link>
           </div>
           <div className="relative w-full">
             <input

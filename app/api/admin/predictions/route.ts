@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // Insert into the pro_predictions table
+    // 1. Insert the Pro Prediction
     const { data, error } = await supabase
       .from('pro_predictions')
       .insert([
@@ -36,6 +36,32 @@ export async function POST(request: Request) {
     if (error) {
       console.error("Supabase Insertion Error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    // 2. Fetch all user IDs to notify
+    const { data: allUsers } = await supabase
+      .from('user')
+      .select('id');
+
+    if (allUsers && allUsers.length > 0) {
+      const notifications = allUsers.map((u: { id: string }) => ({
+        userId: u.id,
+        title: `👑 New Pro Pick: ${body.homeTeam} vs ${body.awayTeam}`,
+        message: `${body.league} · ${body.prediction} — ${body.confidence}% confidence. Check it out now!`,
+        type: 'PREDICTION_ALERT',
+        isRead: false,
+        link: '/dashboard',
+        createdAt: new Date().toISOString(),
+      }));
+
+      const { error: notifError } = await supabase
+        .from('notifications')
+        .insert(notifications);
+
+      if (notifError) {
+        console.error("Notification insert error:", notifError);
+        // Don't fail the whole request — prediction was saved successfully
+      }
     }
 
     return NextResponse.json({ success: true, data });

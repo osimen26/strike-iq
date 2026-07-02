@@ -29,7 +29,18 @@ export async function GET(request: Request) {
     }
 
     const data = await res.json();
-    return NextResponse.json({ success: true, data });
+    
+    // Filter out obscure leagues. Only show Top 5 EU leagues, World Cup, and USA Basketball
+    const ALLOWED_LEAGUES = [
+      'soccer_epl', 'soccer_spain_la_liga', 'soccer_italy_serie_a', 
+      'soccer_germany_bundesliga', 'soccer_france_ligue_one',
+      'soccer_uefa_champs_league', 'soccer_fifa_world_cup',
+      'basketball_nba', 'basketball_wnba', 'basketball_ncaab'
+    ];
+    
+    const filteredData = data.filter((match: any) => ALLOWED_LEAGUES.includes(match.sport_key));
+    
+    return NextResponse.json({ success: true, data: filteredData });
   } catch (error: any) {
     console.error("Odds API Error:", error);
     return NextResponse.json({ 
