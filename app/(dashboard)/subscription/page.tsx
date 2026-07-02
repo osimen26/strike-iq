@@ -38,6 +38,9 @@ function SubscriptionContent() {
   const [loading, setLoading] = useState(true);
   const [upgradingId, setUpgradingId] = useState<string | null>(null);
   const [alertMsg, setAlertMsg] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+  const [flwModalPlan, setFlwModalPlan] = useState<Plan | null>(null);
+  const [flwSimUrl, setFlwSimUrl] = useState<string | null>(null);
+  const [flwProcessing, setFlwProcessing] = useState<boolean>(false);
 
   useEffect(() => {
     fetchData();
@@ -123,7 +126,13 @@ function SubscriptionContent() {
 
       const data = await res.json();
       if (data.success && data.checkoutUrl) {
-        // Redirect to Flutterwave Hosted Checkout or Dev Simulation URL
+        if (data.checkoutUrl.includes('simulated_success')) {
+          setFlwModalPlan(plan);
+          setFlwSimUrl(data.checkoutUrl);
+          setUpgradingId(null);
+          return;
+        }
+        // Redirect to Flutterwave Hosted Checkout
         window.location.href = data.checkoutUrl;
       } else {
         setAlertMsg({ type: 'error', text: data.error || 'Could not initiate payment. Please try again.' });
@@ -426,6 +435,95 @@ function SubscriptionContent() {
           Talk to Syndicate Desk
         </Link>
       </div>
+
+      {/* Flutterwave Checkout Modal (Pop-Up) */}
+      {flwModalPlan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-md rounded-3xl bg-[#0A0E27] border border-[#F5A623]/40 shadow-2xl overflow-hidden p-6 text-white space-y-6">
+            {/* Header */}
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#F5A623]/20 flex items-center justify-center border border-[#F5A623]">
+                  <span className="text-xl">🟡</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg font-heading tracking-wide">Flutterwave Checkout</h3>
+                  <p className="text-xs text-gray-400">Secure Payment Gateway • Sandbox Mode</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setFlwModalPlan(null);
+                  setFlwSimUrl(null);
+                  setFlwProcessing(false);
+                }}
+                className="text-gray-400 hover:text-white text-xl p-1 rounded-lg hover:bg-white/10"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Order Summary */}
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/10 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Plan:</span>
+                <span className="font-bold text-white">{flwModalPlan.name}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-400">Billing Cycle:</span>
+                <span className="font-bold text-[var(--color-brand-emerald)]">{flwModalPlan.interval}</span>
+              </div>
+              <div className="flex justify-between text-base font-extrabold border-t border-white/10 pt-2 mt-2">
+                <span>Total Amount:</span>
+                <span className="text-[#F5A623]">${flwModalPlan.price.toFixed(2)} USD</span>
+              </div>
+            </div>
+
+            {/* Simulated Payment Methods */}
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Select Payment Method</p>
+              <div className="grid grid-cols-3 gap-2">
+                <button className="py-2.5 px-3 rounded-xl bg-[#F5A623]/20 border border-[#F5A623] text-xs font-bold text-white flex flex-col items-center gap-1 shadow-sm">
+                  <span>💳</span> Card
+                </button>
+                <button className="py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-all">
+                  <span>🏦</span> Bank
+                </button>
+                <button className="py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-all">
+                  <span>📱</span> USSD / M-Pesa
+                </button>
+              </div>
+            </div>
+
+            {/* Developer Notice */}
+            <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-[11px] text-amber-200 leading-relaxed">
+              <span className="font-bold">💡 Why is this pop-up showing in Demo Mode?</span> Your current `.env` contains a test key (`EHvwBlhY...`). To accept live money, paste your live Flutterwave Secret Key from your dashboard!
+            </div>
+
+            {/* Action Button */}
+            <button
+              disabled={flwProcessing}
+              onClick={() => {
+                if (!flwSimUrl) return;
+                setFlwProcessing(true);
+                setTimeout(() => {
+                  window.location.href = flwSimUrl;
+                }, 1500);
+              }}
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#F5A623] to-[#E08D00] hover:from-[#FFB53D] hover:to-[#F5A623] text-black font-extrabold text-base uppercase tracking-wider shadow-lg shadow-[#F5A623]/30 transition-all flex items-center justify-center gap-2"
+            >
+              {flwProcessing ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                  <span>Processing Flutterwave Payment...</span>
+                </>
+              ) : (
+                <span>Pay ${flwModalPlan.price.toFixed(2)} USD Now</span>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
