@@ -30,16 +30,15 @@ export async function GET(request: Request) {
 
     const data = await res.json();
     
-    // Allow all major global sports categories (Soccer, Basketball, Baseball, Football, Tennis, Hockey)
-    const filteredData = data.filter((match: any) => {
-      if (!match.sport_key) return false;
-      return match.sport_key.startsWith('soccer_') ||
-             match.sport_key.startsWith('basketball_') ||
-             match.sport_key.startsWith('baseball_') ||
-             match.sport_key.startsWith('americanfootball_') ||
-             match.sport_key.startsWith('icehockey_') ||
-             match.sport_key.startsWith('tennis_');
-    });
+    // Only show Football matches for the 5 Leagues and the World Cup, plus Basketball
+    const ALLOWED_LEAGUES = [
+      'soccer_epl', 'soccer_spain_la_liga', 'soccer_italy_serie_a', 
+      'soccer_germany_bundesliga', 'soccer_france_ligue_one',
+      'soccer_fifa_world_cup',
+      'basketball_nba', 'basketball_wnba', 'basketball_ncaab', 'basketball_euroleague'
+    ];
+    
+    const filteredData = data.filter((match: any) => ALLOWED_LEAGUES.includes(match.sport_key));
     
     return NextResponse.json({ success: true, data: filteredData });
   } catch (error: any) {

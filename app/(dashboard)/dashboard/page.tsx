@@ -240,10 +240,10 @@ export default function PredictionsFeed() {
         const res = await fetch("/api/matches");
         const json = await res.json();
         
-        if (json.success && json.data && json.data.length > 0) {
+        if (json.success && Array.isArray(json.data)) {
           const formattedMatches = json.data.map((event: any) => {
             const dateObj = new Date(event.commence_time);
-            const isBasketball = event.sport_key.includes("basketball");
+            const isBasketball = event.sport_key?.includes("basketball");
             const fakeConfidence = Math.floor(Math.random() * (75 - 60 + 1) + 60); // Standard picks have lower confidence
             
             return {
@@ -333,7 +333,11 @@ export default function PredictionsFeed() {
             <div className="p-12 mt-8 rounded-2xl bg-[var(--color-background-surface)] border border-dashed border-white/20 text-center flex flex-col items-center justify-center text-gray-400">
               <span className="text-5xl mb-4 opacity-50">🏟️</span>
               <h3 className="text-xl text-white font-bold mb-2 font-heading">No {activeFilter !== "All" ? activeFilter : ""} Matches Found</h3>
-              <p className="text-sm max-w-md">Our models are currently analyzing upcoming data. Please check back later or select a different sport.</p>
+              <p className="text-sm max-w-md">
+                {activeFilter === "Football" 
+                  ? "No live Football fixtures currently scheduled for the Top 5 European Leagues or World Cup right now. Please check back later or select another sport."
+                  : "Our models are currently analyzing upcoming data. Please check back later or select a different sport."}
+              </p>
             </div>
           )}
         </div>

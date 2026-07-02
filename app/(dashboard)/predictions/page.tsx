@@ -119,75 +119,103 @@ export default function PredictionsFeed() {
       </div>
 
       {/* Feed */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {MOCK_PREDICTIONS.map((pred) => (
-          <div key={pred.id} className="relative rounded-2xl bg-[var(--color-background-surface)] border border-[var(--color-border-glass)] shadow-xl overflow-hidden group">
-            
-            {/* Top Bar */}
-            <div className="p-4 border-b border-[var(--color-border-glass)] bg-white/5 flex justify-between items-center">
-              <span className="text-xs font-semibold text-gray-300 bg-black/40 px-2 py-1 rounded border border-white/5 uppercase tracking-wider">{pred.league}</span>
-              <span className="text-xs text-gray-500 flex items-center">
-                <svg className="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {pred.kickoff}
-              </span>
+      {(() => {
+        const filteredPredictions = MOCK_PREDICTIONS.filter((pred) => {
+          if (activeSport === "Football") {
+            return pred.league.includes("World Cup") || pred.league.includes("Liga") || pred.league.includes("Premier League") || pred.league.includes("Serie A") || pred.league.includes("Bundesliga") || pred.league.includes("Ligue 1");
+          }
+          if (activeSport === "Basketball") {
+            return pred.league.includes("NBA") || pred.league.includes("EuroLeague") || pred.league.includes("WNBA") || pred.league.includes("Basketball");
+          }
+          return true;
+        });
+
+        if (filteredPredictions.length === 0) {
+          return (
+            <div className="p-12 mt-4 rounded-2xl bg-[var(--color-background-surface)] border border-dashed border-white/20 text-center flex flex-col items-center justify-center text-gray-400">
+              <span className="text-5xl mb-4 opacity-50">⚽</span>
+              <h3 className="text-xl text-white font-bold mb-2 font-heading">No {activeSport} Predictions Found</h3>
+              <p className="text-sm max-w-md">
+                {activeSport === "Football"
+                  ? "No live Football predictions currently scheduled for the Top 5 European Leagues or World Cup right now. Please check back soon or switch to Basketball!"
+                  : "No live predictions currently scheduled for this sport. Please check back later."}
+              </p>
             </div>
+          );
+        }
 
-            {/* Match Info */}
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <div className="text-center flex-1">
-                  <div className="w-12 h-12 mx-auto bg-black/50 rounded-full flex items-center justify-center border border-[var(--color-border-glass)] mb-2 shadow-inner">
-                    <span className="text-xs text-gray-500">Logo</span>
-                  </div>
-                  <h3 className="text-sm font-bold text-white truncate px-2">{pred.homeTeam}</h3>
-                </div>
-                <div className="px-4 text-xs font-bold text-gray-600">VS</div>
-                <div className="text-center flex-1">
-                  <div className="w-12 h-12 mx-auto bg-black/50 rounded-full flex items-center justify-center border border-[var(--color-border-glass)] mb-2 shadow-inner">
-                    <span className="text-xs text-gray-500">Logo</span>
-                  </div>
-                  <h3 className="text-sm font-bold text-white truncate px-2">{pred.awayTeam}</h3>
-                </div>
-              </div>
-
-              {/* Prediction Box */}
-              <div className="bg-black/40 rounded-xl p-4 border border-[var(--color-border-glass)] mb-6 relative overflow-hidden">
-                {pred.isPremium && (
-                  <div className="absolute inset-0 backdrop-blur-md bg-black/60 z-10 flex flex-col items-center justify-center p-4">
-                    <span className="text-xl mb-1">👑</span>
-                    <h4 className="text-sm font-bold text-white mb-2">Premium Prediction</h4>
-                    <Link href="/dashboard/subscription" className="px-3 py-1.5 bg-[var(--color-brand-emerald)] hover:bg-[var(--color-brand-actionGreenHover)] text-white text-xs font-bold rounded shadow-lg transition-colors">
-                      Unlock Now
-                    </Link>
-                  </div>
-                )}
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {filteredPredictions.map((pred) => (
+              <div key={pred.id} className="relative rounded-2xl bg-[var(--color-background-surface)] border border-[var(--color-border-glass)] shadow-xl overflow-hidden group">
                 
-                <div className="flex justify-between items-start mb-2">
-                  <span className="text-xs text-[var(--color-accent-mutedSage)] uppercase tracking-wider">{pred.predictionType}</span>
-                  <div className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getConfidenceColor(pred.confidenceLabel)}`}>
-                    {pred.confidence}% {pred.confidenceLabel}
+                {/* Top Bar */}
+                <div className="p-4 border-b border-[var(--color-border-glass)] bg-white/5 flex justify-between items-center">
+                  <span className="text-xs font-semibold text-gray-300 bg-black/40 px-2 py-1 rounded border border-white/5 uppercase tracking-wider">{pred.league}</span>
+                  <span className="text-xs text-gray-500 flex items-center">
+                    <svg className="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {pred.kickoff}
+                  </span>
+                </div>
+
+                {/* Match Info */}
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="text-center flex-1">
+                      <div className="w-12 h-12 mx-auto bg-black/50 rounded-full flex items-center justify-center border border-[var(--color-border-glass)] mb-2 shadow-inner">
+                        <span className="text-xs text-gray-500">Logo</span>
+                      </div>
+                      <h3 className="text-sm font-bold text-white truncate px-2">{pred.homeTeam}</h3>
+                    </div>
+                    <div className="px-4 text-xs font-bold text-gray-600">VS</div>
+                    <div className="text-center flex-1">
+                      <div className="w-12 h-12 mx-auto bg-black/50 rounded-full flex items-center justify-center border border-[var(--color-border-glass)] mb-2 shadow-inner">
+                        <span className="text-xs text-gray-500">Logo</span>
+                      </div>
+                      <h3 className="text-sm font-bold text-white truncate px-2">{pred.awayTeam}</h3>
+                    </div>
+                  </div>
+
+                  {/* Prediction Box */}
+                  <div className="bg-black/40 rounded-xl p-4 border border-[var(--color-border-glass)] mb-6 relative overflow-hidden">
+                    {pred.isPremium && (
+                      <div className="absolute inset-0 backdrop-blur-md bg-black/60 z-10 flex flex-col items-center justify-center p-4">
+                        <span className="text-xl mb-1">👑</span>
+                        <h4 className="text-sm font-bold text-white mb-2">Premium Prediction</h4>
+                        <Link href="/dashboard/subscription" className="px-3 py-1.5 bg-[var(--color-brand-emerald)] hover:bg-[var(--color-brand-actionGreenHover)] text-white text-xs font-bold rounded shadow-lg transition-colors">
+                          Unlock Now
+                        </Link>
+                      </div>
+                    )}
+                    
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs text-[var(--color-accent-mutedSage)] uppercase tracking-wider">{pred.predictionType}</span>
+                      <div className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getConfidenceColor(pred.confidenceLabel)}`}>
+                        {pred.confidence}% {pred.confidenceLabel}
+                      </div>
+                    </div>
+                    <p className="text-lg font-bold text-white font-heading">{pred.prediction}</p>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-3">
+                    <Link href={`/dashboard/predictions/${pred.id}`} className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-lg text-center transition-colors border border-white/5">
+                      View Analysis
+                    </Link>
+                    <button className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg border border-white/5 transition-colors text-gray-400 hover:text-white">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
-                <p className="text-lg font-bold text-white font-heading">{pred.prediction}</p>
               </div>
-
-              {/* Actions */}
-              <div className="flex space-x-3">
-                <Link href={`/dashboard/predictions/${pred.id}`} className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-lg text-center transition-colors border border-white/5">
-                  View Analysis
-                </Link>
-                <button className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg border border-white/5 transition-colors text-gray-400 hover:text-white">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        );
+      })()}
     </div>
   );
 }
