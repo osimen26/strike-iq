@@ -38,7 +38,12 @@ export default function UpdatePassword() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.email === "osimen30@gmail.com") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
       router.refresh();
     }
   };

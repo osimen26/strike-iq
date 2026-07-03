@@ -33,8 +33,11 @@ export async function GET(request: Request) {
       }
     )
     
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data: { session }, error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
+      if (session?.user?.email === "osimen30@gmail.com" && next === "/dashboard") {
+        return NextResponse.redirect(`${origin}/admin`)
+      }
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

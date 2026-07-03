@@ -28,7 +28,11 @@ export default function Login() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      if (email.toLowerCase().trim() === "osimen30@gmail.com") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
       router.refresh();
     }
   };
