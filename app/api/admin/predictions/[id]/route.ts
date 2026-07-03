@@ -1,16 +1,20 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { sanitizePayload, sanitizeNumber, isValidId } from '@/lib/security/validator';
+import { requireMasterAdmin, logAdminAudit } from '@/lib/security/adminGuard';
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user, errorResponse } = await requireMasterAdmin();
+    if (errorResponse) return errorResponse;
 
-    if (!user || user.email !== "osimen30@gmail.com") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const supabase = await createClient();
+    const { id } = await params;
+    if (!isValidId(id)) {
+      return NextResponse.json({ error: "Invalid ID parameter" }, { status: 400 });
     }
 
-    const { id } = await params;
+    logAdminAudit("DELETE_PRO_PREDICTION", { predictionId: id });
 
     const { error } = await supabase
       .from('pro_predictions')
@@ -28,15 +32,19 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user, errorResponse } = await requireMasterAdmin();
+    if (errorResponse) return errorResponse;
 
-    if (!user || user.email !== "osimen30@gmail.com") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const supabase = await createClient();
+    const rawBody = await request.json();
+    const body = sanitizePayload(rawBody);
+    const { id } = await params;
+
+    if (!isValidId(id)) {
+      return NextResponse.json({ error: "Invalid ID parameter" }, { status: 400 });
     }
 
-    const body = await request.json();
-    const { id } = await params;
+    logAdminAudit("UPDATE_PRO_PREDICTION", { predictionId: id, match: `${body.homeTeam} vs ${body.awayTeam}` });
 
     const { data, error } = await supabase
       .from('pro_predictions')
@@ -48,9 +56,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         match_date: body.matchDate,
         match_time: body.matchTime,
         prediction: body.prediction,
-        confidence: Number(body.confidence),
+        confidence: sanitizeNumber(body.confidence, 0, 100, 75),
         analysis: body.analysis,
-        tags: body.tags
+        tags: Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).slice(0, 50)) : []
       })
       .eq('id', id)
       .select();

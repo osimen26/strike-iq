@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
+import { sanitizeString, isValidId } from '@/lib/security/validator';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,10 +14,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { tx_ref, planId } = await req.json();
+    const rawBody = await req.json();
+    const tx_ref = sanitizeString(rawBody?.tx_ref, 128);
+    const planId = sanitizeString(rawBody?.planId, 100);
 
-    if (!tx_ref || !planId) {
-      return NextResponse.json({ error: 'Transaction reference and plan ID are required.' }, { status: 400 });
+    if (!tx_ref || !planId || !isValidId(planId) || !isValidId(tx_ref)) {
+      return NextResponse.json({ error: 'Invalid or missing Transaction reference or Plan ID.' }, { status: 400 });
     }
 
     const plan = await prisma.plan.findUnique({ where: { id: planId } });

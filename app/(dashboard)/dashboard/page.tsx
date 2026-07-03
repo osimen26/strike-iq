@@ -38,116 +38,109 @@ const FALLBACK_MATCHES = [
 function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
   const [showAnalysis, setShowAnalysis] = useState(false);
 
-  // Dynamic glow color based on confidence
-  const glowColor = match.confidence >= 85 ? "var(--color-brand-emerald)" : 
-                    match.confidence >= 75 ? "var(--color-brand-mint)" : 
-                    "gray";
+  const glowColor = match.confidence >= 85 ? "#00E599" : 
+                    match.confidence >= 75 ? "#108960" : 
+                    "#52525b";
 
   return (
-    <div className={`relative group rounded-2xl bg-[var(--color-background-surface)] border ${match.isProPick ? 'border-[var(--color-brand-emerald)]/50' : 'border-[var(--color-border-glass)]'} overflow-hidden shadow-2xl transition-all duration-300 hover:border-white/20`}>
+    <div className={`relative group rounded-xl bg-[#09090b] border ${match.isProPick ? 'border-[#00E599]/60 shadow-[0_0_15px_rgba(0,229,153,0.08)]' : 'border-zinc-800/80'} overflow-hidden transition-all duration-200 hover:border-zinc-700`}>
       
-      {/* Subtle Ambient Glow */}
-      <div 
-        className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none"
-        style={{ backgroundColor: match.isProPick ? 'var(--color-brand-emerald)' : glowColor, transform: 'translate(30%, -30%)' }}
-      ></div>
-
-      <div className="relative z-10 p-6 sm:p-8">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+      <div className="relative z-10 p-5 sm:p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           
           {/* LEFT: Match Info & Teams */}
           <div className="flex-1 flex flex-col md:flex-row items-start md:items-center gap-6">
             {/* Meta Info */}
-            <div className="w-full md:w-32 shrink-0 flex flex-row md:flex-col items-center md:items-start justify-between border-b md:border-b-0 md:border-r border-white/10 pb-4 md:pb-0 md:pr-4">
-              <div className="flex items-center gap-2 mb-0 md:mb-2">
-                <div className="w-5 h-5 flex items-center justify-center opacity-80">
+            <div className="w-full md:w-36 shrink-0 flex flex-row md:flex-col items-center md:items-start justify-between border-b md:border-b-0 md:border-r border-zinc-800/80 pb-3 md:pb-0 md:pr-4">
+              <div className="flex items-center gap-2 mb-0 md:mb-1.5">
+                <div className="w-4 h-4 flex items-center justify-center opacity-80">
                   <img src={getLeagueLogo(match.league, match.sport)} alt={match.league} className="max-w-full max-h-full object-contain" />
                 </div>
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider line-clamp-1">{match.league}</span>
+                <span className="text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider line-clamp-1">{match.league}</span>
               </div>
               <div className="text-right md:text-left">
-                <div className="text-sm font-semibold text-[var(--color-brand-mint)]">{match.date}</div>
-                <div className="text-xs text-gray-500 font-mono mt-1">{match.time}</div>
+                <div className="text-xs font-mono font-bold text-[#00E599]">{match.date}</div>
+                <div className="text-[11px] text-zinc-500 font-mono mt-0.5">{match.time}</div>
               </div>
             </div>
 
             {/* Teams */}
             <div className="flex-1 flex items-center justify-center md:justify-start gap-4 w-full">
-              <div className="flex flex-col items-center gap-2 w-1/3">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shadow-inner overflow-hidden">
-                  <img src={getTeamLogo(match.homeTeam)} alt={match.homeTeam} className="w-full h-full object-contain p-1.5" />
+              <div className="flex flex-col items-center gap-2 w-2/5">
+                <div className="w-12 h-12 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center overflow-hidden p-2 shadow-inner">
+                  <img src={getTeamLogo(match.homeTeam)} alt={match.homeTeam} className="w-full h-full object-contain" />
                 </div>
-                <span className="font-heading text-sm sm:text-lg text-white text-center line-clamp-2">{match.homeTeam}</span>
+                <span className="font-mono font-bold text-xs sm:text-sm text-white text-center line-clamp-1">{match.homeTeam}</span>
               </div>
               
-              <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-xs font-bold text-gray-500 font-mono shrink-0">
+              <div className="px-2 py-0.5 bg-[#121215] rounded border border-zinc-800 text-[10px] font-bold text-zinc-500 font-mono shrink-0">
                 VS
               </div>
 
-              <div className="flex flex-col items-center gap-2 w-1/3">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shadow-inner overflow-hidden">
-                  <img src={getTeamLogo(match.awayTeam)} alt={match.awayTeam} className="w-full h-full object-contain p-1.5" />
+              <div className="flex flex-col items-center gap-2 w-2/5">
+                <div className="w-12 h-12 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center overflow-hidden p-2 shadow-inner">
+                  <img src={getTeamLogo(match.awayTeam)} alt={match.awayTeam} className="w-full h-full object-contain" />
                 </div>
-                <span className="font-heading text-sm sm:text-lg text-white text-center line-clamp-2">{match.awayTeam}</span>
+                <span className="font-mono font-bold text-xs sm:text-sm text-white text-center line-clamp-1">{match.awayTeam}</span>
               </div>
             </div>
           </div>
 
           {/* RIGHT: AI Prediction & Confidence Ring */}
-          <div className="flex items-center justify-between lg:justify-end gap-6 border-t lg:border-t-0 border-white/10 pt-6 lg:pt-0 w-full lg:w-auto relative">
+          <div className="flex items-center justify-between lg:justify-end gap-6 border-t lg:border-t-0 border-zinc-800/80 pt-5 lg:pt-0 w-full lg:w-auto relative">
             
             {isLocked && (
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-md rounded-xl border border-white/10 p-2 text-center">
-                <span className="text-2xl mb-1">🔒</span>
-                <a href="/subscription" className="text-xs font-bold text-[var(--color-brand-emerald)] hover:underline uppercase tracking-widest cursor-pointer">
-                  Upgrade to Pro
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 rounded-lg border border-zinc-800 p-2 text-center">
+                <span className="text-xl mb-1">🔒</span>
+                <a href="/dashboard/subscription" className="text-[10px] font-mono font-bold text-[#00E599] hover:underline uppercase tracking-widest cursor-pointer">
+                  PRO TIER REQUIRED
                 </a>
               </div>
             )}
 
             {/* The Verdict */}
-            <div className={`flex flex-col items-start lg:items-end gap-2 flex-1 lg:flex-none ${isLocked ? 'blur-sm opacity-50' : ''}`}>
-              <div className="flex flex-wrap gap-2 mb-1">
+            <div className={`flex flex-col items-start lg:items-end gap-2 flex-1 lg:flex-none ${isLocked ? 'blur-sm opacity-40' : ''}`}>
+              <div className="flex flex-wrap gap-1.5 mb-0.5">
                 {match.isProPick && (
-                  <span className="px-2 py-0.5 rounded-full bg-[var(--color-brand-emerald)]/20 border border-[var(--color-brand-emerald)]/50 text-[10px] font-bold text-[var(--color-brand-emerald)] uppercase tracking-wider whitespace-nowrap">
-                    👑 Pro Pick
+                  <span className="px-2 py-0.5 rounded bg-[#00E599]/10 border border-[#00E599]/40 text-[9px] font-mono font-bold text-[#00E599] uppercase tracking-wider whitespace-nowrap">
+                    👑 PRO EDGE
                   </span>
                 )}
                 {match.tags?.map((tag: string) => (
-                  <span key={tag} className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                  <span key={tag} className="px-2 py-0.5 rounded bg-[#121215] border border-zinc-800 text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap">
                     {tag}
                   </span>
                 ))}
               </div>
-              <div className="px-4 py-2 bg-[var(--color-background-glass)] backdrop-blur-md rounded-xl border border-white/10 shadow-lg w-full lg:w-auto">
-                <span className="text-sm text-gray-400 mr-2">AI Pick:</span>
-                <span className="font-heading text-md sm:text-lg text-[var(--color-brand-mint)] tracking-wide">{match.prediction}</span>
+              <div className="px-3.5 py-2 bg-[#121215] rounded-lg border border-zinc-800/80 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-3 shadow-sm">
+                <span className="text-xs font-mono text-zinc-400 uppercase">MODEL PICK:</span>
+                <span className="font-mono font-bold text-sm text-[#00E599] tracking-tight">{match.prediction}</span>
               </div>
             </div>
 
             {/* Circular Confidence Gauge */}
-            <div className={`relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center shrink-0 ${isLocked ? 'blur-sm opacity-50' : ''}`}>
+            <div className={`relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0 ${isLocked ? 'blur-sm opacity-40' : ''}`}>
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                 <path
-                  className="text-white/5"
+                  className="text-zinc-800"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="3"
+                  strokeWidth="2.5"
                 />
                 <path
-                  className="transition-all duration-1000 ease-out drop-shadow-md"
+                  className="transition-all duration-700 ease-out"
                   strokeDasharray={`${match.confidence}, 100`}
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   stroke={glowColor}
-                  strokeWidth="3"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-heading text-lg sm:text-xl text-white">{match.confidence}</span>
-                <span className="text-[10px] text-gray-400 font-mono -mt-1">%</span>
+                <span className="font-mono font-bold text-sm sm:text-base text-white">{match.confidence}</span>
+                <span className="text-[9px] text-zinc-500 font-mono -mt-1">%</span>
               </div>
             </div>
 
@@ -155,20 +148,21 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
         </div>
 
         {/* Expand Analysis Toggle */}
-        <div className="mt-6 flex justify-center">
+        <div className="mt-5 pt-3 border-t border-zinc-900 flex justify-between items-center">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase">AI ENGINE: DEEPSEEK ADVANCED SPORTS MODEL</span>
           <button 
             onClick={() => {
               if (isLocked) {
-                window.location.href = "/subscription";
+                window.location.href = "/dashboard/subscription";
                 return;
               }
               setShowAnalysis(!showAnalysis)
             }}
-            className="group/btn flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+            className="group/btn flex items-center gap-2 px-3 py-1 rounded bg-[#121215] border border-zinc-800 hover:border-zinc-700 transition-colors"
           >
-            <span className={`w-2 h-2 rounded-full ${isLocked ? 'bg-gray-500' : 'bg-[var(--color-brand-emerald)] animate-pulse'}`}></span>
-            <span className="text-xs font-medium text-gray-300 group-hover/btn:text-white transition-colors">
-              {isLocked ? "Unlock AI Analysis" : showAnalysis ? "Hide AI Analysis" : "View AI Analysis"}
+            <span className={`w-1.5 h-1.5 rounded-full ${isLocked ? 'bg-zinc-600' : 'bg-[#00E599] animate-pulse'}`}></span>
+            <span className="text-[11px] font-mono font-bold text-zinc-300 group-hover/btn:text-white transition-colors uppercase">
+              {isLocked ? "LOCK // UNLOCK ANALYSIS" : showAnalysis ? "CLOSE ANALYSIS" : "READ RATIONALE"}
             </span>
           </button>
         </div>
@@ -176,12 +170,12 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
 
       {/* Expanded Analysis Drawer */}
       <div 
-        className={`bg-black/40 border-t border-white/5 transition-all duration-300 ease-in-out overflow-hidden ${
-          showAnalysis && !isLocked ? "max-h-96 opacity-100 py-6" : "max-h-0 opacity-0 py-0"
+        className={`bg-[#050507] border-t border-zinc-800/80 transition-all duration-300 ease-in-out overflow-hidden ${
+          showAnalysis && !isLocked ? "max-h-96 opacity-100 py-5" : "max-h-0 opacity-0 py-0"
         }`}
       >
-        <div className="px-6 sm:px-8 text-sm text-gray-300 leading-relaxed font-main">
-          <span className="font-bold text-[var(--color-brand-mint)] mr-2">Core Rationale:</span>
+        <div className="px-5 sm:px-6 text-xs text-zinc-300 leading-relaxed font-mono">
+          <span className="font-bold text-[#00E599] uppercase mr-2">[RATIONALE // METRICS]:</span>
           {match.analysis}
         </div>
       </div>
@@ -285,30 +279,34 @@ export default function PredictionsFeed() {
   });
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto pb-12">
+    <div className="space-y-6 max-w-6xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-10 pt-4">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-8 pt-2 border-b border-zinc-900 pb-6">
         <div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-heading tracking-tight mb-2 flex items-center gap-3">
-            Welcome, <span className="text-[var(--color-brand-mint)]">{user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || "Strategist"}</span>
-            {isProUser && <span className="text-xl px-2 py-0.5 bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] border border-[var(--color-brand-emerald)]/50 rounded text-xs uppercase tracking-widest font-bold translate-y-1">Pro Member</span>}
+          <div className="flex items-center gap-2 text-xs font-mono text-[#00E599] font-bold uppercase tracking-wider mb-2">
+            <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse"></span>
+            LIVE INTELLIGENCE FEED // TERMINAL v2.4
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-white font-heading tracking-tight mb-2 flex items-center gap-3 uppercase">
+            STRATEGY DESK: <span className="text-[#00E599]">{user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || "STRATEGIST"}</span>
+            {isProUser && <span className="px-2 py-0.5 bg-[#00E599]/10 text-[#00E599] border border-[#00E599]/40 rounded text-[10px] font-mono uppercase tracking-widest font-bold">PRO MEMBER</span>}
           </h1>
-          <p className="text-[var(--color-accent-mutedSage)] text-lg">Your intelligence feed is pulling live market data.</p>
+          <p className="text-zinc-400 text-sm font-mono">Real-time market odds, AI confidence metrics, and quantitative match predictions.</p>
         </div>
         
         {/* Sleek Filters */}
-        <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 shadow-inner backdrop-blur-sm self-start shrink-0 overflow-x-auto max-w-full">
+        <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800 self-start shrink-0 overflow-x-auto max-w-full font-mono">
           {["All", "Football", "Basketball"].map(filter => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+              className={`px-5 py-2 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap uppercase tracking-wider ${
                 activeFilter === filter 
-                  ? "bg-[var(--color-brand-actionGreen)] text-white shadow-md shadow-black/50" 
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                  ? "bg-[#00E599] text-black shadow-sm" 
+                  : "text-zinc-400 hover:text-white hover:bg-[#121215]"
               }`}
             >
-              {filter}
+              {filter === "All" ? "ALL MARKETS" : filter.toUpperCase()}
             </button>
           ))}
         </div>
@@ -316,12 +314,12 @@ export default function PredictionsFeed() {
 
       {/* Predictions Feed list */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20">
-          <div className="w-12 h-12 border-4 border-white/10 border-t-[var(--color-brand-emerald)] rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-400 font-mono text-sm animate-pulse">Syncing Intelligence Feed...</p>
+        <div className="flex flex-col items-center justify-center py-20 bg-[#09090b] rounded-xl border border-zinc-800/80">
+          <div className="w-10 h-10 border-2 border-zinc-800 border-t-[#00E599] rounded-full animate-spin mb-4"></div>
+          <p className="text-zinc-400 font-mono text-xs uppercase tracking-widest animate-pulse">SYNCING QUANTITATIVE MODELS...</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {filteredMatches.length > 0 ? (
             filteredMatches.map(match => {
               // Lock the match if it's a Pro Pick and the user is NOT a Pro User
@@ -330,13 +328,13 @@ export default function PredictionsFeed() {
               return <MatchCard key={match.id} match={match} isLocked={isLocked} />
             })
           ) : (
-            <div className="p-12 mt-8 rounded-2xl bg-[var(--color-background-surface)] border border-dashed border-white/20 text-center flex flex-col items-center justify-center text-gray-400">
-              <span className="text-5xl mb-4 opacity-50">🏟️</span>
-              <h3 className="text-xl text-white font-bold mb-2 font-heading">No {activeFilter !== "All" ? activeFilter : ""} Matches Found</h3>
-              <p className="text-sm max-w-md">
+            <div className="p-12 mt-4 rounded-xl bg-[#09090b] border border-dashed border-zinc-800 text-center flex flex-col items-center justify-center text-zinc-400 font-mono">
+              <span className="text-4xl mb-4 opacity-40">📊</span>
+              <h3 className="text-base text-white font-bold mb-2 uppercase tracking-wide">No {activeFilter !== "All" ? activeFilter : "Active"} Fixtures Found</h3>
+              <p className="text-xs max-w-md text-zinc-500 leading-relaxed font-sans">
                 {activeFilter === "Football" 
                   ? "No live Football fixtures currently scheduled for the Top 5 European Leagues or World Cup right now. Please check back later or select another sport."
-                  : "Our models are currently analyzing upcoming data. Please check back later or select a different sport."}
+                  : "Our quantitative engines are currently processing upcoming schedules. Please check back later or select another market."}
               </p>
             </div>
           )}

@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 export default async function MatchesPage() {
   const matches = await prisma.match.findMany({
     where: { isDeleted: false },

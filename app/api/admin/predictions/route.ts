@@ -1,19 +1,21 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { sanitizePayload, sanitizeNumber } from '@/lib/security/validator';
+import { requireMasterAdmin, logAdminAudit } from '@/lib/security/adminGuard';
 
 export async function POST(request: Request) {
   try {
+    const { user, errorResponse } = await requireMasterAdmin();
+    if (errorResponse) return errorResponse;
+
     const supabase = await createClient();
-    
-    // Verify authentication and admin email
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user || user.email !== "osimen30@gmail.com") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const rawBody = await request.json();
+    const body = sanitizePayload(rawBody);
 
-    const body = await request.json();
+    // Log security audit
+    logAdminAudit("CREATE_PRO_PREDICTION", { match: `${body.homeTeam} vs ${body.awayTeam}`, league: body.league });
 
-    // 1. Insert the Pro Prediction
+    // 1. Insert the Pro Prediction with sanitized fields
     const { data, error } = await supabase
       .from('pro_predictions')
       .insert([
@@ -25,9 +27,9 @@ export async function POST(request: Request) {
           match_date: body.matchDate,
           match_time: body.matchTime,
           prediction: body.prediction,
-          confidence: Number(body.confidence),
+          confidence: sanitizeNumber(body.confidence, 0, 100, 75),
           analysis: body.analysis,
-          tags: body.tags,
+          tags: Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).slice(0, 50)) : [],
           created_by: user.id
         }
       ])

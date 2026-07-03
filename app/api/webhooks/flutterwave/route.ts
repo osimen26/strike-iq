@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { sanitizePayload } from "@/lib/security/validator";
 
 export async function POST(req: Request) {
   try {
@@ -12,13 +13,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const payload = await req.json();
+    const rawPayload = await req.json();
+    const payload = sanitizePayload(rawPayload);
 
     // 2. Log the incoming webhook
     await prisma.paymentWebhook.create({
       data: {
         provider: "FLUTTERWAVE",
-        eventType: payload.event,
+        eventType: String(payload.event || "").slice(0, 50),
         payload: JSON.stringify(payload),
         status: "RECEIVED",
       },

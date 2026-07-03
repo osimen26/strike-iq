@@ -25,7 +25,11 @@ export default function Login() {
     });
 
     if (error) {
-      setError(error.message);
+      if (error.message.toLowerCase().includes("email not confirmed") || error.message.toLowerCase().includes("not verified")) {
+        setError("⚠️ Your email address has not been confirmed yet. Please check your inbox and click the verification link before logging in.");
+      } else {
+        setError(error.message);
+      }
       setLoading(false);
     } else {
       router.push("/dashboard");

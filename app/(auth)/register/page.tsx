@@ -13,6 +13,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -21,7 +22,7 @@ export default function Register() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -35,6 +36,10 @@ export default function Register() {
 
     if (error) {
       setError(error.message);
+      setLoading(false);
+    } else if (data.user && !data.session) {
+      // Email verification is turned on in Supabase!
+      setVerificationSent(true);
       setLoading(false);
     } else {
       router.push("/dashboard");
@@ -90,6 +95,23 @@ export default function Register() {
         <div className="flex-1 border-t border-border-glass"></div>
       </div>
 
+      {verificationSent ? (
+        <div className="bg-emerald-950/40 border border-[var(--color-brand-emerald)] p-6 rounded-xl text-center flex flex-col gap-3 my-4 shadow-[0_0_25px_rgba(0,229,153,0.15)]">
+          <div className="w-12 h-12 bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+            📧
+          </div>
+          <h3 className="text-white font-bold text-lg">Verification Email Sent!</h3>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            We sent a secure activation link to <span className="text-[var(--color-brand-emerald)] font-semibold">{email}</span>. Please check your inbox and click the link to activate your VIP account before logging in.
+          </p>
+          <Link
+            href="/login"
+            className="mt-2 inline-block bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold py-2.5 px-6 rounded-lg transition-all"
+          >
+            Go to Login Page
+          </Link>
+        </div>
+      ) : (
       <form onSubmit={handleRegister} className="flex flex-col gap-5 w-full">
         {error && (
           <div className="text-red-400 text-sm font-medium text-center">
@@ -171,6 +193,7 @@ export default function Register() {
           {loading ? "Creating account..." : "Sign Up"}
         </button>
       </form>
+      )}
 
       {/* Footer */}
       <p className="text-center text-sm text-brand-mint/70">

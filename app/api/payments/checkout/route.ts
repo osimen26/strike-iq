@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
+import { sanitizeString, isValidId } from '@/lib/security/validator';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,10 +14,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized. Please log in first.' }, { status: 401 });
     }
 
-    const { planId } = await req.json();
+    const rawBody = await req.json();
+    const planId = sanitizeString(rawBody?.planId, 100);
 
-    if (!planId) {
-      return NextResponse.json({ error: 'Plan ID is required.' }, { status: 400 });
+    if (!planId || !isValidId(planId)) {
+      return NextResponse.json({ error: 'Invalid or missing Plan ID parameter.' }, { status: 400 });
     }
 
     // Find requested plan
