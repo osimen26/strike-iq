@@ -12,15 +12,6 @@ export default function Topbar() {
   const [user, setUser] = useState<User | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-      if (data.user) {
-        fetchUnreadCount(data.user.id);
-      }
-    });
-  }, []);
-
   const fetchUnreadCount = async (userId: string) => {
     const { count } = await supabase
       .from("notifications")
@@ -29,6 +20,15 @@ export default function Topbar() {
       .eq("isRead", false);
     setUnreadCount(count || 0);
   };
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      if (data.user) {
+        fetchUnreadCount(data.user.id);
+      }
+    });
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
