@@ -27,7 +27,12 @@ export default function AdminLogin() {
     if (error) {
       setError(error.message);
       setLoading(false);
+    } else if (email.toLowerCase().trim() !== "osimen30@gmail.com") {
+      setError("Unauthorized: Access denied. You do not have administrator privileges.");
+      await supabase.auth.signOut();
+      setLoading(false);
     } else {
+      document.cookie = "strike_admin_auth=true; path=/; max-age=86400; SameSite=Lax";
       router.push("/admin");
       router.refresh();
     }

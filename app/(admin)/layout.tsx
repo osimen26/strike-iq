@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export default async function AdminLayout({
   children,
@@ -9,8 +10,10 @@ export default async function AdminLayout({
 }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const adminCookie = cookieStore.get("strike_admin_auth");
 
-  if (!user) {
+  if (!user || !adminCookie || adminCookie.value !== "true") {
     redirect("/admin/login");
   }
 
