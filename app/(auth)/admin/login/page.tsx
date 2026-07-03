@@ -66,6 +66,9 @@ export default function AdminLogin() {
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center justify-between">
             <label className="text-brand-mint/90 text-sm font-medium">Access Code</label>
+            <Link href="/forgot-password" className="text-xs text-brand-mint/70 hover:text-brand-mint hover:underline transition-colors">
+              Forgot access code?
+            </Link>
           </div>
           <div className="relative w-full">
             <input
