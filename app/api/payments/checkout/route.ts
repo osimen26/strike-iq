@@ -57,8 +57,9 @@ export async function POST(req: Request) {
     }
 
     // Check if live Flutterwave Secret Key is configured (supports both V3 FLWSECK keys and V4 Client Secrets)
-    const flwSecretKey = process.env.FLUTTERWAVE_SECRET_KEY;
-    if (flwSecretKey && flwSecretKey.trim() !== '' && !flwSecretKey.includes('your-')) {
+    const candidateKeys = [process.env.FLUTTERWAVE_SECRET_KEY, process.env.Flutterwave, process.env.FLUTTERWAVE_KEY];
+    const flwSecretKey = candidateKeys.find(k => k && k.trim() !== '' && !k.includes('your-') && k !== 'EHvwBlhYvyO7gKb512jaVNMkbReAKflt');
+    if (flwSecretKey) {
       const flwRes = await fetch('https://api.flutterwave.com/v3/payments', {
         method: 'POST',
         headers: {
