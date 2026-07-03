@@ -59,6 +59,8 @@ export async function POST(req: Request) {
     // Check if live Flutterwave Secret Key is configured (supports both V3 FLWSECK keys and V4 Client Secrets)
     const candidateKeys = [process.env.FLUTTERWAVE_SECRET_KEY, process.env.Flutterwave, process.env.FLUTTERWAVE_KEY];
     const flwSecretKey = candidateKeys.find(k => k && k.trim() !== '' && !k.includes('your-') && k !== 'EHvwBlhYvyO7gKb512jaVNMkbReAKflt');
+    let flwErrorMsg: string | null = null;
+
     if (flwSecretKey) {
       const flwRes = await fetch('https://api.flutterwave.com/v3/payments', {
         method: 'POST',
@@ -88,20 +90,24 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: true, checkoutUrl: flwData.data.link });
       } else {
         console.error('Flutterwave API returned error:', flwData);
+        flwErrorMsg = flwData.message || flwData.error || JSON.stringify(flwData);
         // Fall through to dev simulation mode if live call failed
       }
+    } else {
+      flwErrorMsg = 'No live secret key found in environment variables (Vercel/local).';
     }
 
     // DEV / SIMULATION MODE FALLBACK
     // If no live keys or if testing locally, redirect to simulated success URL
-    console.log('Using Flutterwave Simulation Mode for tx_ref:', tx_ref);
+    console.log('Using Flutterwave Simulation Mode for tx_ref:', tx_ref, 'Reason:', flwErrorMsg);
     const simulationUrl = `/subscription?payment=simulated_success&tx_ref=${tx_ref}&planId=${plan.id}&planName=${encodeURIComponent(plan.name)}`;
     
     return NextResponse.json({
       success: true,
       checkoutUrl: simulationUrl,
       simulated: true,
-      message: 'Redirecting via Dev Simulation Mode (no live Flutterwave key detected).'
+      flwError: flwErrorMsg,
+      message: flwErrorMsg ? `Flutterwave API Note: ${flwErrorMsg}` : 'Redirecting via Dev Simulation Mode (no live Flutterwave key detected).'
     });
 
   } catch (error: any) {

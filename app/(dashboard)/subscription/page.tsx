@@ -41,6 +41,7 @@ function SubscriptionContent() {
   const [flwModalPlan, setFlwModalPlan] = useState<Plan | null>(null);
   const [flwSimUrl, setFlwSimUrl] = useState<string | null>(null);
   const [flwProcessing, setFlwProcessing] = useState<boolean>(false);
+  const [flwErrorMsg, setFlwErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -129,6 +130,7 @@ function SubscriptionContent() {
         if (data.checkoutUrl.includes('simulated_success')) {
           setFlwModalPlan(plan);
           setFlwSimUrl(data.checkoutUrl);
+          setFlwErrorMsg(data.flwError || null);
           setUpgradingId(null);
           return;
         }
@@ -495,9 +497,24 @@ function SubscriptionContent() {
               </div>
             </div>
 
-            {/* Developer Notice */}
-            <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-[11px] text-amber-200 leading-relaxed">
-              <span className="font-bold">💡 Why is this pop-up showing in Demo Mode?</span> Your current `.env` contains a test key (`EHvwBlhY...`). To accept live money, paste your live Flutterwave Secret Key from your dashboard!
+            {/* Developer Notice & Error Display */}
+            <div className="bg-amber-500/10 border border-amber-500/30 p-3.5 rounded-xl text-xs text-amber-200 leading-relaxed space-y-2">
+              <div className="flex items-center gap-1.5 font-bold text-amber-300">
+                <span>⚠️</span>
+                <span>Why is this Pop-up showing in Demo/Sandbox Mode?</span>
+              </div>
+              {flwErrorMsg ? (
+                <div className="bg-black/40 p-2.5 rounded-lg border border-amber-500/20 font-mono text-[11px] text-amber-100">
+                  <span className="text-red-400 font-bold">Flutterwave API Note:</span> "{flwErrorMsg}"
+                </div>
+              ) : (
+                <p className="text-[11px] opacity-90">
+                  No valid live key was detected in Vercel environment variables.
+                </p>
+              )}
+              <p className="text-[11px] text-gray-300">
+                <span className="font-semibold text-white">💡 Pro Tip:</span> If you just added your live secret key, ensure USD international card payments are enabled on your Flutterwave merchant account!
+              </p>
             </div>
 
             {/* Action Button */}
