@@ -105,11 +105,11 @@ function AboutSection() {
             </div>
           </div>
 
-          {/* Card 3: Local League Depth */}
+          {/* Card 3: Major League Focus */}
           <div className="feature-card">
             <div className="feature-text">
-              <h3>Local League Depth</h3>
-              <p>NPFL coverage no global tipster touches, alongside EPL, La Liga, and UCL.</p>
+              <h3>Major League Focus</h3>
+              <p>Deep tactical coverage across the Premier League, La Liga, Serie A, Bundesliga, UCL, and NBA.</p>
             </div>
             <div className="feature-graphic graphic-heatmap">
               <div className="heatmap-grid">
