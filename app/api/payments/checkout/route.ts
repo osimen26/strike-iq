@@ -58,16 +58,22 @@ export async function POST(req: Request) {
 
     // Check if live Flutterwave Secret Key is configured (supports both V3 FLWSECK keys and V4 Client Secrets)
     const candidateKeys = [process.env.FLUTTERWAVE_SECRET_KEY, process.env.Flutterwave, process.env.FLUTTERWAVE_KEY];
-    const flwSecretKey = candidateKeys.find(k => k && k.trim() !== '' && !k.includes('your-') && k !== 'EHvwBlhYvyO7gKb512jaVNMkbReAKflt');
+    const rawKey = candidateKeys.find(k => k && k.trim() !== '' && !k.includes('your-') && k.trim() !== 'EHvwBlhYvyO7gKb512jaVNMkbReAKflt');
+    const flwSecretKey = rawKey ? rawKey.replace(/^["']|["']$/g, '').trim() : null;
     let flwErrorMsg: string | null = null;
 
     if (flwSecretKey) {
-      const flwRes = await fetch('https://api.flutterwave.com/v3/payments', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${flwSecretKey}`,
-          'Content-Type': 'application/json',
-        },
+      if (flwSecretKey.startsWith('FLWPUBK')) {
+        flwErrorMsg = 'You pasted your Public Key (FLWPUBK...). Please use your Secret Key (FLWSECK...) from Flutterwave Settings -> API Keys.';
+      } else if (!flwSecretKey.startsWith('FLWSECK')) {
+        flwErrorMsg = `Invalid key format. Flutterwave V3 secret keys must start with FLWSECK_TEST- or FLWSECK-. (Received key starting with: "${flwSecretKey.substring(0, 8)}...")`;
+      } else {
+        const flwRes = await fetch('https://api.flutterwave.com/v3/payments', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${flwSecretKey}`,
+            'Content-Type': 'application/json',
+          },
         body: JSON.stringify({
           tx_ref,
           amount: plan.price,
@@ -93,6 +99,7 @@ export async function POST(req: Request) {
         flwErrorMsg = flwData.message || flwData.error || JSON.stringify(flwData);
         // Fall through to dev simulation mode if live call failed
       }
+    }
     } else {
       flwErrorMsg = 'No live secret key found in environment variables (Vercel/local).';
     }
