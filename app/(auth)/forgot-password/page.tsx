@@ -31,12 +31,12 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="w-full flex flex-col gap-8 font-main text-brand-mint">
+    <div className="w-full flex flex-col gap-8 font-main text-white">
       
       {/* Header */}
       <div className="text-center w-full flex flex-col gap-2">
-        <h2 className="text-brand-mint font-heading text-3xl md:text-4xl">Reset Password</h2>
-        <p className="text-brand-mint/80 font-main text-sm">Enter your email to receive a password reset link.</p>
+        <h2 className="text-white font-heading text-3xl md:text-4xl">Reset Password</h2>
+        <p className="text-zinc-400 font-main text-sm">Enter your email to receive a password reset link.</p>
       </div>
 
       <form onSubmit={handleReset} className="flex flex-col gap-5 w-full">
@@ -47,20 +47,20 @@ export default function ForgotPassword() {
         )}
         
         {success && (
-          <div className="text-brand-emerald text-sm font-medium text-center bg-brand-emerald/10 py-3 rounded-lg border border-brand-emerald/20">
+          <div className="text-[#138561] text-sm font-medium text-center bg-[#138561]/10 py-3 rounded-lg border border-[#138561]/20">
             {success}
           </div>
         )}
 
         {/* Email */}
         <div className="flex flex-col gap-2 w-full">
-          <label className="text-brand-mint/90 text-sm font-medium">Email</label>
+          <label className="text-zinc-300 text-sm font-medium">Email</label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-brand-mint text-sm placeholder:text-brand-mint/40 outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-colors"
+            className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
             placeholder="eg. johnfrans@gmail.com"
           />
         </div>
@@ -68,16 +68,16 @@ export default function ForgotPassword() {
         <button
           type="submit"
           disabled={loading || !!success}
-          className="w-full bg-[var(--color-brand-emerald)] text-[var(--color-brand-mint)] font-semibold text-[16px] py-3.5 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(16,137,96,0.3)]"
+          className="w-full bg-[#138561] text-white font-semibold text-[16px] py-3.5 rounded-lg hover:bg-[#0f6b4d] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(19,133,97,0.3)]"
         >
           {loading ? "Sending..." : "Send Reset Link"}
         </button>
       </form>
 
       {/* Footer */}
-      <p className="text-center text-sm text-brand-mint/70">
+      <p className="text-center text-sm text-zinc-400">
         Remembered your password?{" "}
-        <Link href="/login" className="text-brand-mint font-semibold hover:underline decoration-brand-actionGreen underline-offset-4">
+        <Link href="/login" className="text-[#138561] font-semibold hover:underline decoration-[#138561] underline-offset-4">
           Log in
         </Link>
       </p>

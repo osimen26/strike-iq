@@ -39,12 +39,12 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="w-full flex flex-col gap-8 font-main text-brand-mint">
+    <div className="w-full flex flex-col gap-8 font-main text-white">
       
       {/* Header */}
       <div className="text-center w-full flex flex-col gap-2">
-        <h2 className="text-brand-mint font-heading text-3xl md:text-4xl">Admin Portal</h2>
-        <p className="text-brand-mint/80 font-main text-sm">Enter administrator credentials to proceed.</p>
+        <h2 className="text-white font-heading text-3xl md:text-4xl">Admin Portal</h2>
+        <p className="text-zinc-400 font-main text-sm">Enter administrator credentials to proceed.</p>
       </div>
 
       <form onSubmit={handleLogin} className="flex flex-col gap-5 w-full">
@@ -56,13 +56,13 @@ export default function AdminLogin() {
 
         {/* Email */}
         <div className="flex flex-col gap-2 w-full">
-          <label className="text-brand-mint/90 text-sm font-medium">Clearance Email</label>
+          <label className="text-zinc-300 text-sm font-medium">Clearance Email</label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-brand-mint text-sm placeholder:text-brand-mint/40 outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-colors"
+            className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
             placeholder="admin@strikeiq.com"
           />
         </div>
@@ -70,8 +70,8 @@ export default function AdminLogin() {
         {/* Password */}
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center justify-between">
-            <label className="text-brand-mint/90 text-sm font-medium">Access Code</label>
-            <Link href="/forgot-password" className="text-xs text-brand-mint/70 hover:text-brand-mint hover:underline transition-colors">
+            <label className="text-zinc-300 text-sm font-medium">Access Code</label>
+            <Link href="/forgot-password" className="text-xs text-zinc-400 hover:text-white hover:underline transition-colors">
               Forgot access code?
             </Link>
           </div>
@@ -81,13 +81,13 @@ export default function AdminLogin() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-brand-mint text-sm placeholder:text-brand-mint/40 outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-colors"
+              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
               placeholder="Enter your password"
             />
             <button 
               type="button" 
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-mint/60 hover:text-brand-mint transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
             >
               {showPassword ? (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -101,15 +101,15 @@ export default function AdminLogin() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[var(--color-brand-emerald)] text-[var(--color-brand-mint)] font-semibold text-[16px] py-3.5 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(16,137,96,0.3)]"
+          className="w-full bg-[#138561] text-white font-semibold text-[16px] py-3.5 rounded-lg hover:bg-[#0f6b4d] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(19,133,97,0.3)]"
         >
           {loading ? "Authenticating..." : "Initialize Session"}
         </button>
       </form>
 
       {/* Footer */}
-      <p className="text-center text-sm text-brand-mint/70">
-        <Link href="/dashboard" className="text-brand-mint font-semibold hover:underline decoration-brand-actionGreen underline-offset-4">
+      <p className="text-center text-sm text-zinc-400">
+        <Link href="/dashboard" className="text-[#138561] font-semibold hover:underline decoration-[#138561] underline-offset-4">
           ← Return to public site
         </Link>
       </p>

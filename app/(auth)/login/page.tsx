@@ -53,12 +53,12 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full flex flex-col gap-8 font-main text-brand-mint">
+    <div className="w-full flex flex-col gap-8 font-main text-white">
       
       {/* Header */}
       <div className="text-center w-full flex flex-col gap-2">
-        <h2 className="text-brand-mint font-heading text-3xl md:text-4xl">Log In Account</h2>
-        <p className="text-brand-mint/80 font-main text-sm">Enter your personal data to access your account.</p>
+        <h2 className="text-white font-heading text-3xl md:text-4xl">Log In Account</h2>
+        <p className="text-zinc-400 font-main text-sm">Enter your personal data to access your account.</p>
       </div>
 
       {/* Social Logins */}
@@ -74,14 +74,14 @@ export default function Login() {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
           </svg>
-          <span className="text-brand-mint text-sm font-medium">Continue with Google</span>
+          <span className="text-zinc-200 text-sm font-medium">Continue with Google</span>
         </button>
       </div>
 
       {/* Divider */}
       <div className="flex items-center w-full gap-3">
         <div className="flex-1 border-t border-border-glass"></div>
-        <span className="text-brand-mint/60 text-sm font-medium uppercase">Or</span>
+        <span className="text-zinc-500 text-sm font-medium uppercase">Or</span>
         <div className="flex-1 border-t border-border-glass"></div>
       </div>
 
@@ -94,13 +94,13 @@ export default function Login() {
 
         {/* Email */}
         <div className="flex flex-col gap-2 w-full">
-          <label className="text-brand-mint/90 text-sm font-medium">Email</label>
+          <label className="text-zinc-300 text-sm font-medium">Email</label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-brand-mint text-sm placeholder:text-brand-mint/40 outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-colors"
+            className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
             placeholder="eg. johnfrans@gmail.com"
           />
         </div>
@@ -108,8 +108,8 @@ export default function Login() {
         {/* Password */}
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center justify-between">
-            <label className="text-brand-mint/90 text-sm font-medium">Password</label>
-            <Link href="/forgot-password" className="text-brand-mint/60 hover:text-brand-mint text-sm hover:underline">Forgot password?</Link>
+            <label className="text-zinc-300 text-sm font-medium">Password</label>
+            <Link href="/forgot-password" className="text-zinc-400 hover:text-white text-sm hover:underline">Forgot password?</Link>
           </div>
           <div className="relative w-full">
             <input
@@ -117,13 +117,13 @@ export default function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-brand-mint text-sm placeholder:text-brand-mint/40 outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-colors"
+              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
               placeholder="Enter your password"
             />
             <button 
               type="button" 
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-mint/60 hover:text-brand-mint transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
             >
               {showPassword ? (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -137,16 +137,16 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[var(--color-brand-emerald)] text-[var(--color-brand-mint)] font-semibold text-[16px] py-3.5 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(16,137,96,0.3)]"
+          className="w-full bg-[#138561] text-white font-semibold text-[16px] py-3.5 rounded-lg hover:bg-[#0f6b4d] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(19,133,97,0.3)]"
         >
           {loading ? "Logging in..." : "Log In"}
         </button>
       </form>
 
       {/* Footer */}
-      <p className="text-center text-sm text-brand-mint/70">
+      <p className="text-center text-sm text-zinc-400">
         Don't have an account?{" "}
-        <Link href="/register" className="text-brand-mint font-semibold hover:underline decoration-brand-actionGreen underline-offset-4">
+        <Link href="/register" className="text-[#138561] font-semibold hover:underline decoration-[#138561] underline-offset-4">
           Sign up
         </Link>
       </p>

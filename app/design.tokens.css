@@ -1,9 +1,9 @@
 @theme {
   /* OLED Matte Dark Mode & Sports Terminal Palette */
   --color-brand-mint: #00E599;
-  --color-brand-emerald: #108960;
-  --color-brand-actionGreen: #00C880;
-  --color-brand-actionGreenHover: #009e64;
+  --color-brand-emerald: #138561;
+  --color-brand-actionGreen: #138561;
+  --color-brand-actionGreenHover: #0e6449;
   
   /* Pure solid matte backgrounds (No Frosted Glass / No Blurs) */
   --color-background-app: #000000;

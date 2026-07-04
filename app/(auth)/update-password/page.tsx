@@ -44,12 +44,12 @@ export default function UpdatePassword() {
   };
 
   return (
-    <div className="w-full flex flex-col gap-8 font-main text-brand-mint">
+    <div className="w-full flex flex-col gap-8 font-main text-white">
       
       {/* Header */}
       <div className="text-center w-full flex flex-col gap-2">
-        <h2 className="text-brand-mint font-heading text-3xl md:text-4xl">Update Password</h2>
-        <p className="text-brand-mint/80 font-main text-sm">Enter a new secure password for your account.</p>
+        <h2 className="text-white font-heading text-3xl md:text-4xl">Update Password</h2>
+        <p className="text-zinc-400 font-main text-sm">Enter a new secure password for your account.</p>
       </div>
 
       <form onSubmit={handleUpdate} className="flex flex-col gap-5 w-full">
@@ -61,20 +61,20 @@ export default function UpdatePassword() {
 
         {/* New Password */}
         <div className="flex flex-col gap-2 w-full">
-          <label className="text-brand-mint/90 text-sm font-medium">New Password</label>
+          <label className="text-zinc-300 text-sm font-medium">New Password</label>
           <div className="relative w-full">
             <input
               type={showPassword ? "text" : "password"}
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-brand-mint text-sm placeholder:text-brand-mint/40 outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-colors"
+              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
               placeholder="Enter your new password"
             />
             <button 
               type="button" 
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-mint/60 hover:text-brand-mint transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
             >
               {showPassword ? (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -87,14 +87,14 @@ export default function UpdatePassword() {
 
         {/* Confirm Password */}
         <div className="flex flex-col gap-2 w-full">
-          <label className="text-brand-mint/90 text-sm font-medium">Confirm Password</label>
+          <label className="text-zinc-300 text-sm font-medium">Confirm Password</label>
           <div className="relative w-full">
             <input
               type={showPassword ? "text" : "password"}
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-brand-mint text-sm placeholder:text-brand-mint/40 outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-colors"
+              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
               placeholder="Confirm your new password"
             />
           </div>
@@ -103,7 +103,7 @@ export default function UpdatePassword() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[var(--color-brand-emerald)] text-[var(--color-brand-mint)] font-semibold text-[16px] py-3.5 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(16,137,96,0.3)]"
+          className="w-full bg-[#138561] text-white font-semibold text-[16px] py-3.5 rounded-lg hover:bg-[#0f6b4d] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(19,133,97,0.3)]"
         >
           {loading ? "Updating..." : "Update Password"}
         </button>

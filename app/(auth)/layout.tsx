@@ -21,11 +21,11 @@ export default function AuthLayout({
         {/* Text Content Overlay */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12 z-10">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-5 h-5 rounded-full border-[4px] border-brand-mint"></div>
-            <span className="text-brand-mint font-heading tracking-wide text-xl uppercase">STRIKE IQ</span>
+            <div className="w-5 h-5 rounded-full border-[4px] border-[#138561]"></div>
+            <span className="text-[#138561] font-heading tracking-wide text-xl uppercase">STRIKE IQ</span>
           </div>
-          <h1 className="text-brand-mint font-heading text-5xl mb-4">Get Started with Us</h1>
-          <p className="text-brand-mint/80 font-main text-lg max-w-[280px]">
+          <h1 className="text-white font-heading text-5xl mb-4">Get Started with Us</h1>
+          <p className="text-zinc-300 font-main text-lg max-w-[280px]">
             Complete these easy steps to register your account.
           </p>
         </div>
@@ -41,8 +41,8 @@ export default function AuthLayout({
 
         {/* Mobile Logo (Hidden on desktop) */}
         <div className="md:hidden flex items-center justify-center gap-2 mb-8 relative z-10">
-          <div className="w-4 h-4 rounded-full border-[3px] border-brand-mint"></div>
-          <span className="text-brand-mint font-heading tracking-wide text-lg uppercase">STRIKE IQ</span>
+          <div className="w-4 h-4 rounded-full border-[3px] border-[#138561]"></div>
+          <span className="text-[#138561] font-heading tracking-wide text-lg uppercase">STRIKE IQ</span>
         </div>
 
         <div className="w-full max-w-md relative z-10">
