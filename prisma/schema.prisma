@@ -161,7 +161,7 @@ model PredictionExplanation {
   prediction   Prediction @relation(fields: [predictionId], references: [id], onDelete: Cascade)
   content      String     @db.Text
   keyFactors   String[]   // e.g., ["Injuries", "Form"]
-  aiModelUsed  String?    // e.g., "deepseek-chat"
+  aiModelUsed  String?    // e.g., "STRIKE-IQ QUANT V4"
   
   @@map("prediction_explanations")
 }
@@ -280,7 +280,7 @@ model AiJob {
   id           String   @id @default(cuid())
   matchId      String?
   promptUsed   String   @db.Text
-  model        String   // e.g., deepseek-chat
+  model        String   // e.g., STRIKE-IQ QUANT V4
   response     String   @db.Text
   tokensUsed   Int?
   status       String   // SUCCESS, FAILED

@@ -53,11 +53,12 @@ export default function LeaguesPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-white/10 pb-6">
         <div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading">
               Sports Competitions & Leagues
             </h1>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-[var(--color-brand-emerald)]/10 text-[var(--color-brand-electricGreen)] border border-[var(--color-brand-emerald)]/30">
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#138561]/20 text-[#138561] border border-[#138561]/40 whitespace-nowrap shrink-0 shadow-[0_0_15px_rgba(19,133,97,0.15)] flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#138561] animate-pulse"></span>
               AI COVERAGE ACTIVE
             </span>
           </div>
@@ -86,7 +87,7 @@ export default function LeaguesPage() {
               onClick={() => setSelectedSport('all')}
               className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 selectedSport === 'all'
-                  ? 'bg-[var(--color-brand-emerald)] text-black shadow-md shadow-[var(--color-brand-emerald)]/20'
+                  ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/20'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -96,7 +97,7 @@ export default function LeaguesPage() {
               onClick={() => setSelectedSport('football')}
               className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 selectedSport === 'football'
-                  ? 'bg-[var(--color-brand-emerald)] text-black shadow-md shadow-[var(--color-brand-emerald)]/20'
+                  ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/20'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -106,7 +107,7 @@ export default function LeaguesPage() {
               onClick={() => setSelectedSport('basketball')}
               className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 selectedSport === 'basketball'
-                  ? 'bg-[var(--color-brand-emerald)] text-black shadow-md shadow-[var(--color-brand-emerald)]/20'
+                  ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/20'
                   : 'text-gray-400 hover:text-white'
               }`}
             >

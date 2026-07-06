@@ -47,7 +47,7 @@ export default function Topbar() {
           <input 
             type="text" 
             placeholder="Fixtures, leagues, odds..." 
-            className="w-full pl-20 pr-4 py-1.5 bg-[#09090b] border border-zinc-800 rounded-md text-xs font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-[#00E599] transition-colors"
+            className="w-full pl-20 pr-4 py-1.5 bg-[#09090b] border border-zinc-800 rounded-md text-xs font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-[#138561] transition-colors"
           />
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function Topbar() {
         {/* Notification Bell with live badge */}
         <Link 
           href="/dashboard/notifications" 
-          className="relative p-2 text-zinc-400 hover:text-[#00E599] transition-colors"
+          className="relative p-2 text-zinc-400 hover:text-[#138561] transition-colors"
           onClick={() => setUnreadCount(0)}
           title="Notifications"
         >
@@ -64,7 +64,7 @@ export default function Topbar() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 min-w-[16px] h-4 px-0.5 bg-[#00E599] rounded-full flex items-center justify-center text-[9px] font-mono font-bold text-black">
+            <span className="absolute top-1 right-1 min-w-[16px] h-4 px-0.5 bg-[#138561] rounded-full flex items-center justify-center text-[9px] font-mono font-bold text-white">
               {unreadCount > 99 ? "99+" : unreadCount}
             </span>
           )}
@@ -77,7 +77,7 @@ export default function Topbar() {
             <span className="text-xs font-mono font-bold text-white tracking-wide">{displayName}</span>
             <span className="text-[10px] font-mono text-zinc-500 uppercase">{user?.email || "ONLINE"}</span>
           </div>
-          <Link href="/dashboard/profile" className="shrink-0 w-8 h-8 rounded-md bg-[#121215] border border-zinc-700 flex items-center justify-center text-[#00E599] font-mono font-bold text-xs hover:border-[#00E599] transition-all cursor-pointer" title="View Profile">
+          <Link href="/dashboard/profile" className="shrink-0 w-8 h-8 rounded-md bg-[#121215] border border-zinc-700 flex items-center justify-center text-[#138561] font-mono font-bold text-xs hover:border-[#138561] transition-all cursor-pointer" title="View Profile">
             {displayName.charAt(0).toUpperCase()}
           </Link>
           <button 

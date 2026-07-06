@@ -208,7 +208,7 @@
 
 .pricing-btn {
   background-color: var(--color-emerald);
-  color: var(--color-mint);
+  color: #ffffff;
   border: none;
   border-radius: 50px;
   padding: 23px 34px 21px;
@@ -319,7 +319,7 @@
 
 .talk-btn {
   background: #138561;
-  color: hsla(102, 58%, 87%, 1);
+  color: #ffffff;
   font-family: var(--font-geist);
   border: none;
   border-radius: 50px;

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { sanitizeString, isValidId } from '@/lib/security/validator';
+import { MASTER_ADMIN_EMAIL } from '@/lib/security/adminGuard';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,12 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // In production, strictly restrict payment simulation to VIP Administrator only!
+    if (process.env.NODE_ENV === 'production' && user.email !== MASTER_ADMIN_EMAIL) {
+      console.warn(`[SECURITY_ALERT] Unauthorized payment simulation attempt in production by ${user.email}`);
+      return NextResponse.json({ error: 'Forbidden: Payment simulation is disabled in production for standard accounts.' }, { status: 403 });
     }
 
     const rawBody = await req.json();

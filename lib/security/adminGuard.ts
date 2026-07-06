@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 // The master VIP administrator account authorized to manage AI predictions and platform config
-export const MASTER_ADMIN_EMAIL = "osimen30@gmail.com";
+export const MASTER_ADMIN_EMAIL = "osimenvictor09@gmail.com";
 
 /**
  * Verifies that the incoming API request is authenticated and authorized as the master administrator.

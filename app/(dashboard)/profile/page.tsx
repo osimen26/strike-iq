@@ -9,12 +9,9 @@ function ProfileContent() {
   const initialTab = searchParams.get('tab') === 'settings' ? 'settings' : 'profile';
   
   const [activeTab, setActiveTab] = useState<'profile' | 'settings' | 'bookmarks'>(initialTab as any);
-  const [user, setUser] = useState<any>({
-    email: 'member@strikeiq.ai',
-    name: 'Strike IQ Bettor',
-    tier: 'Pro Member ⚡',
-    joinDate: 'Jan 2026',
-  });
+  const [user, setUser] = useState<any>(null);
+  const [planName, setPlanName] = useState<string>('Free');
+  const [resetSent, setResetSent] = useState(false);
   
   // Settings state
   const [oddsFormat, setOddsFormat] = useState<'DECIMAL' | 'FRACTIONAL' | 'AMERICAN'>('DECIMAL');
@@ -25,19 +22,42 @@ function ProfileContent() {
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    // Attempt to fetch current user profile session
+    // Fetch real auth user
+    import('@/lib/supabase/client').then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        if (data.user) setUser(data.user);
+      });
+    });
+
+    // Fetch real subscription status
     fetch('/api/subscriptions/current')
       .then((res) => res.json())
       .then((data) => {
-        if (data.success && data.subscription) {
-          setUser((prev: any) => ({
-            ...prev,
-            tier: data.planName || 'Pro Member ⚡',
-          }));
+        if (data.success) {
+          setPlanName(data.planName || 'Free');
         }
       })
       .catch(() => {});
   }, []);
+
+  const handleResetPassword = async () => {
+    if (!user?.email) return;
+    const { createClient } = await import('@/lib/supabase/client');
+    const supabase = createClient();
+    await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: `${window.location.origin}/update-password`,
+    });
+    setResetSent(true);
+    setSavedMsg('✉️ Password reset link sent to your email.');
+    setTimeout(() => setSavedMsg(null), 5000);
+  };
+
+  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Strategist';
+  const joinDate = user?.created_at
+    ? new Date(user.created_at).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })
+    : '—';
+  const tierLabel = planName === 'Free' ? 'Free Tier' : `${planName} ⚡`;
 
   const handleSaveSettings = () => {
     setSavedMsg('⚡ Preferences saved securely to your Strike IQ Profile.');
@@ -116,10 +136,10 @@ function ProfileContent() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">{user.name}</h3>
-                <p className="text-xs text-gray-400">{user.email}</p>
+                <h3 className="text-lg font-bold text-white">{displayName}</h3>
+                <p className="text-xs text-gray-400">{user?.email || '—'}</p>
                 <div className="mt-2 inline-block px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-electricGreen)] border border-[var(--color-brand-emerald)]/30">
-                  {user.tier}
+                  {tierLabel}
                 </div>
               </div>
             </div>
@@ -133,7 +153,7 @@ function ProfileContent() {
               </div>
               <div className="flex justify-between py-1 border-b border-white/5">
                 <span className="text-gray-400">Member Since:</span>
-                <span className="text-white font-medium">{user.joinDate}</span>
+                <span className="text-white font-medium">{joinDate}</span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-gray-400">Payment Gateway:</span>
@@ -208,10 +228,11 @@ function ProfileContent() {
                 <div className="text-xs text-gray-400 mt-0.5">We recommend rotating passwords every 90 days for sports betting accounts.</div>
               </div>
               <button
-                onClick={() => alert('Password reset verification link sent to your registered email.')}
-                className="px-5 py-2.5 rounded-xl font-bold text-xs uppercase bg-[var(--color-brand-emerald)] text-black hover:bg-emerald-400 transition-all shadow-md shrink-0"
+                onClick={handleResetPassword}
+                disabled={resetSent}
+                className="px-5 py-2.5 rounded-xl font-bold text-xs uppercase bg-[var(--color-brand-emerald)] text-black hover:bg-emerald-400 transition-all shadow-md shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Reset Password
+                {resetSent ? 'Link Sent ✓' : 'Reset Password'}
               </button>
             </div>
           </div>

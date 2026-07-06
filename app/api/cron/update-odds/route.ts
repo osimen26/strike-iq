@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 /**
  * GET /api/cron/update-odds
  * Automated Vercel Cron Job scheduled every 4 hours.
- * Scans upcoming fixtures, sends data to DeepSeek AI, and generates/updates pro predictions & confidence scores.
+ * Scans upcoming fixtures, sends data to Strike-IQ Quant V4 AI, and generates/updates pro predictions & confidence scores.
  */
 export async function GET(request: Request) {
   try {
@@ -15,12 +15,15 @@ export async function GET(request: Request) {
     const authHeader = request.headers.get("authorization");
     const cronSecret = process.env.CRON_SECRET;
     
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    if (process.env.NODE_ENV === "production" && (!cronSecret || authHeader !== `Bearer ${cronSecret}`)) {
+      console.warn("[CRON_SECURITY] Unauthorized cron execution attempt blocked.");
+      return NextResponse.json({ error: "Unauthorized cron execution." }, { status: 401 });
+    } else if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
       console.warn("[CRON_SECURITY] Unauthorized cron execution attempt blocked.");
       return NextResponse.json({ error: "Unauthorized cron execution." }, { status: 401 });
     }
 
-    console.log("[CRON_UPDATE_ODDS] Starting automated DeepSeek AI odds refresh job...");
+    console.log("[CRON_UPDATE_ODDS] Starting automated Strike-IQ Quant V4 odds refresh job...");
 
     // 2. Fetch up to 8 active matches that need prediction updates or generation
     const upcomingMatches = await prisma.match.findMany({
@@ -59,12 +62,12 @@ export async function GET(request: Request) {
     let updatedCount = 0;
     let createdCount = 0;
 
-    // 3. Process fixtures sequentially through DeepSeek AI engine
+    // 3. Process fixtures sequentially through Strike-IQ Quant V4 engine
     for (const match of upcomingMatches) {
       try {
         console.log(`[CRON_UPDATE_ODDS] Processing fixture: ${match.homeTeam.name} vs ${match.awayTeam.name} (${match.league.name})`);
 
-        // Build rich contextual prompt data for DeepSeek
+        // Build rich contextual prompt data for Strike-IQ AI
         const contextData = {
           fixture: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
           league: match.league.name,
@@ -75,7 +78,7 @@ export async function GET(request: Request) {
           keyVariables: ["Player availability", "Tactical matchup", "Home pitch advantage", "League standings pressure"]
         };
 
-        // Call DeepSeek AI Odds Engine
+        // Call Strike-IQ Quant V4 Engine
         const aiResult = await generatePrediction(match.id, contextData);
 
         if (!aiResult) {
@@ -104,12 +107,12 @@ export async function GET(request: Request) {
                   create: {
                     content: aiResult.explanation,
                     keyFactors: aiResult.keyFactors,
-                    aiModelUsed: "deepseek-chat"
+                    aiModelUsed: "STRIKE-IQ QUANT V4"
                   },
                   update: {
                     content: aiResult.explanation,
                     keyFactors: aiResult.keyFactors,
-                    aiModelUsed: "deepseek-chat"
+                    aiModelUsed: "STRIKE-IQ QUANT V4"
                   }
                 }
               }
@@ -141,7 +144,7 @@ export async function GET(request: Request) {
                 create: {
                   content: aiResult.explanation,
                   keyFactors: aiResult.keyFactors,
-                  aiModelUsed: "deepseek-chat"
+                  aiModelUsed: "STRIKE-IQ QUANT V4"
                 }
               }
             }
@@ -166,7 +169,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
-      job: "DeepSeek AI Odds Refresh",
+      job: "Strike-IQ Quant V4 Odds Refresh",
       processedTotal: processedResults.length,
       created: createdCount,
       updated: updatedCount,

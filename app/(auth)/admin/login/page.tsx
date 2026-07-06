@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { MASTER_ADMIN_EMAIL } from "@/lib/security/adminGuard";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -19,17 +20,49 @@ export default function AdminLogin() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
+    const cleanEmail = email.toLowerCase().trim();
+
+    if (cleanEmail !== MASTER_ADMIN_EMAIL.toLowerCase()) {
+      setError("Unauthorized: Access denied. You do not have administrator privileges.");
+      await supabase.auth.signOut();
+      setLoading(false);
+      return;
+    }
+
+    let { error: signInError } = await supabase.auth.signInWithPassword({
+      email: cleanEmail,
       password,
     });
 
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else if (email.toLowerCase().trim() !== "osimen30@gmail.com") {
-      setError("Unauthorized: Access denied. You do not have administrator privileges.");
-      await supabase.auth.signOut();
+    // If login fails because user doesn't exist yet, automatically register the VIP admin account
+    if (signInError && signInError.message.includes("Invalid login credentials")) {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: cleanEmail,
+        password,
+        options: {
+          data: {
+            full_name: "Osimen Victor",
+            role: "admin",
+          },
+        },
+      });
+
+      if (!signUpError) {
+        // Retry sign in after successful auto-registration
+        const { error: retryError } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
+        signInError = retryError;
+      }
+    }
+
+    if (signInError) {
+      if (signInError.message.includes("Invalid login credentials")) {
+        setError(`Invalid credentials. Please verify your password for ${MASTER_ADMIN_EMAIL}.`);
+      } else {
+        setError(signInError.message);
+      }
       setLoading(false);
     } else {
       document.cookie = "strike_admin_auth=true; path=/; max-age=86400; SameSite=Lax";
@@ -63,7 +96,7 @@ export default function AdminLogin() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
-            placeholder="admin@strikeiq.com"
+            placeholder="osimenvictor09@gmail.com"
           />
         </div>
 
@@ -108,11 +141,19 @@ export default function AdminLogin() {
       </form>
 
       {/* Footer */}
-      <p className="text-center text-sm text-zinc-400">
-        <Link href="/dashboard" className="text-[#138561] font-semibold hover:underline decoration-[#138561] underline-offset-4">
-          ← Return to public site
-        </Link>
-      </p>
+      <div className="flex flex-col items-center gap-3 text-center text-sm text-zinc-400">
+        <p>
+          First time setting up Admin?{" "}
+          <Link href="/register" className="text-[#138561] font-semibold hover:underline decoration-[#138561] underline-offset-4">
+            Create account on Register page →
+          </Link>
+        </p>
+        <p>
+          <Link href="/dashboard" className="text-zinc-400 hover:text-white transition-colors">
+            ← Return to public site
+          </Link>
+        </p>
+      </div>
 
     </div>
   );

@@ -78,7 +78,7 @@ function SubscriptionContent() {
     } else if (paymentStatus === 'success') {
       setAlertMsg({
         type: 'success',
-        text: '🎉 Payment Successful! Your Strike IQ Pro subscription has been activated via Flutterwave.',
+        text: '🎉 Payment Successful! Your Strike IQ Pro subscription has been activated.',
       });
       fetchData();
       setTimeout(() => router.replace('/subscription'), 4000);
@@ -117,7 +117,7 @@ function SubscriptionContent() {
     
     try {
       setUpgradingId(plan.id);
-      setAlertMsg({ type: 'info', text: `Initiating secure Flutterwave checkout for ${plan.name}...` });
+      setAlertMsg({ type: 'info', text: `Initiating secure checkout for ${plan.name}...` });
 
       const res = await fetch('/api/payments/checkout', {
         method: 'POST',
@@ -158,7 +158,7 @@ function SubscriptionContent() {
               Subscription & Pro Access
             </h1>
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-[var(--color-brand-emerald)]/20 to-[var(--color-brand-electricGreen)]/20 border border-[var(--color-brand-emerald)]/40 text-[var(--color-brand-electricGreen)] animate-pulse">
-              FLUTTERWAVE VERIFIED
+              INSTANT PRO ACCESS ⚡
             </span>
           </div>
           <p className="text-[var(--color-accent-mutedSage)] mt-2 text-sm md:text-base">
@@ -214,7 +214,7 @@ function SubscriptionContent() {
             onClick={() => setBillingCycle('MONTHLY')}
             className={`px-6 py-2 rounded-full text-xs font-bold uppercase transition-all ${
               billingCycle === 'MONTHLY'
-                ? 'bg-[var(--color-brand-emerald)] text-black shadow-md shadow-[var(--color-brand-emerald)]/30'
+                ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/30'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -224,7 +224,7 @@ function SubscriptionContent() {
             onClick={() => setBillingCycle('YEARLY')}
             className={`px-6 py-2 rounded-full text-xs font-bold uppercase transition-all flex items-center gap-2 ${
               billingCycle === 'YEARLY'
-                ? 'bg-[var(--color-brand-emerald)] text-black shadow-md shadow-[var(--color-brand-emerald)]/30'
+                ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/30'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -244,7 +244,7 @@ function SubscriptionContent() {
           <div className="w-10 h-10 border-4 border-[var(--color-brand-emerald)] border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+        <div className="flex flex-wrap justify-center gap-8 items-stretch max-w-5xl mx-auto">
           {filteredPlans.map((plan) => {
             const isCurrent = planName === plan.name || (planName === 'Free' && plan.price === 0);
             const isPro = plan.price > 0;
@@ -252,7 +252,7 @@ function SubscriptionContent() {
             return (
               <div
                 key={plan.id}
-                className={`relative rounded-2xl p-7 flex flex-col justify-between transition-all duration-300 ${
+                className={`relative rounded-2xl p-7 flex flex-col justify-between transition-all duration-300 w-full sm:w-[380px] max-w-full ${
                   isPro
                     ? 'bg-gradient-to-b from-emerald-950/30 to-black/80 border-2 border-[var(--color-brand-emerald)]/50 shadow-2xl shadow-[var(--color-brand-emerald)]/10 hover:border-[var(--color-brand-emerald)] hover:scale-[1.01]'
                     : 'bg-[var(--color-background-surface)] border border-white/10 hover:border-white/20'
@@ -260,7 +260,7 @@ function SubscriptionContent() {
               >
                 {/* Pro Badge */}
                 {isPro && (
-                  <div className="absolute -top-3.5 right-6 bg-gradient-to-r from-[var(--color-brand-emerald)] to-emerald-400 text-black text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                  <div className="absolute -top-3.5 right-6 bg-gradient-to-r from-[var(--color-brand-emerald)] to-emerald-400 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
                     👑 RECOMMENDATION
                   </div>
                 )}
@@ -298,10 +298,8 @@ function SubscriptionContent() {
                     <ul className="space-y-2.5">
                       {plan.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start gap-2.5 text-xs text-gray-200">
-                          <svg className="w-4 h-4 text-[var(--color-brand-electricGreen)] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                          <span className="font-medium">{feature}</span>
+                          <span className="text-[var(--color-brand-emerald)] font-bold shrink-0 mt-0.5">✓</span>
+                          <span className="leading-relaxed">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -328,16 +326,16 @@ function SubscriptionContent() {
                     <button
                       onClick={() => handleUpgrade(plan)}
                       disabled={upgradingId === plan.id}
-                      className="w-full py-3.5 px-4 rounded-xl font-extrabold text-xs uppercase bg-gradient-to-r from-[var(--color-brand-emerald)] to-emerald-400 text-black hover:from-emerald-400 hover:to-[var(--color-brand-electricGreen)] transition-all shadow-lg shadow-[var(--color-brand-emerald)]/20 flex items-center justify-center gap-2 transform active:scale-95"
+                      className="w-full py-3.5 px-4 rounded-xl font-extrabold text-xs uppercase bg-[#138561] text-white hover:bg-[#0f6b4d] transition-all shadow-lg shadow-[#138561]/20 flex items-center justify-center gap-2 transform active:scale-95"
                     >
                       {upgradingId === plan.id ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                          <span>Connecting Flutterwave...</span>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Securing Checkout...</span>
                         </>
                       ) : (
                         <>
-                          <span>UPGRADE WITH FLUTTERWAVE 🚀</span>
+                          <span>UPGRADE TO PRO ⚡</span>
                         </>
                       )}
                     </button>
@@ -355,7 +353,7 @@ function SubscriptionContent() {
           <div>
             <h2 className="text-xl font-bold text-white font-heading">Billing & Transaction History</h2>
             <p className="text-xs text-[var(--color-accent-mutedSage)] mt-1">
-              All financial transactions and Flutterwave verification logs are recorded here.
+              All billing history and subscription payments are recorded here.
             </p>
           </div>
           <div className="text-xs text-gray-400">
@@ -399,7 +397,7 @@ function SubscriptionContent() {
                       ${tx.amount.toFixed(2)}
                     </td>
                     <td className="py-3.5 px-4 text-gray-300 uppercase">
-                      {tx.paymentMethod || 'Flutterwave'}
+                      {tx.paymentMethod || 'Card / Bank'}
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <span
@@ -449,8 +447,8 @@ function SubscriptionContent() {
                   <span className="text-xl">🟡</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg font-heading tracking-wide">Flutterwave Checkout</h3>
-                  <p className="text-xs text-gray-400">Secure Payment Gateway • Sandbox Mode</p>
+                  <h3 className="font-bold text-lg font-heading tracking-wide">Secure Checkout</h3>
+                  <p className="text-xs text-gray-400">Strike IQ Pro Entitlement • Instant Activation</p>
                 </div>
               </div>
               <button
@@ -532,7 +530,7 @@ function SubscriptionContent() {
               {flwProcessing ? (
                 <>
                   <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                  <span>Processing Flutterwave Payment...</span>
+                  <span>Processing Payment...</span>
                 </>
               ) : (
                 <span>Pay ${flwModalPlan.price.toFixed(2)} USD Now</span>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { MASTER_ADMIN_EMAIL } from "@/lib/security/adminGuard";
 
 export default async function AdminLayout({
   children,
@@ -17,7 +18,7 @@ export default async function AdminLayout({
     redirect("/admin/login");
   }
 
-  if (user.email !== "osimen30@gmail.com") {
+  if (user.email !== MASTER_ADMIN_EMAIL) {
     return (
       <div className="min-h-screen bg-[var(--color-background-app)] flex flex-col items-center justify-center p-4">
         <div className="bg-white/5 border border-white/10 p-8 rounded-2xl max-w-md text-center">
@@ -34,7 +35,7 @@ export default async function AdminLayout({
     );
   }
 
-  // Admin access granted for osimen30@gmail.com
+  // Admin access granted for MASTER_ADMIN_EMAIL
 
   return (
     <div className="flex min-h-screen bg-[var(--color-background-app)] text-white font-main">

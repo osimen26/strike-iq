@@ -83,7 +83,7 @@
 
 .academy-btn {
   background-color: var(--color-emerald); /* Exact from Figma */
-  color: var(--color-mint); /* Text color #d6f1ca */
+  color: #ffffff;
   font-family: var(--font-geist);
   font-size: 16px;
   font-weight: 600;

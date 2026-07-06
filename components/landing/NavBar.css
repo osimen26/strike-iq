@@ -68,7 +68,7 @@
 }
 
 .navbar-login-wrapper {
-  background-color: var(--color-mint);
+  background-color: var(--color-emerald);
   border-radius: 2px;
   padding: 13px 18px 11px 18px;
   display: flex;
@@ -87,7 +87,7 @@
   font-weight: 600;
   font-size: 16px;
   letter-spacing: -0.48px;
-  color: #191919;
+  color: #ffffff;
   text-transform: uppercase;
   background: none;
   border: none;

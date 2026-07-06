@@ -65,8 +65,8 @@ CREATE POLICY "Users can view own payments" ON public."payments" FOR SELECT USIN
 CREATE POLICY "Users can manage own saved predictions" ON public."saved_predictions" FOR ALL USING (auth.uid()::text = "userId");
 CREATE POLICY "Users can view and update own notifications" ON public."notifications" FOR ALL USING (auth.uid()::text = "userId");
 
--- 5. Create Admin Override Policies (For osimen30@gmail.com)
-CREATE POLICY "Admin full access predictions" ON public."predictions" FOR ALL USING (auth.jwt() ->> 'email' = 'osimen30@gmail.com');
-CREATE POLICY "Admin full access matches" ON public."matches" FOR ALL USING (auth.jwt() ->> 'email' = 'osimen30@gmail.com');
+-- 5. Create Admin Override Policies (For osimenvictor09@gmail.com)
+CREATE POLICY "Admin full access predictions" ON public."predictions" FOR ALL USING (auth.jwt() ->> 'email' = 'osimenvictor09@gmail.com');
+CREATE POLICY "Admin full access matches" ON public."matches" FOR ALL USING (auth.jwt() ->> 'email' = 'osimenvictor09@gmail.com');
 
 -- Note: Prisma ORM API routes connect using database service roles, automatically bypassing RLS securely on server endpoints.

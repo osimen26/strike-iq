@@ -1,6 +1,6 @@
 @theme {
   /* OLED Matte Dark Mode & Sports Terminal Palette */
-  --color-brand-mint: #00E599;
+  --color-brand-mint: #138561;
   --color-brand-emerald: #138561;
   --color-brand-actionGreen: #138561;
   --color-brand-actionGreenHover: #0e6449;
@@ -15,7 +15,7 @@
   /* Sharp, high-precision solid borders */
   --color-border-glass: #1f1f24;
   --color-border-subtle: #18181c;
-  --color-border-focus: #00E599;
+  --color-border-focus: #138561;
   
   /* Crisp typography colors */
   --color-accent-dimGray: #27272a;

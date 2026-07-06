@@ -38,12 +38,12 @@ const FALLBACK_MATCHES = [
 function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
   const [showAnalysis, setShowAnalysis] = useState(false);
 
-  const glowColor = match.confidence >= 85 ? "#00E599" : 
+  const glowColor = match.confidence >= 85 ? "#138561" : 
                     match.confidence >= 75 ? "#108960" : 
                     "#52525b";
 
   return (
-    <div className={`relative group rounded-xl bg-[#09090b] border ${match.isProPick ? 'border-[#00E599]/60 shadow-[0_0_15px_rgba(0,229,153,0.08)]' : 'border-zinc-800/80'} overflow-hidden transition-all duration-200 hover:border-zinc-700`}>
+    <div className={`relative group rounded-xl bg-[#09090b] border ${match.isProPick ? 'border-[#138561]/80 shadow-[0_0_20px_rgba(19,133,97,0.15)]' : 'border-zinc-800/80'} overflow-hidden transition-all duration-200 hover:border-zinc-700`}>
       
       <div className="relative z-10 p-5 sm:p-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -59,7 +59,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
                 <span className="text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider line-clamp-1">{match.league}</span>
               </div>
               <div className="text-right md:text-left">
-                <div className="text-xs font-mono font-bold text-[#00E599]">{match.date}</div>
+                <div className="text-xs font-mono font-bold text-[#138561]">{match.date}</div>
                 <div className="text-[11px] text-zinc-500 font-mono mt-0.5">{match.time}</div>
               </div>
             </div>
@@ -92,7 +92,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
             {isLocked && (
               <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 rounded-lg border border-zinc-800 p-2 text-center">
                 <span className="text-xl mb-1">🔒</span>
-                <a href="/dashboard/subscription" className="text-[10px] font-mono font-bold text-[#00E599] hover:underline uppercase tracking-widest cursor-pointer">
+                <a href="/dashboard/subscription" className="text-[10px] font-mono font-bold text-[#138561] hover:underline uppercase tracking-widest cursor-pointer">
                   PRO TIER REQUIRED
                 </a>
               </div>
@@ -102,7 +102,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
             <div className={`flex flex-col items-start lg:items-end gap-2 flex-1 lg:flex-none ${isLocked ? 'blur-sm opacity-40' : ''}`}>
               <div className="flex flex-wrap gap-1.5 mb-0.5">
                 {match.isProPick && (
-                  <span className="px-2 py-0.5 rounded bg-[#00E599]/10 border border-[#00E599]/40 text-[9px] font-mono font-bold text-[#00E599] uppercase tracking-wider whitespace-nowrap">
+                  <span className="px-2 py-0.5 rounded bg-[#138561]/20 border border-[#138561]/40 text-[9px] font-mono font-bold text-[#138561] uppercase tracking-wider whitespace-nowrap">
                     👑 PRO EDGE
                   </span>
                 )}
@@ -114,7 +114,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
               </div>
               <div className="px-3.5 py-2 bg-[#121215] rounded-lg border border-zinc-800/80 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-3 shadow-sm">
                 <span className="text-xs font-mono text-zinc-400 uppercase">MODEL PICK:</span>
-                <span className="font-mono font-bold text-sm text-[#00E599] tracking-tight">{match.prediction}</span>
+                <span className="font-mono font-bold text-sm text-[#138561] tracking-tight">{match.prediction}</span>
               </div>
             </div>
 
@@ -147,20 +147,20 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
           </div>
         </div>
 
-        {/* Expand Analysis Toggle */}
-        <div className="mt-5 pt-3 border-t border-zinc-900 flex justify-between items-center">
-          <span className="text-[10px] font-mono text-zinc-500 uppercase">AI ENGINE: DEEPSEEK ADVANCED SPORTS MODEL</span>
+        {/* Toggle Analysis Button */}
+        <div className="mt-4 pt-3 border-t border-zinc-800/50 flex justify-end">
           <button 
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (isLocked) {
                 window.location.href = "/dashboard/subscription";
-                return;
+              } else {
+                setShowAnalysis(!showAnalysis);
               }
-              setShowAnalysis(!showAnalysis)
             }}
             className="group/btn flex items-center gap-2 px-3 py-1 rounded bg-[#121215] border border-zinc-800 hover:border-zinc-700 transition-colors"
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${isLocked ? 'bg-zinc-600' : 'bg-[#00E599] animate-pulse'}`}></span>
+            <span className={`w-1.5 h-1.5 rounded-full ${isLocked ? 'bg-zinc-600' : 'bg-[#138561] animate-pulse'}`}></span>
             <span className="text-[11px] font-mono font-bold text-zinc-300 group-hover/btn:text-white transition-colors uppercase">
               {isLocked ? "LOCK // UNLOCK ANALYSIS" : showAnalysis ? "CLOSE ANALYSIS" : "READ RATIONALE"}
             </span>
@@ -175,7 +175,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
         }`}
       >
         <div className="px-5 sm:px-6 text-xs text-zinc-300 leading-relaxed font-mono">
-          <span className="font-bold text-[#00E599] uppercase mr-2">[RATIONALE // METRICS]:</span>
+          <span className="font-bold text-[#138561] uppercase mr-2">[RATIONALE // METRICS]:</span>
           {match.analysis}
         </div>
       </div>
@@ -194,79 +194,36 @@ export default function PredictionsFeed() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Fetch the real user and their subscription status in parallel
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
-      if (data.user?.user_metadata?.plan === 'pro') {
-        setIsProUser(true);
-      }
     });
-  }, []);
 
-  useEffect(() => {
-    const fetchMatches = async () => {
-      setLoading(true);
-      try {
-        // 1. Fetch Pro Predictions directly from Supabase DB
-        const { data: dbProPicks, error: proError } = await supabase
-          .from('pro_predictions')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (!proError && dbProPicks) {
-          const formattedProPicks = dbProPicks.map(p => ({
-            id: p.id,
-            league: p.league,
-            homeTeam: p.home_team,
-            awayTeam: p.away_team,
-            date: p.match_date,
-            time: p.match_time,
-            prediction: p.prediction,
-            confidence: p.confidence,
-            analysis: p.analysis,
-            sport: p.sport,
-            tags: p.tags,
-            isProPick: true
-          }));
-          setProPicks(formattedProPicks);
+    fetch('/api/subscriptions/current')
+      .then((r) => r.json())
+      .then((sub) => {
+        if (sub.success && sub.isPro) {
+          setIsProUser(true);
         }
+      })
+      .catch(() => {}); // Non-critical — free tier is the safe fallback
 
-        // 2. Fetch standard Matches from The Odds API route
-        const res = await fetch("/api/matches");
-        const json = await res.json();
-        
-        if (json.success && Array.isArray(json.data)) {
-          const formattedMatches = json.data.map((event: any) => {
-            const dateObj = new Date(event.commence_time);
-            const isBasketball = event.sport_key?.includes("basketball");
-            const fakeConfidence = Math.floor(Math.random() * (75 - 60 + 1) + 60); // Standard picks have lower confidence
-            
-            return {
-              id: event.id,
-              league: event.sport_title,
-              homeTeam: event.home_team,
-              awayTeam: event.away_team,
-              date: dateObj.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }),
-              time: dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }),
-              prediction: `${fakeConfidence > 65 ? event.home_team : event.away_team} Edge`,
-              confidence: fakeConfidence,
-              analysis: `Standard feed analysis for ${event.home_team} vs ${event.away_team}. Market data fetched from The Odds API. Upgrade to Pro for deep rationale on premium fixtures.`,
-              sport: isBasketball ? "basketball" : "football",
-              tags: ["Standard Pick"]
-            };
-          });
-          setMatches(formattedMatches);
-        } else {
-          setMatches(FALLBACK_MATCHES);
+    const fetchFeed = async () => {
+      try {
+        const res = await fetch("/api/feed");
+        const data = await res.json();
+        if (data.success) {
+          setMatches(data.data.matches || []);
+          setProPicks(data.data.proPicks || []);
         }
       } catch (err) {
-        console.error("Failed to fetch matches:", err);
-        setMatches(FALLBACK_MATCHES);
+        console.error("Failed to load predictions feed:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMatches();
+    fetchFeed();
   }, []);
 
   const combinedFeed = [...proPicks, ...matches];
@@ -283,15 +240,15 @@ export default function PredictionsFeed() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-8 pt-2 border-b border-zinc-900 pb-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-[#00E599] font-bold uppercase tracking-wider mb-2">
-            <span className="w-2 h-2 rounded-full bg-[#00E599] animate-pulse"></span>
-            LIVE INTELLIGENCE FEED // TERMINAL v2.4
+          <div className="flex items-center gap-2 text-xs font-mono text-[#138561] font-bold uppercase tracking-wider mb-2">
+            <span className="w-2 h-2 rounded-full bg-[#138561] animate-pulse"></span>
+            AI PREDICTION TERMINAL // LIVE FEED
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white font-heading tracking-tight mb-2 flex items-center gap-3 uppercase">
-            STRATEGY DESK: <span className="text-[#00E599]">{user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || "STRATEGIST"}</span>
-            {isProUser && <span className="px-2 py-0.5 bg-[#00E599]/10 text-[#00E599] border border-[#00E599]/40 rounded text-[10px] font-mono uppercase tracking-widest font-bold">PRO MEMBER</span>}
+            STRATEGY DESK: <span className="text-[#138561]">{user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || "STRATEGIST"}</span>
+            {isProUser && <span className="px-2 py-0.5 bg-[#138561]/20 text-[#138561] border border-[#138561]/40 rounded text-[10px] font-mono uppercase tracking-widest font-bold">PRO MEMBER</span>}
           </h1>
-          <p className="text-zinc-400 text-sm font-mono">Real-time market odds, AI confidence metrics, and quantitative match predictions.</p>
+          <p className="text-zinc-400 text-sm font-mono">Real-time quantitative odds, Strike-IQ proprietary match analytics, and high-confidence algorithmic betting rationales across elite global leagues.</p>
         </div>
         
         {/* Sleek Filters */}
@@ -302,7 +259,7 @@ export default function PredictionsFeed() {
               onClick={() => setActiveFilter(filter)}
               className={`px-5 py-2 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap uppercase tracking-wider ${
                 activeFilter === filter 
-                  ? "bg-[#00E599] text-black shadow-sm" 
+                  ? "bg-[#138561] text-white shadow-sm shadow-[#138561]/20" 
                   : "text-zinc-400 hover:text-white hover:bg-[#121215]"
               }`}
             >
@@ -315,7 +272,7 @@ export default function PredictionsFeed() {
       {/* Predictions Feed list */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 bg-[#09090b] rounded-xl border border-zinc-800/80">
-          <div className="w-10 h-10 border-2 border-zinc-800 border-t-[#00E599] rounded-full animate-spin mb-4"></div>
+          <div className="w-10 h-10 border-2 border-zinc-800 border-t-[#138561] rounded-full animate-spin mb-4"></div>
           <p className="text-zinc-400 font-mono text-xs uppercase tracking-widest animate-pulse">SYNCING QUANTITATIVE MODELS...</p>
         </div>
       ) : (
@@ -329,13 +286,16 @@ export default function PredictionsFeed() {
             })
           ) : (
             <div className="p-12 mt-4 rounded-xl bg-[#09090b] border border-dashed border-zinc-800 text-center flex flex-col items-center justify-center text-zinc-400 font-mono">
-              <span className="text-4xl mb-4 opacity-40">📊</span>
-              <h3 className="text-base text-white font-bold mb-2 uppercase tracking-wide">No {activeFilter !== "All" ? activeFilter : "Active"} Fixtures Found</h3>
-              <p className="text-xs max-w-md text-zinc-500 leading-relaxed font-sans">
-                {activeFilter === "Football" 
-                  ? "No live Football fixtures currently scheduled for the Top 5 European Leagues or World Cup right now. Please check back later or select another sport."
-                  : "Our quantitative engines are currently processing upcoming schedules. Please check back later or select another market."}
+              <div className="w-12 h-12 rounded-2xl bg-[#138561]/10 border border-[#138561]/30 flex items-center justify-center text-[#138561] mb-4 text-xl shadow-[0_0_15px_rgba(19,133,97,0.15)] font-mono font-bold">⚡</div>
+              <h3 className="text-base text-white font-heading tracking-wide uppercase mb-2">NO ACTIVE {activeFilter !== "All" ? activeFilter.toUpperCase() : ""} FIXTURES RIGHT NOW</h3>
+              <p className="text-xs max-w-md text-zinc-400 leading-relaxed font-sans mb-6">
+                Our proprietary Strike-IQ quantitative engines are continuously scanning upcoming schedules and market odds. New high-confidence algorithmic predictions will appear here automatically once lines open.
               </p>
+              {activeFilter !== "All" && (
+                <button onClick={() => setActiveFilter("All")} className="px-5 py-2 rounded-lg bg-[#138561] text-white text-xs font-mono font-bold hover:bg-[#0f6b4d] transition-all uppercase tracking-wider shadow-md">
+                  View All Markets
+                </button>
+              )}
             </div>
           )}
         </div>

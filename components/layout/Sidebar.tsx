@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 const navigation = [
   { name: "Predictions Feed", href: "/dashboard", icon: "⚡" },
-  { name: "AI Performance", href: "/analytics", icon: "📊" },
+  { name: "AI Performance", href: "/dashboard/analytics", icon: "📊" },
   { name: "Leagues", href: "/dashboard/leagues", icon: "🏆" },
   { name: "My Profile", href: "/dashboard/profile", icon: "👤" },
   { name: "Subscription", href: "/dashboard/subscription", icon: "👑" },
@@ -52,8 +52,8 @@ export default function Sidebar() {
       `}>
         <div className="p-6 flex items-center justify-between border-b border-zinc-900">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-[#00E599] rounded-md flex items-center justify-center font-bold text-black text-lg">⚡</div>
-            <span className="text-xl font-heading text-white tracking-wider uppercase font-bold">Strike<span className="text-[#00E599]">IQ</span></span>
+            <div className="w-8 h-8 bg-[#138561] rounded-md flex items-center justify-center font-bold text-white text-lg">⚡</div>
+            <span className="text-xl font-heading text-white tracking-wider uppercase font-bold">Strike<span className="text-[#138561]">IQ</span></span>
           </div>
           <button onClick={() => setIsOpen(false)} className="lg:hidden text-zinc-400 hover:text-white">
             ✕
@@ -69,7 +69,7 @@ export default function Sidebar() {
                 href={item.href}
                 className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-lg transition-all font-mono text-sm ${
                   isActive
-                    ? "bg-[#121215] text-[#00E599] border-l-2 border-[#00E599] font-bold shadow-sm"
+                    ? "bg-[#121215] text-[#138561] border-l-2 border-[#138561] font-bold shadow-sm"
                     : "text-zinc-400 hover:bg-[#09090b] hover:text-white"
                 }`}
               >
@@ -83,11 +83,11 @@ export default function Sidebar() {
         <div className="p-4 border-t border-zinc-900">
           <div className="p-4 rounded-xl bg-[#09090b] border border-zinc-800/80 shadow-md">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#00E599]">Pro Tier</span>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#138561]">Pro Tier</span>
               <span className="text-sm">👑</span>
             </div>
             <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed font-sans">Unlock real-time AI rationales and high-confidence predictions.</p>
-            <Link href="/dashboard/subscription" className="block text-center text-xs font-mono font-bold bg-[#00E599] text-black py-2 rounded-lg hover:bg-[#00c880] transition-colors uppercase tracking-wider">
+            <Link href="/dashboard/subscription" className="block text-center text-xs font-mono font-bold bg-[#138561] text-white py-2.5 rounded-lg hover:bg-[#0f6b4d] transition-colors uppercase tracking-wider shadow-[0_0_15px_rgba(19,133,97,0.3)]">
               Upgrade Pro
             </Link>
           </div>
