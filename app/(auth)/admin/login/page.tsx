@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { MASTER_ADMIN_EMAIL } from "@/lib/security/adminGuard";
+import { MASTER_ADMIN_EMAIL } from "@/lib/security/constants";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
