@@ -80,7 +80,7 @@ export async function POST(req: Request) {
           tx_ref,
           amount: plan.price,
           currency: plan.currency || 'USD',
-          redirect_url: `${appUrl}/subscription?payment=success&tx_ref=${tx_ref}`,
+          redirect_url: `${appUrl}/subscription?flw_return=1&tx_ref=${tx_ref}`,
           customer: {
             email: user.email,
             name: user.user_metadata?.full_name || user.email.split('@')[0] || 'Strike IQ Member',

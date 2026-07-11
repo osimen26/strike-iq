@@ -53,9 +53,19 @@ function SubscriptionContent() {
 
     // Check URL params for payment redirect completion
     const paymentStatus = searchParams.get('payment');
+    const flwStatus = searchParams.get('status');
     const txRef = searchParams.get('tx_ref');
     const planIdParam = searchParams.get('planId');
     const planNameParam = searchParams.get('planName');
+
+    if (flwStatus === 'cancelled') {
+      setAlertMsg({
+        type: 'info',
+        text: 'Payment was cancelled. No charges were made to your account.',
+      });
+      router.replace('/subscription');
+      return;
+    }
 
     if (paymentStatus === 'simulated_success' && txRef && planIdParam) {
       // Guard against re-fire on searchParams re-renders
@@ -84,7 +94,7 @@ function SubscriptionContent() {
           }
         })
         .catch(() => setAlertMsg({ type: 'error', text: 'Network error during activation.' }));
-    } else if (paymentStatus === 'success') {
+    } else if (flwStatus === 'successful' || paymentStatus === 'success') {
       setAlertMsg({
         type: 'success',
         text: '🎉 Payment Successful! Your Strike IQ Pro subscription has been activated.',
