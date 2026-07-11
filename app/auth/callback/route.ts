@@ -33,8 +33,23 @@ export async function GET(request: Request) {
       }
     )
     
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data: sessionData, error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
+      try {
+        const u = sessionData?.user
+        if (u?.email) {
+          await supabase.from('user').upsert([{
+            id: u.id,
+            email: u.email.toLowerCase(),
+            name: u.user_metadata?.full_name || u.email.split('@')[0],
+            role: u.email.toLowerCase() === 'osimenvictor04@gmail.com' ? 'admin' : 'user',
+            emailVerified: true,
+            createdAt: u.created_at || new Date().toISOString()
+          }])
+        }
+      } catch (err) {
+        console.warn('Could not sync OAuth user to public table:', err)
+      }
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

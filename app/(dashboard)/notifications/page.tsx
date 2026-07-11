@@ -45,7 +45,7 @@ export default function NotificationsPage() {
     fetchNotifications();
   }, []);
 
-  const fetchNotifications = async () => {
+  async function fetchNotifications() {
     setLoading(true);
     try {
       const res = await fetch("/api/notifications");

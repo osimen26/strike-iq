@@ -27,6 +27,7 @@ model User {
   banned        Boolean?
   banReason     String?
   banExpires    DateTime?
+  referralCode  String?   // Influencer / Affiliate referral code used during registration
   
   // Better Auth core relationships
   sessions      Session[]
@@ -153,6 +154,27 @@ model Prediction {
   isDeleted      Boolean  @default(false)
 
   @@map("predictions")
+}
+
+model ProPrediction {
+  id          String   @id @default(cuid())
+  homeTeam    String   @map("home_team")
+  awayTeam    String   @map("away_team")
+  league      String
+  sport       String   @default("football")
+  matchDate   String   @map("match_date")
+  matchTime   String   @map("match_time")
+  prediction  String
+  confidence  Int      @default(85)
+  analysis    String?  @db.Text
+  status      String?  @default("PENDING")
+  bookingCode String?  @map("booking_code")
+  bookmaker   String?  @map("bookmaker")
+  createdBy   String?  @map("created_by")
+  tags        String[] @default([])
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("pro_predictions")
 }
 
 model PredictionExplanation {

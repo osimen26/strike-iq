@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { MASTER_ADMIN_EMAIL } from "@/lib/security/constants";
+import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from "@/lib/security/constants";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -22,7 +22,7 @@ export default function AdminLogin() {
 
     const cleanEmail = email.toLowerCase().trim();
 
-    if (cleanEmail !== MASTER_ADMIN_EMAIL.toLowerCase()) {
+    if (!MASTER_ADMIN_EMAILS.includes(cleanEmail)) {
       setError("Unauthorized: Access denied. You do not have administrator privileges.");
       await supabase.auth.signOut();
       setLoading(false);
@@ -58,8 +58,8 @@ export default function AdminLogin() {
     }
 
     if (signInError) {
-      if (signInError.message.includes("Invalid login credentials")) {
-        setError(`Invalid credentials. Please verify your password for ${MASTER_ADMIN_EMAIL}.`);
+      if (signInError.message.includes("Invalid login credentials") || signInError.message.toLowerCase().includes("email not confirmed")) {
+        setError(`Login failed: In Supabase Dashboard ➔ Authentication ➔ Providers ➔ Email, please turn OFF "Confirm email". Then under Authentication ➔ Users, click (...) next to ${cleanEmail} and click "Confirm email address" or delete the user to recreate it cleanly.`);
       } else {
         setError(signInError.message);
       }
@@ -89,27 +89,29 @@ export default function AdminLogin() {
 
         {/* Email */}
         <div className="flex flex-col gap-2 w-full">
-          <label className="text-zinc-300 text-sm font-medium">Clearance Email</label>
+          <label htmlFor="clearanceEmailInput" className="text-zinc-300 text-sm font-medium">Clearance Email</label>
           <input
+            id="clearanceEmailInput"
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
-            placeholder="osimenvictor09@gmail.com"
+            placeholder="osimenvictor04@gmail.com"
           />
         </div>
 
         {/* Password */}
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center justify-between">
-            <label className="text-zinc-300 text-sm font-medium">Access Code</label>
+            <label htmlFor="accessCodeInput" className="text-zinc-300 text-sm font-medium">Access Code</label>
             <Link href="/forgot-password" className="text-xs text-zinc-400 hover:text-white hover:underline transition-colors">
               Forgot access code?
             </Link>
           </div>
           <div className="relative w-full">
             <input
+              id="accessCodeInput"
               type={showPassword ? "text" : "password"}
               required
               value={password}
@@ -119,6 +121,7 @@ export default function AdminLogin() {
             />
             <button 
               type="button" 
+              aria-label="Toggle password visibility"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
             >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -10,6 +10,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -17,10 +18,20 @@ export default function Register() {
   const router = useRouter();
   const supabase = createClient();
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get("ref") || params.get("code") || params.get("referral");
+      if (ref) setReferralCode(ref.toUpperCase());
+    }
+  }, []);
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    const cleanRef = referralCode.trim().toUpperCase() || null;
 
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -30,6 +41,7 @@ export default function Register() {
           full_name: `${firstName} ${lastName}`.trim(),
           first_name: firstName,
           last_name: lastName,
+          referral_code: cleanRef,
         },
       },
     });
@@ -37,13 +49,29 @@ export default function Register() {
     if (error) {
       setError(error.message);
       setLoading(false);
-    } else if (data.user && !data.session) {
-      // Email verification is turned on in Supabase!
-      setVerificationSent(true);
-      setLoading(false);
     } else {
-      router.push("/dashboard");
-      router.refresh();
+      try {
+        const userId = data.user?.id || "usr_" + Math.random().toString(36).substring(2, 11);
+        await supabase.from("user").upsert([{
+          id: userId,
+          email: email.trim().toLowerCase(),
+          name: `${firstName} ${lastName}`.trim(),
+          role: "user",
+          emailVerified: true,
+          referralCode: cleanRef,
+          createdAt: new Date().toISOString()
+        }]);
+      } catch (err) {
+        console.warn("Could not sync user to public table:", err);
+      }
+
+      if (data.user && !data.session) {
+        setVerificationSent(true);
+        setLoading(false);
+      } else {
+        router.push("/dashboard");
+        router.refresh();
+      }
     }
   };
 
@@ -64,10 +92,10 @@ export default function Register() {
 
   return (
     <div className="w-full flex flex-col gap-8 font-main text-white">
-      
-      {/* Header */}
+
+      {/* Header — h1 for correct heading hierarchy (WCAG 2.4.6) */}
       <div className="text-center w-full flex flex-col gap-2">
-        <h2 className="text-white font-heading text-3xl md:text-4xl">Sign Up Account</h2>
+        <h1 className="text-white font-heading text-3xl md:text-4xl">Sign Up Account</h1>
         <p className="text-zinc-400 font-main text-sm">Enter your personal data to create your account.</p>
       </div>
 
@@ -76,9 +104,10 @@ export default function Register() {
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
+          aria-label="Continue with Google"
           className="flex-1 flex items-center justify-center gap-3 border border-border-glass bg-background-glass rounded-lg p-3 hover:bg-white/10 transition-colors disabled:opacity-50"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
@@ -89,18 +118,22 @@ export default function Register() {
       </div>
 
       {/* Divider */}
-      <div className="flex items-center w-full gap-3">
+      <div className="flex items-center w-full gap-3" aria-hidden="true">
         <div className="flex-1 border-t border-border-glass"></div>
         <span className="text-zinc-500 text-sm font-medium uppercase">Or</span>
         <div className="flex-1 border-t border-border-glass"></div>
       </div>
 
       {verificationSent ? (
-        <div className="bg-emerald-950/40 border border-[#138561] p-6 rounded-xl text-center flex flex-col gap-3 my-4 shadow-[0_0_25px_rgba(19,133,97,0.15)]">
-          <div className="w-12 h-12 bg-[#138561]/20 text-[#138561] rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+        <div
+          role="status"
+          aria-live="polite"
+          className="bg-emerald-950/40 border border-[#138561] p-6 rounded-xl text-center flex flex-col gap-3 my-4 shadow-[0_0_25px_rgba(19,133,97,0.15)]"
+        >
+          <div className="w-12 h-12 bg-[#138561]/20 text-[#138561] rounded-full flex items-center justify-center mx-auto text-2xl font-bold" aria-hidden="true">
             📧
           </div>
-          <h3 className="text-white font-bold text-lg">Verification Email Sent!</h3>
+          <h2 className="text-white font-bold text-lg">Verification Email Sent!</h2>
           <p className="text-gray-300 text-sm leading-relaxed">
             We sent a secure activation link to <span className="text-[#138561] font-semibold">{email}</span>. Please check your inbox and click the link to activate your VIP account before logging in.
           </p>
@@ -112,87 +145,117 @@ export default function Register() {
           </Link>
         </div>
       ) : (
-      <form onSubmit={handleRegister} className="flex flex-col gap-5 w-full">
-        {error && (
-          <div className="text-red-400 text-sm font-medium text-center">
-            {error}
-          </div>
-        )}
+        <form onSubmit={handleRegister} className="flex flex-col gap-5 w-full" noValidate>
+          {/* Error message — role="alert" ensures screen readers announce it immediately */}
+          {error && (
+            <div role="alert" aria-live="assertive" className="text-red-400 text-sm font-medium text-center bg-red-950/30 border border-red-500/30 rounded-lg px-4 py-2.5">
+              {error}
+            </div>
+          )}
 
-        {/* First & Last Name */}
-        <div className="flex flex-col sm:flex-row w-full gap-4">
-          <div className="flex flex-col gap-2 flex-1">
-            <label className="text-zinc-300 text-sm font-medium">First Name</label>
+          {/* First & Last Name */}
+          <div className="flex flex-col sm:flex-row w-full gap-4">
+            <div className="flex flex-col gap-2 flex-1">
+              <label htmlFor="firstName" className="text-zinc-300 text-sm font-medium">First Name</label>
+              <input
+                id="firstName"
+                type="text"
+                required
+                autoComplete="given-name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
+                placeholder="eg. John"
+              />
+            </div>
+            <div className="flex flex-col gap-2 flex-1">
+              <label htmlFor="lastName" className="text-zinc-300 text-sm font-medium">Last Name</label>
+              <input
+                id="lastName"
+                type="text"
+                required
+                autoComplete="family-name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
+                placeholder="eg. Francisco"
+              />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="email" className="text-zinc-300 text-sm font-medium">Email</label>
             <input
-              type="text"
+              id="email"
+              type="email"
               required
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
-              placeholder="eg. John"
+              placeholder="eg. johnfrans@gmail.com"
             />
           </div>
-          <div className="flex flex-col gap-2 flex-1">
-            <label className="text-zinc-300 text-sm font-medium">Last Name</label>
+
+          {/* Referral Code */}
+          <div className="flex flex-col gap-2 w-full">
+            <div className="flex items-center justify-between">
+              <label htmlFor="referralCode" className="text-zinc-300 text-sm font-medium flex items-center gap-1.5">
+                <span>🏷️ Referral / Influencer Code</span>
+                <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-white/5 text-gray-400">Optional</span>
+              </label>
+            </div>
             <input
+              id="referralCode"
               type="text"
-              required
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
-              placeholder="eg. Francisco"
+              autoComplete="off"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+              className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm uppercase font-mono tracking-wider placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
+              placeholder="eg. STRIKE-VIP or TWITTER-KING"
             />
           </div>
-        </div>
 
-        {/* Email */}
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-zinc-300 text-sm font-medium">Email</label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
-            placeholder="eg. johnfrans@gmail.com"
-          />
-        </div>
-
-        {/* Password */}
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-zinc-300 text-sm font-medium mb-0.5">Password</label>
-          <div className="relative w-full">
-            <input
-              type={showPassword ? "text" : "password"}
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
-              placeholder="Enter your password"
-            />
-            <button 
-              type="button" 
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
-            >
-              {showPassword ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
-              )}
-            </button>
+          {/* Password */}
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="password" className="text-zinc-300 text-sm font-medium mb-0.5">Password</label>
+            <div className="relative w-full">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                required
+                autoComplete="new-password"
+                aria-describedby="password-hint"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
+              >
+                {showPassword ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                )}
+              </button>
+            </div>
+            <p id="password-hint" className="text-zinc-500 text-xs mt-1">Must be at least 8 characters.</p>
           </div>
-          <p className="text-zinc-500 text-xs mt-1">Must be at least 8 characters.</p>
-        </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-[#138561] text-white font-semibold text-[16px] py-3.5 rounded-lg hover:bg-[#0f6b4d] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(19,133,97,0.3)]"
-        >
-          {loading ? "Creating account..." : "Sign Up"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#138561] text-white font-semibold text-[16px] py-3.5 rounded-lg hover:bg-[#0f6b4d] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-[0_0_15px_rgba(19,133,97,0.3)]"
+          >
+            {loading ? "Creating account..." : "Sign Up"}
+          </button>
+        </form>
       )}
 
       {/* Footer */}

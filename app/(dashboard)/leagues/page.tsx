@@ -24,7 +24,7 @@ export default function LeaguesPage() {
     fetchLeagues();
   }, [selectedSport]);
 
-  const fetchLeagues = async () => {
+  async function fetchLeagues() {
     try {
       setLoading(true);
       const res = await fetch(`/api/leagues?sport=${selectedSport}`);
@@ -131,7 +131,7 @@ export default function LeaguesPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* League Directory List (Left Column) */}
-          <div className="lg:col-span-1 space-y-3 max-h-[700px] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="lg:col-span-1 space-y-3 max-h-[700px] overflow-y-auto px-1.5 py-1.5 custom-scrollbar">
             <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-1">
               Available Competitions ({filteredLeagues.length})
             </div>
@@ -143,7 +143,7 @@ export default function LeaguesPage() {
                   onClick={() => setSelectedLeague(league)}
                   className={`p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all duration-200 ${
                     isSelected
-                      ? 'bg-gradient-to-r from-emerald-950/60 to-black border-[var(--color-brand-emerald)] shadow-lg shadow-[var(--color-brand-emerald)]/10 scale-[1.01]'
+                      ? 'bg-gradient-to-r from-emerald-950/70 via-black to-black border-[var(--color-brand-emerald)] shadow-md shadow-[var(--color-brand-emerald)]/15 ring-1 ring-[var(--color-brand-emerald)]/40'
                       : 'bg-[var(--color-background-surface)] border-white/10 hover:border-white/20 hover:bg-white/5'
                   }`}
                 >

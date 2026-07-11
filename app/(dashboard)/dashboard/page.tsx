@@ -5,35 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { getTeamLogo, getLeagueLogo } from "@/lib/logos";
 
-// Fallback Mock Data in case API is unavailable or rate-limited
-const FALLBACK_MATCHES = [
-  {
-    id: "mock1",
-    league: "World Cup 2026",
-    homeTeam: "Brazil",
-    awayTeam: "France",
-    date: "Today",
-    time: "20:00 GMT",
-    prediction: "Brazil to Win",
-    confidence: 88,
-    analysis: "Brazil has won their last 5 games with an xG difference of +2.1. France's away form has been erratic, conceding early goals. The model strongly favors a dominant home performance.",
-    sport: "football",
-    tags: ["Hot Tip", "High Value"]
-  },
-  {
-    id: "mock2",
-    league: "World Cup 2026",
-    homeTeam: "Argentina",
-    awayTeam: "Germany",
-    date: "Tomorrow",
-    time: "15:30 GMT",
-    prediction: "Over 2.5 Goals",
-    confidence: 82,
-    analysis: "Both teams play an attacking style. Germany has scored in every match this tournament, while Argentina's defense has shown vulnerabilities against high press.",
-    sport: "football",
-    tags: ["High Variance"]
-  }
-];
+
 
 function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
   const [showAnalysis, setShowAnalysis] = useState(false);
@@ -70,7 +42,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
                 <div className="w-12 h-12 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center overflow-hidden p-2 shadow-inner">
                   <img src={getTeamLogo(match.homeTeam)} alt={match.homeTeam} className="w-full h-full object-contain" />
                 </div>
-                <span className="font-mono font-bold text-xs sm:text-sm text-white text-center line-clamp-1">{match.homeTeam}</span>
+                <span title={match.homeTeam} className="font-mono font-bold text-xs sm:text-sm text-white text-center line-clamp-1">{match.homeTeam}</span>
               </div>
               
               <div className="px-2 py-0.5 bg-[#121215] rounded border border-zinc-800 text-[10px] font-bold text-zinc-500 font-mono shrink-0">
@@ -81,7 +53,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
                 <div className="w-12 h-12 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center overflow-hidden p-2 shadow-inner">
                   <img src={getTeamLogo(match.awayTeam)} alt={match.awayTeam} className="w-full h-full object-contain" />
                 </div>
-                <span className="font-mono font-bold text-xs sm:text-sm text-white text-center line-clamp-1">{match.awayTeam}</span>
+                <span title={match.awayTeam} className="font-mono font-bold text-xs sm:text-sm text-white text-center line-clamp-1">{match.awayTeam}</span>
               </div>
             </div>
           </div>
@@ -101,6 +73,21 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
             {/* The Verdict */}
             <div className={`flex flex-col items-start lg:items-end gap-2 flex-1 lg:flex-none ${isLocked ? 'blur-sm opacity-40' : ''}`}>
               <div className="flex flex-wrap gap-1.5 mb-0.5">
+                {match.status === 'WON' && (
+                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40 text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-wider whitespace-nowrap shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    ✅ WON (+0.85u)
+                  </span>
+                )}
+                {match.status === 'LOST' && (
+                  <span className="px-2 py-0.5 rounded bg-red-500/20 border border-red-500/40 text-[9px] font-mono font-bold text-red-400 uppercase tracking-wider whitespace-nowrap">
+                    ❌ LOST (-1.0u)
+                  </span>
+                )}
+                {match.status === 'VOID' && (
+                  <span className="px-2 py-0.5 rounded bg-zinc-500/20 border border-zinc-500/40 text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap">
+                    ⚪ VOID
+                  </span>
+                )}
                 {match.isProPick && (
                   <span className="px-2 py-0.5 rounded bg-[#138561]/20 border border-[#138561]/40 text-[9px] font-mono font-bold text-[#138561] uppercase tracking-wider whitespace-nowrap">
                     👑 PRO EDGE
@@ -116,6 +103,24 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
                 <span className="text-xs font-mono text-zinc-400 uppercase">MODEL PICK:</span>
                 <span className="font-mono font-bold text-sm text-[#138561] tracking-tight">{match.prediction}</span>
               </div>
+              {match.bookingCode && (
+                <div 
+                  onClick={() => {
+                    navigator.clipboard.writeText(match.bookingCode);
+                    alert(`Copied ${match.bookmaker || 'Booking'} Code: ${match.bookingCode}`);
+                  }}
+                  title="Click to copy booking code"
+                  className="px-3 py-1.5 bg-gradient-to-r from-[#138561]/25 to-emerald-950/40 rounded-lg border border-[#138561]/60 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-2.5 shadow-[0_0_12px_rgba(19,133,97,0.2)] cursor-pointer hover:border-emerald-400 transition-all group/code"
+                >
+                  <span className="text-[10px] font-mono font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1">
+                    🎟️ {match.bookmaker || 'BOOKING CODE'}:
+                  </span>
+                  <span className="font-mono font-bold text-xs text-white tracking-widest select-all bg-black/40 px-2 py-0.5 rounded border border-white/10 group-hover/code:border-[#138561]">
+                    {match.bookingCode}
+                  </span>
+                  <span className="text-[10px] text-[#138561] group-hover/code:text-white transition-colors">COPY 📋</span>
+                </div>
+              )}
             </div>
 
             {/* Circular Confidence Gauge */}
@@ -213,8 +218,8 @@ export default function PredictionsFeed() {
         const res = await fetch("/api/feed");
         const data = await res.json();
         if (data.success) {
-          setMatches(data.data.matches || []);
           setProPicks(data.data.proPicks || []);
+          setMatches(data.data.matches || []);
         }
       } catch (err) {
         console.error("Failed to load predictions feed:", err);
@@ -226,7 +231,13 @@ export default function PredictionsFeed() {
     fetchFeed();
   }, []);
 
-  const combinedFeed = [...proPicks, ...matches];
+  // Deduplicate by id, pro picks first
+  const seen = new Set<string>();
+  const combinedFeed = [...proPicks, ...matches].filter(m => {
+    if (seen.has(m.id)) return false;
+    seen.add(m.id);
+    return true;
+  });
 
   const filteredMatches = combinedFeed.filter(match => {
     if (activeFilter === "All") return true;

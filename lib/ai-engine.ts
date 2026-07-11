@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 const DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions";
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || "REDACTED_KEY";
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 export interface AiPredictionResult {
   selection: string;
   confidence: number;

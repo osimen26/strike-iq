@@ -19,7 +19,7 @@ export default function Login() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -32,6 +32,21 @@ export default function Login() {
       }
       setLoading(false);
     } else {
+      try {
+        const userObj = data.user;
+        if (userObj?.email) {
+          await supabase.from("user").upsert([{
+            id: userObj.id,
+            email: userObj.email.toLowerCase(),
+            name: userObj.user_metadata?.full_name || userObj.email.split('@')[0],
+            role: userObj.email.toLowerCase() === "osimenvictor04@gmail.com" ? "admin" : "user",
+            emailVerified: true,
+            createdAt: userObj.created_at || new Date().toISOString()
+          }]);
+        }
+      } catch (err) {
+        console.warn("Could not sync user on login:", err);
+      }
       router.push("/dashboard");
       router.refresh();
     }
@@ -55,9 +70,9 @@ export default function Login() {
   return (
     <div className="w-full flex flex-col gap-8 font-main text-white">
       
-      {/* Header */}
+      {/* Header — h1 for correct heading hierarchy */}
       <div className="text-center w-full flex flex-col gap-2">
-        <h2 className="text-white font-heading text-3xl md:text-4xl">Log In Account</h2>
+        <h1 className="text-white font-heading text-3xl md:text-4xl">Log In Account</h1>
         <p className="text-zinc-400 font-main text-sm">Enter your personal data to access your account.</p>
       </div>
 
@@ -85,19 +100,21 @@ export default function Login() {
         <div className="flex-1 border-t border-border-glass"></div>
       </div>
 
-      <form onSubmit={handleLogin} className="flex flex-col gap-5 w-full">
+      <form onSubmit={handleLogin} className="flex flex-col gap-5 w-full" noValidate>
         {error && (
-          <div className="text-red-400 text-sm font-medium text-center">
+          <div role="alert" aria-live="assertive" className="text-red-400 text-sm font-medium text-center bg-red-950/30 border border-red-500/30 rounded-lg px-4 py-2.5">
             {error}
           </div>
         )}
 
         {/* Email */}
         <div className="flex flex-col gap-2 w-full">
-          <label className="text-zinc-300 text-sm font-medium">Email</label>
+          <label htmlFor="login-email" className="text-zinc-300 text-sm font-medium">Email</label>
           <input
+            id="login-email"
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
@@ -108,27 +125,30 @@ export default function Login() {
         {/* Password */}
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center justify-between">
-            <label className="text-zinc-300 text-sm font-medium">Password</label>
+            <label htmlFor="login-password" className="text-zinc-300 text-sm font-medium">Password</label>
             <Link href="/forgot-password" className="text-zinc-400 hover:text-white text-sm hover:underline">Forgot password?</Link>
           </div>
           <div className="relative w-full">
             <input
+              id="login-password"
               type={showPassword ? "text" : "password"}
               required
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-background-glass border border-border-glass rounded-lg pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
               placeholder="Enter your password"
             />
             <button 
-              type="button" 
+              type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
             >
               {showPassword ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
               ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
               )}
             </button>
           </div>

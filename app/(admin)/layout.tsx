@@ -2,7 +2,17 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { MASTER_ADMIN_EMAIL } from "@/lib/security/adminGuard";
+import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from "@/lib/security/adminGuard";
+import type { Metadata } from "next";
+import AdminSidebar from "./AdminSidebar";
+
+export const metadata: Metadata = {
+  title: "Admin Control Panel",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminLayout({
   children,
@@ -18,7 +28,7 @@ export default async function AdminLayout({
     redirect("/admin/login");
   }
 
-  if (user.email !== MASTER_ADMIN_EMAIL) {
+  if (!user.email || !MASTER_ADMIN_EMAILS.includes(user.email.toLowerCase())) {
     return (
       <div className="min-h-screen bg-[var(--color-background-app)] flex flex-col items-center justify-center p-4">
         <div className="bg-white/5 border border-white/10 p-8 rounded-2xl max-w-md text-center">
@@ -39,27 +49,7 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-screen bg-[var(--color-background-app)] text-white font-main">
-      {/* Admin Sidebar */}
-      <div className="w-64 border-r border-white/10 bg-black/40 p-6 flex flex-col shrink-0">
-        <div className="flex items-center space-x-2 mb-10 text-[var(--color-brand-emerald)] font-heading text-xl">
-          <span>⚙️</span>
-          <span className="font-bold tracking-tight">Strike Admin</span>
-        </div>
-        <nav className="space-y-3 flex-1">
-          <Link href="/admin" className="block px-4 py-2.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-colors font-medium">
-            Overview
-          </Link>
-          <Link href="/admin/predictions" className="block px-4 py-2.5 rounded-lg bg-[var(--color-brand-emerald)]/10 text-[var(--color-brand-emerald)] font-bold border border-[var(--color-brand-emerald)]/20 transition-all">
-            Add Pro Prediction
-          </Link>
-          <Link href="/admin/users" className="block px-4 py-2.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-colors font-medium">
-            Users
-          </Link>
-          <Link href="/dashboard" className="block px-4 py-2.5 mt-8 rounded-lg text-gray-500 hover:bg-white/5 hover:text-white transition-colors font-medium">
-            ← Back to App
-          </Link>
-        </nav>
-      </div>
+      <AdminSidebar />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">

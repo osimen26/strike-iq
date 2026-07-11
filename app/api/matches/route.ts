@@ -30,15 +30,44 @@ export async function GET(request: Request) {
 
     const data = await res.json();
     
-    // Only show Football matches for the 5 Leagues and the World Cup, plus Basketball
-    const ALLOWED_LEAGUES = [
-      'soccer_epl', 'soccer_spain_la_liga', 'soccer_italy_serie_a', 
-      'soccer_germany_bundesliga', 'soccer_france_ligue_one',
+    // Allowed leagues: PRD top-5 + UEFA club comps + International & World Football + Basketball
+    const ALLOWED_SPORT_KEYS = new Set([
+      'soccer_epl',
+      'soccer_spain_la_liga',
+      'soccer_italy_serie_a',
+      'soccer_germany_bundesliga',
+      'soccer_france_ligue_one',
+      'soccer_uefa_champs_league',
+      'soccer_uefa_europa_league',
+      'soccer_uefa_europa_conference_league',
       'soccer_fifa_world_cup',
-      'basketball_nba', 'basketball_wnba', 'basketball_ncaab', 'basketball_euroleague'
-    ];
-    
-    const filteredData = data.filter((match: any) => ALLOWED_LEAGUES.includes(match.sport_key));
+      'soccer_fifa_world_cup_winner',
+      'soccer_fifa_world_cup_qualification',
+      'soccer_fifa_club_world_cup',
+      'soccer_uefa_nations_league',
+      'soccer_uefa_european_championship',
+      'soccer_uefa_euro_qualification',
+      'soccer_conmebol_copa_america',
+      'soccer_conmebol_copa_libertadores',
+      'soccer_africa_cup_of_nations',
+      'basketball_nba',
+      'basketball_wnba',
+      'basketball_ncaab',
+      'basketball_euroleague',
+    ]);
+
+    const now = new Date();
+    const threeDaysOut = new Date();
+    threeDaysOut.setDate(now.getDate() + 4);
+
+    const filteredData = data.filter((match: any) => {
+      if (!match || !match.id || !match.home_team || !match.away_team || !match.commence_time) return false;
+      const matchDate = new Date(match.commence_time);
+      if (matchDate > threeDaysOut) return false;
+
+      const k = match.sport_key || '';
+      return ALLOWED_SPORT_KEYS.has(k) || k.includes('fifa') || k.includes('world_cup') || k.includes('uefa') || k.includes('copa') || k.includes('nations');
+    }).sort((a: any, b: any) => new Date(a.commence_time).getTime() - new Date(b.commence_time).getTime()).slice(0, 50);
     
     return NextResponse.json({ success: true, data: filteredData });
   } catch (error: any) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -42,10 +42,15 @@ function SubscriptionContent() {
   const [flwSimUrl, setFlwSimUrl] = useState<string | null>(null);
   const [flwProcessing, setFlwProcessing] = useState<boolean>(false);
   const [flwErrorMsg, setFlwErrorMsg] = useState<string | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+
+  // Prevent activation re-fire if searchParams changes after first successful processing
+  const activationProcessed = useRef(false);
 
   useEffect(() => {
     fetchData();
-    
+
     // Check URL params for payment redirect completion
     const paymentStatus = searchParams.get('payment');
     const txRef = searchParams.get('tx_ref');
@@ -53,8 +58,12 @@ function SubscriptionContent() {
     const planNameParam = searchParams.get('planName');
 
     if (paymentStatus === 'simulated_success' && txRef && planIdParam) {
+      // Guard against re-fire on searchParams re-renders
+      if (activationProcessed.current) return;
+      activationProcessed.current = true;
+
       setAlertMsg({ type: 'info', text: '⚡ Processing your Pro subscription activation...' });
-      
+
       fetch('/api/payments/simulate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,9 +76,9 @@ function SubscriptionContent() {
               type: 'success',
               text: `🎉 Pro Subscription Activated! You are now subscribed to ${planNameParam || 'Strike IQ Pro'}. Enjoy full AI transparency!`,
             });
-            fetchData(); // Refresh subscription status
-            // Clean URL after 4 seconds
-            setTimeout(() => router.replace('/subscription'), 4000);
+            fetchData();
+            // Clean URL immediately to prevent any future re-fire
+            router.replace('/subscription');
           } else {
             setAlertMsg({ type: 'error', text: data.error || 'Activation failed.' });
           }
@@ -85,12 +94,13 @@ function SubscriptionContent() {
     }
   }, [searchParams]);
 
-  const fetchData = async () => {
+  async function fetchData() {
+    const controller = new AbortController();
     try {
       setLoading(true);
       const [plansRes, subRes] = await Promise.all([
-        fetch('/api/plans'),
-        fetch('/api/subscriptions/current')
+        fetch('/api/plans', { signal: controller.signal }),
+        fetch('/api/subscriptions/current', { signal: controller.signal })
       ]);
 
       const plansData = await plansRes.json();
@@ -105,10 +115,34 @@ function SubscriptionContent() {
         setDaysRemaining(subData.daysRemaining || 0);
         setPayments(subData.payments || []);
       }
-    } catch (err) {
-      console.error('Error loading subscription dashboard:', err);
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        console.error('Error loading subscription dashboard:', err);
+      }
     } finally {
       setLoading(false);
+    }
+    return () => controller.abort();
+  };
+
+  const handleCancelSubscription = async () => {
+    if (isCancelling) return; // Prevent double-submit
+    setIsCancelling(true);
+    setShowCancelConfirm(false);
+    try {
+      setAlertMsg({ type: "info", text: "Processing cancellation request..." });
+      const res = await fetch("/api/subscriptions/cancel", { method: "POST" });
+      const data = await res.json();
+      if (data.success) {
+        setAlertMsg({ type: "success", text: "✅ " + data.message });
+        await fetchData();
+      } else {
+        setAlertMsg({ type: "error", text: data.error || "Failed to cancel recurring subscription." });
+      }
+    } catch (err) {
+      setAlertMsg({ type: "error", text: "Network error while processing cancellation." });
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -135,7 +169,7 @@ function SubscriptionContent() {
           return;
         }
         // Redirect to Flutterwave Hosted Checkout
-        window.location.href = data.checkoutUrl;
+        window.location.assign(data.checkoutUrl);
       } else {
         setAlertMsg({ type: 'error', text: data.error || 'Could not initiate payment. Please try again.' });
         setUpgradingId(null);
@@ -181,9 +215,19 @@ function SubscriptionContent() {
             </div>
           </div>
           {planName !== 'Free' && (
-            <div className="text-right border-l border-white/10 pl-5">
-              <div className="text-[11px] text-gray-400 uppercase font-semibold">Remaining Access</div>
-              <div className="text-sm font-bold text-white mt-0.5">{daysRemaining} Days Active</div>
+            <div className="flex items-center gap-4 border-l border-white/10 pl-5">
+              <div className="text-right">
+                <div className="text-[11px] text-gray-400 uppercase font-semibold">Remaining Access</div>
+                <div className="text-sm font-bold text-white mt-0.5">{daysRemaining} Days Active</div>
+              </div>
+              <button
+                onClick={() => setShowCancelConfirm(true)}
+                disabled={isCancelling}
+                className="px-3 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/80 border border-red-500/40 text-red-300 text-xs font-bold transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Stop recurring subscription billing"
+              >
+                {isCancelling ? 'Cancelling...' : '🛑 Stop Auto-Renewal'}
+              </button>
             </div>
           )}
         </div>
@@ -309,12 +353,23 @@ function SubscriptionContent() {
                 {/* CTA Button */}
                 <div className="mt-8">
                   {isCurrent ? (
-                    <button
-                      disabled
-                      className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-white/10 text-gray-400 border border-white/5 cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      <span>✓ Current Plan</span>
-                    </button>
+                    <div className="space-y-2">
+                      <button
+                        disabled
+                        className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-white/10 text-gray-400 border border-white/5 cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        <span>✓ Current Plan</span>
+                      </button>
+                      {isPro && (
+                        <button
+                          onClick={() => setShowCancelConfirm(true)}
+                          disabled={isCancelling}
+                          className="w-full py-2 px-3 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-300 text-[11px] font-semibold border border-red-500/30 transition-colors cursor-pointer disabled:opacity-50"
+                        >
+                          {isCancelling ? 'Cancelling...' : '🛑 Cancel Auto-Renewal'}
+                        </button>
+                      )}
+                    </div>
                   ) : plan.price === 0 ? (
                     <button
                       disabled
@@ -536,6 +591,42 @@ function SubscriptionContent() {
                 <span>Pay ${flwModalPlan.price.toFixed(2)} USD Now</span>
               )}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Cancel Confirmation Modal — replaces browser confirm() */}
+      {showCancelConfirm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cancel-modal-title"
+        >
+          <div className="bg-[#121215] border border-red-500/40 rounded-2xl p-6 max-w-sm w-full space-y-5 shadow-2xl shadow-red-900/20">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-red-950/60 flex items-center justify-center text-xl" aria-hidden="true">🛑</div>
+              <h2 id="cancel-modal-title" className="text-lg font-bold text-white">Stop Auto-Renewal?</h2>
+            </div>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              Are you sure you want to stop your recurring subscription? You will continue to enjoy full <span className="text-emerald-400 font-semibold">Pro VIP access</span> until your current billing period ends — you will not lose access immediately.
+            </p>
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowCancelConfirm(false)}
+                className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl text-sm transition-colors"
+              >
+                Keep Subscription
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelSubscription}
+                className="flex-1 py-3 bg-red-900/80 hover:bg-red-800 border border-red-500/40 text-red-200 font-bold rounded-xl text-sm transition-colors"
+              >
+                Yes, Stop Renewal
+              </button>
+            </div>
           </div>
         </div>
       )}

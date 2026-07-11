@@ -67,9 +67,9 @@ export default function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-lg transition-all font-mono text-sm ${
+                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition-all font-mono text-sm ${
                   isActive
-                    ? "bg-[#121215] text-[#138561] border-l-2 border-[#138561] font-bold shadow-sm"
+                    ? "bg-[#138561]/15 text-[#00FF88] border border-[#138561]/50 font-bold shadow-[0_0_15px_rgba(0,255,136,0.15)]"
                     : "text-zinc-400 hover:bg-[#09090b] hover:text-white"
                 }`}
               >

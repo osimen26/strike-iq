@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-import { MASTER_ADMIN_EMAIL } from "./constants";
-export { MASTER_ADMIN_EMAIL };
+import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from "./constants";
+export { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS };
 
 /**
  * Verifies that the incoming API request is authenticated and authorized as the master administrator.
@@ -20,7 +20,7 @@ export async function requireMasterAdmin() {
     };
   }
 
-  if (user.email !== MASTER_ADMIN_EMAIL) {
+  if (!user.email || !MASTER_ADMIN_EMAILS.includes(user.email.toLowerCase())) {
     console.warn(`[ADMIN_SECURITY_GUARD] Forbidden access attempt by non-admin account: ${user.email} (IP/Session ID: ${user.id})`);
     return {
       user: null,

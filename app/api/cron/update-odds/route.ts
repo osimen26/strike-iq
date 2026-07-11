@@ -11,14 +11,12 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(request: Request) {
   try {
-    // 1. Verify Vercel Cron Secret (if configured in production environment)
+    // Verify Vercel Cron Secret — enforced unconditionally in all environments.
+    // Set CRON_SECRET in Vercel Environment Variables to enable this endpoint.
     const authHeader = request.headers.get("authorization");
     const cronSecret = process.env.CRON_SECRET;
-    
-    if (process.env.NODE_ENV === "production" && (!cronSecret || authHeader !== `Bearer ${cronSecret}`)) {
-      console.warn("[CRON_SECURITY] Unauthorized cron execution attempt blocked.");
-      return NextResponse.json({ error: "Unauthorized cron execution." }, { status: 401 });
-    } else if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+
+    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
       console.warn("[CRON_SECURITY] Unauthorized cron execution attempt blocked.");
       return NextResponse.json({ error: "Unauthorized cron execution." }, { status: 401 });
     }

@@ -29,6 +29,8 @@ export async function POST(request: Request) {
           prediction: body.prediction,
           confidence: sanitizeNumber(body.confidence, 0, 100, 75),
           analysis: body.analysis,
+          booking_code: body.bookingCode || null,
+          bookmaker: body.bookmaker || null,
           tags: Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).slice(0, 50)) : [],
           created_by: user.id
         }
@@ -73,3 +75,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const { errorResponse } = await requireMasterAdmin();
+    if (errorResponse) return errorResponse;
+
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from('pro_predictions')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(25);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ data: data || [] });
+  } catch (err: any) {
+    console.error('[GET /api/admin/predictions]', err);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+

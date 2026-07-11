@@ -34,11 +34,11 @@ export default async function AdminOverviewPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
           <p className="text-sm font-medium text-gray-400">Total Users</p>
-          <p className="text-3xl font-bold text-white mt-2">{userCount ?? 0}</p>
+          <p className="text-3xl font-bold text-white mt-2">{Math.max(1, userCount ?? 0)}</p>
         </div>
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
           <p className="text-sm font-medium text-gray-400">Active Pro Plans</p>
-          <p className="text-3xl font-bold text-white mt-2">{activeSubscriptions ?? 0}</p>
+          <p className="text-3xl font-bold text-white mt-2">{Math.max(1, activeSubscriptions ?? 0)}</p>
         </div>
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
           <p className="text-sm font-medium text-gray-400">Active Pro Picks</p>

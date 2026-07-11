@@ -109,7 +109,7 @@ function AboutSection() {
           <div className="feature-card">
             <div className="feature-text">
               <h3>Major League Focus</h3>
-              <p>Deep tactical coverage across the Premier League, La Liga, Serie A, Bundesliga, UCL, and NBA.</p>
+              <p>Deep tactical coverage across Europe's Top 5 Football Leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), UCL, and NBA.</p>
             </div>
             <div className="feature-graphic graphic-heatmap">
               <div className="heatmap-grid">

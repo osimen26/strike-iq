@@ -54,6 +54,7 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
               <th className="px-6 py-4">League</th>
               <th className="px-6 py-4">Date & Time</th>
               <th className="px-6 py-4">Pick (Confidence)</th>
+              <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -80,6 +81,12 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
                     <span className="text-[var(--color-brand-mint)] font-bold text-sm">{p.prediction}</span>
                     <span className="text-xs text-gray-400">{p.confidence}% Confidence</span>
                   </div>
+                </td>
+                <td className="px-6 py-4">
+                  {p.status === 'WON' && <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono text-xs font-bold border border-emerald-500/30">✅ WON</span>}
+                  {p.status === 'LOST' && <span className="px-2 py-1 rounded bg-red-500/20 text-red-400 font-mono text-xs font-bold border border-red-500/30">❌ LOST</span>}
+                  {p.status === 'VOID' && <span className="px-2 py-1 rounded bg-zinc-500/20 text-zinc-400 font-mono text-xs font-bold border border-zinc-500/30">⚪ VOID</span>}
+                  {(!p.status || p.status === 'PENDING') && <span className="px-2 py-1 rounded bg-amber-500/20 text-amber-400 font-mono text-xs font-bold border border-amber-500/30">⏳ PENDING</span>}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-3">

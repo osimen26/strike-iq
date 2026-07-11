@@ -63,13 +63,13 @@ function HeroSection() {
   });
 
   return (
-    <section ref={heroRef} className="hero-section">
+    <section ref={heroRef} id="hero" aria-label="Hero Section" className="hero-section">
       {/* Background Image Container */}
       <div className="hero-bg absolute inset-0 z-0">
         <img 
           ref={imgRef}
           src="/banner-section.png"
-          alt="StrikeIQ Background"
+          alt="Strike IQ AI Football and Basketball Betting Intelligence Dashboard"
           className="hero-bg-img"
           onLoad={() => setIsHeroReady(true)} 
         />
@@ -86,7 +86,7 @@ function HeroSection() {
             <div className="headline-line"><span>NOT INSTINCT.</span></div>
           </h1>
           <p className="hero-subtitle">
-            StrikeIQ analyzes thousands of data points across every game to deliver predictions you can trust — covering the Premier League, Europe's top five football leagues, and major basketball competitions, all powered by AI.
+            StrikeIQ analyzes thousands of quantitative data points across every game to deliver predictions you can trust — covering Europe's Top 5 Football Leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), UEFA Champions League (UCL), and NBA, all powered by AI.
           </p>
           <div className="hero-cta-group">
             <a href="/login" className="cta-primary text-center inline-block">GET FREE PREDICTION</a>

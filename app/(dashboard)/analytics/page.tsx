@@ -80,37 +80,22 @@ function BarChart({ data }: { data: { label: string; value: number; color?: stri
   );
 }
 
-// ─── Mock Data ────────────────────────────────────────────────────────────────
-const FALLBACK_ANALYTICS = {
-  winRate: 74.2,
-  totalPredictions: 1284,
-  avgConfidence: 81.5,
-  roi: "+28.4%",
-  monthlyAccuracy: [68, 71, 70, 73, 75, 74, 76, 78, 77, 79, 81, 74.2],
-  winLoss: { won: 953, lost: 331 },
-  bySport: [
-    { label: "Football (Premier League, UCL...)", value: 76.4, color: "#138561" },
-    { label: "Basketball (NBA, EuroLeague)", value: 71.8, color: "#3b82f6" },
-    { label: "Tennis (ATP, WTA)", value: 69.5, color: "#eab308" },
-  ],
-  byConfidence: [
-    { label: "High (≥80%)", value: 82.1, color: "#138561" },
-    { label: "Medium (65–79%)", value: 68.4, color: "#eab308" },
-    { label: "Low (<65%)", value: 54.0, color: "#ef4444" },
-  ],
-  recentPredictions: [
-    { id: "1", match: "Real Madrid vs Man City", prediction: "Over 2.5 Goals", confidence: 88, result: "WON", odds: "1.85", date: "Yesterday" },
-    { id: "2", match: "Arsenal vs Bayern", prediction: "Arsenal BTTS", confidence: 79, result: "WON", odds: "1.72", date: "Yesterday" },
-    { id: "3", match: "Lakers vs Celtics", prediction: "Celtics -4.5", confidence: 83, result: "WON", odds: "1.91", date: "2 days ago" },
-    { id: "4", match: "PSG vs Barcelona", prediction: "PSG Win", confidence: 71, result: "LOST", odds: "2.10", date: "2 days ago" },
-    { id: "5", match: "Inter vs Atletico", prediction: "Under 2.5 Goals", confidence: 85, result: "WON", odds: "1.68", date: "3 days ago" },
-    { id: "6", match: "Leverkusen vs West Ham", prediction: "Leverkusen -1.5", confidence: 91, result: "WON", odds: "1.95", date: "3 days ago" },
-  ],
+// ─── Initial Empty State ────────────────────────────────────────────────────────
+const EMPTY_ANALYTICS = {
+  winRate: 0,
+  totalPredictions: 0,
+  avgConfidence: 0,
+  roi: "0.0%",
+  monthlyAccuracy: [],
+  winLoss: { won: 0, lost: 0 },
+  bySport: [],
+  byConfidence: [],
+  recentPredictions: [],
 };
 
 // ─── Main Analytics Page ──────────────────────────────────────────────────────
 export default function AnalyticsPage() {
-  const [data, setData] = useState(FALLBACK_ANALYTICS);
+  const [data, setData] = useState<any>(EMPTY_ANALYTICS);
   const [proPicks, setProPicks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -121,21 +106,12 @@ export default function AnalyticsPage() {
       .select("*")
       .order("created_at", { ascending: false })
       .then(({ data: picks }) => {
-        if (picks && picks.length > 0) {
+        if (picks) {
           setProPicks(picks);
-        } else {
-          setProPicks([
-            { home_team: "Real Madrid", away_team: "Man City", league: "UEFA Champions League", prediction: "Over 2.5 Goals", confidence: 88, sport: "football" },
-            { home_team: "Arsenal", away_team: "Bayern Munich", league: "UEFA Champions League", prediction: "Arsenal BTTS", confidence: 79, sport: "football" },
-            { home_team: "LA Lakers", away_team: "Boston Celtics", league: "NBA", prediction: "Celtics -4.5", confidence: 83, sport: "basketball" },
-            { home_team: "PSG", away_team: "Barcelona", league: "UEFA Champions League", prediction: "PSG Win", confidence: 71, sport: "football" },
-            { home_team: "Inter Milan", away_team: "Atletico Madrid", league: "Serie A", prediction: "Under 2.5 Goals", confidence: 85, sport: "football" },
-            { home_team: "Bayer Leverkusen", away_team: "West Ham", league: "Europa League", prediction: "Leverkusen -1.5", confidence: 91, sport: "football" },
-          ]);
         }
       });
 
-    // Attempt live fetch; fall back cleanly if table empty / unavailable
+    // Fetch live quantitative benchmarks from database
     fetch("/api/analytics")
       .then((r) => r.json())
       .then((res) => {
@@ -143,28 +119,23 @@ export default function AnalyticsPage() {
           setData(res.data);
         }
       })
-      .catch(() => {
-        // use fallback
+      .catch((err) => {
+        console.error("Failed to load analytics:", err);
       })
       .finally(() => setLoading(false));
   }, []);
 
-  const simulatedWon = data.winLoss?.won || 953;
-  const simulatedLost = data.winLoss?.lost || 331;
-  const total = simulatedWon + simulatedLost;
-  const padded = data.monthlyAccuracy?.slice(-7) || [68, 71, 70, 73, 75, 74, 76];
-  const footballPicks = Math.round(total * 0.62);
-  const basketballPicks = Math.round(total * 0.38);
-  const highConfidence = Math.round(total * 0.55);
-  const medConfidence = Math.round(total * 0.32);
-  const lowConfidence = Math.round(total * 0.13);
-  const topLeagues: [string, number][] = [
-    ["Premier League", Math.round(total * 0.35)],
-    ["UEFA Champions League", Math.round(total * 0.25)],
-    ["NBA", Math.round(total * 0.20)],
-    ["La Liga", Math.round(total * 0.12)],
-    ["Serie A", Math.round(total * 0.08)]
-  ];
+  const won = data.winLoss?.won || 0;
+  const lost = data.winLoss?.lost || 0;
+  const total = data.totalPredictions || proPicks.length || 0;
+  const padded = data.monthlyAccuracy && data.monthlyAccuracy.length > 0 ? data.monthlyAccuracy : [data.winRate || 0];
+
+  const leagueCounts: Record<string, number> = {};
+  proPicks.forEach((p) => {
+    const lg = p.league || "Other";
+    leagueCounts[lg] = (leagueCounts[lg] || 0) + 1;
+  });
+  const topLeagues: [string, number][] = Object.entries(leagueCounts).sort((a, b) => b[1] - a[1]);
 
   const kpis = [
     { label: "Overall Win Rate", value: `${data.winRate}%`, sub: "Last 30 days", icon: "🎯", color: "text-[#138561]" },
@@ -240,15 +211,15 @@ export default function AnalyticsPage() {
         <div className="p-6 rounded-2xl bg-[var(--color-background-surface)] border border-[var(--color-border-glass)] flex flex-col gap-4">
           <h2 className="text-lg font-semibold text-white font-heading">Win / Loss Split</h2>
           <div className="flex items-center justify-center gap-6">
-            <DonutChart won={simulatedWon} lost={simulatedLost} />
+            <DonutChart won={won} lost={lost} />
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-[#138561]"></div>
-                <span className="text-sm text-gray-300">Won <strong className="text-white">{simulatedWon}</strong></span>
+                <span className="text-sm text-gray-300">Won <strong className="text-white">{won}</strong></span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <span className="text-sm text-gray-300">Lost <strong className="text-white">{simulatedLost}</strong></span>
+                <span className="text-sm text-gray-300">Lost <strong className="text-white">{lost}</strong></span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-gray-600"></div>
@@ -280,20 +251,21 @@ export default function AnalyticsPage() {
         {/* Sport breakdown */}
         <div className="p-6 rounded-2xl bg-[var(--color-background-surface)] border border-[var(--color-border-glass)] flex flex-col gap-4">
           <h2 className="text-lg font-semibold text-white font-heading">Picks by Sport</h2>
-          <BarChart data={[
-            { label: "Football", value: total > 0 ? Math.round((footballPicks / total) * 100) : 0, color: "#138561" },
-            { label: "Basketball", value: total > 0 ? Math.round((basketballPicks / total) * 100) : 0, color: "#3b82f6" },
-          ]} />
+          {data.bySport && data.bySport.length > 0 ? (
+            <BarChart data={data.bySport} />
+          ) : (
+            <p className="text-gray-500 text-xs py-4">No sport distribution recorded yet.</p>
+          )}
         </div>
 
         {/* Confidence Breakdown */}
         <div className="p-6 rounded-2xl bg-[var(--color-background-surface)] border border-[var(--color-border-glass)] flex flex-col gap-4">
           <h2 className="text-lg font-semibold text-white font-heading">Confidence Breakdown</h2>
-          <BarChart data={[
-            { label: "High (≥80%)", value: total > 0 ? Math.round((highConfidence / total) * 100) : 0, color: "#d6f1ca" },
-            { label: "Med (65-79%)", value: total > 0 ? Math.round((medConfidence / total) * 100) : 0, color: "#f59e0b" },
-            { label: "Low (<65%)", value: total > 0 ? Math.round((lowConfidence / total) * 100) : 0, color: "#ef4444" },
-          ]} />
+          {data.byConfidence && data.byConfidence.length > 0 ? (
+            <BarChart data={data.byConfidence} />
+          ) : (
+            <p className="text-gray-500 text-xs py-4">No confidence distribution recorded yet.</p>
+          )}
         </div>
       </div>
 
@@ -305,7 +277,7 @@ export default function AnalyticsPage() {
         ) : (
           <div className="space-y-3">
             {topLeagues.map(([league, count], i) => {
-              const pct = Math.round((count / total) * 100);
+              const pct = total > 0 ? Math.round((count / total) * 100) : 0;
               return (
                 <div key={i} className="flex items-center gap-4">
                   <span className="w-5 text-sm font-bold text-gray-500">#{i + 1}</span>
@@ -323,9 +295,11 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Recent Picks Table */}
-      {proPicks.length > 0 && (
-        <div className="p-6 rounded-2xl bg-[var(--color-background-surface)] border border-[var(--color-border-glass)]">
-          <h2 className="text-lg font-semibold text-white font-heading mb-5">Recent Pro Picks</h2>
+      <div className="p-6 rounded-2xl bg-[var(--color-background-surface)] border border-[var(--color-border-glass)]">
+        <h2 className="text-lg font-semibold text-white font-heading mb-5">Recent Pro Picks</h2>
+        {proPicks.length === 0 ? (
+          <p className="text-gray-500 text-sm text-center py-6">No Pro Picks published yet.</p>
+        ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -352,8 +326,8 @@ export default function AnalyticsPage() {
               </tbody>
             </table>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

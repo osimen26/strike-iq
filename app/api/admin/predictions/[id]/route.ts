@@ -58,6 +58,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         prediction: body.prediction,
         confidence: sanitizeNumber(body.confidence, 0, 100, 75),
         analysis: body.analysis,
+        booking_code: body.bookingCode || null,
+        bookmaker: body.bookmaker || null,
+        status: body.status || "PENDING",
         tags: Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).slice(0, 50)) : []
       })
       .eq('id', id)
