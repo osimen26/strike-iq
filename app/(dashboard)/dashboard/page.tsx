@@ -315,8 +315,8 @@ export default function PredictionsFeed() {
             })
           ) : (
             <div className="p-12 mt-4 rounded-xl bg-[#09090b] border border-dashed border-zinc-800 text-center flex flex-col items-center justify-center text-zinc-400 font-mono">
-              <div className="w-12 h-12 rounded-2xl bg-[#138561]/10 border border-[#138561]/30 flex items-center justify-center text-[#138561] mb-4 shadow-[0_0_15px_rgba(19,133,97,0.15)]">
-                <ZapIcon size={24} className="text-[#138561]" />
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#138561]/25 via-[#138561]/10 to-transparent border border-emerald-500/50 flex items-center justify-center text-[#10b981] mb-5 shadow-[0_0_25px_rgba(16,185,129,0.3)]">
+                <ZapIcon size={28} className="text-[#10b981] drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" />
               </div>
               <h3 className="text-base text-white font-heading tracking-wide uppercase mb-2">NO ACTIVE {activeFilter !== "All" ? activeFilter.toUpperCase() : ""} FIXTURES RIGHT NOW</h3>
               <p className="text-xs max-w-md text-zinc-400 leading-relaxed font-sans mb-6">
