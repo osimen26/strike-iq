@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COUNTRY_FLAGS, TEAM_LOGOS } from "@/lib/logos";
+import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from "@/lib/security/rateLimit";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,11 @@ export const dynamic = "force-dynamic";
  * Checks static dictionaries first, then queries TheSportsDB API, with intelligent fallback.
  */
 export async function GET(req: NextRequest) {
+  // Rate limit: 100 logo requests per minute per IP
+  const ip = getClientIp(req);
+  const rl = checkRateLimit(`logo:${ip}`, RATE_LIMITS.PUBLIC);
+  if (!rl.success) return rateLimitResponse(rl);
+
   const { searchParams } = new URL(req.url);
   const rawTeam = searchParams.get("team");
 

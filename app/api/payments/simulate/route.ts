@@ -3,10 +3,16 @@ import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { sanitizeString, isValidId } from '@/lib/security/validator';
 import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from '@/lib/security/adminGuard';
+import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
+  // Rate limit: 5 simulation attempts per minute per IP
+  const ip = getClientIp(req);
+  const rl = checkRateLimit(`simulate:${ip}`, RATE_LIMITS.PAYMENT);
+  if (!rl.success) return rateLimitResponse(rl);
+
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();

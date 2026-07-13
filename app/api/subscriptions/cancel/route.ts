@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
+import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+  // Rate limit: 30 requests per minute per IP
+  const ip = getClientIp(request);
+  const rl = checkRateLimit(`cancel:${ip}`, RATE_LIMITS.USER);
+  if (!rl.success) return rateLimitResponse(rl);
+
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();

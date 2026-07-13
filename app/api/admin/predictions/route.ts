@@ -2,8 +2,14 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { sanitizePayload, sanitizeNumber } from '@/lib/security/validator';
 import { requireMasterAdmin, logAdminAudit } from '@/lib/security/adminGuard';
+import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 export async function POST(request: Request) {
+  // Rate limit: 20 admin writes per minute per IP
+  const ip = getClientIp(request);
+  const rl = checkRateLimit(`admin-predict-write:${ip}`, RATE_LIMITS.ADMIN_WRITE);
+  if (!rl.success) return rateLimitResponse(rl);
+
   try {
     const { user, errorResponse } = await requireMasterAdmin();
     if (errorResponse) return errorResponse;
@@ -76,7 +82,12 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Rate limit: 60 admin reads per minute per IP
+  const ip = getClientIp(request);
+  const rl = checkRateLimit(`admin-predict-read:${ip}`, RATE_LIMITS.ADMIN_READ);
+  if (!rl.success) return rateLimitResponse(rl);
+
   try {
     const { errorResponse } = await requireMasterAdmin();
     if (errorResponse) return errorResponse;
