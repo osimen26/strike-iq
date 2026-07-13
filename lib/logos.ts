@@ -56,7 +56,57 @@ export const COUNTRY_FLAGS: Record<string, string> = {
 };
 
 export const TEAM_LOGOS: Record<string, string> = {
-  // Premier League
+  // ==================== WNBA TEAMS ====================
+  "Atlanta Dream": "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
+  "Los Angeles Sparks": "https://a.espncdn.com/i/teamlogos/wnba/500/la.png",
+  "LA Sparks": "https://a.espncdn.com/i/teamlogos/wnba/500/la.png",
+  "Las Vegas Aces": "https://a.espncdn.com/i/teamlogos/wnba/500/lv.png",
+  "New York Liberty": "https://a.espncdn.com/i/teamlogos/wnba/500/ny.png",
+  "Connecticut Sun": "https://a.espncdn.com/i/teamlogos/wnba/500/conn.png",
+  "Minnesota Lynx": "https://a.espncdn.com/i/teamlogos/wnba/500/min.png",
+  "Seattle Storm": "https://a.espncdn.com/i/teamlogos/wnba/500/sea.png",
+  "Phoenix Mercury": "https://a.espncdn.com/i/teamlogos/wnba/500/phx.png",
+  "Chicago Sky": "https://a.espncdn.com/i/teamlogos/wnba/500/chi.png",
+  "Indiana Fever": "https://a.espncdn.com/i/teamlogos/wnba/500/ind.png",
+  "Dallas Wings": "https://a.espncdn.com/i/teamlogos/wnba/500/dal.png",
+  "Washington Mystics": "https://a.espncdn.com/i/teamlogos/wnba/500/was.png",
+
+  // ==================== NBA TEAMS ====================
+  "Atlanta Hawks": "https://a.espncdn.com/i/teamlogos/nba/500/atl.png",
+  "Boston Celtics": "https://a.espncdn.com/i/teamlogos/nba/500/bos.png",
+  "Brooklyn Nets": "https://a.espncdn.com/i/teamlogos/nba/500/bkn.png",
+  "Charlotte Hornets": "https://a.espncdn.com/i/teamlogos/nba/500/cha.png",
+  "Chicago Bulls": "https://a.espncdn.com/i/teamlogos/nba/500/chi.png",
+  "Cleveland Cavaliers": "https://a.espncdn.com/i/teamlogos/nba/500/cle.png",
+  "Dallas Mavericks": "https://a.espncdn.com/i/teamlogos/nba/500/dal.png",
+  "Denver Nuggets": "https://a.espncdn.com/i/teamlogos/nba/500/den.png",
+  "Detroit Pistons": "https://a.espncdn.com/i/teamlogos/nba/500/det.png",
+  "Golden State Warriors": "https://a.espncdn.com/i/teamlogos/nba/500/gs.png",
+  "Houston Rockets": "https://a.espncdn.com/i/teamlogos/nba/500/hou.png",
+  "Indiana Pacers": "https://a.espncdn.com/i/teamlogos/nba/500/ind.png",
+  "LA Clippers": "https://a.espncdn.com/i/teamlogos/nba/500/lac.png",
+  "Los Angeles Clippers": "https://a.espncdn.com/i/teamlogos/nba/500/lac.png",
+  "Los Angeles Lakers": "https://a.espncdn.com/i/teamlogos/nba/500/lal.png",
+  "Lakers": "https://a.espncdn.com/i/teamlogos/nba/500/lal.png",
+  "Memphis Grizzlies": "https://a.espncdn.com/i/teamlogos/nba/500/mem.png",
+  "Miami Heat": "https://a.espncdn.com/i/teamlogos/nba/500/mia.png",
+  "Milwaukee Bucks": "https://a.espncdn.com/i/teamlogos/nba/500/mil.png",
+  "Minnesota Timberwolves": "https://a.espncdn.com/i/teamlogos/nba/500/min.png",
+  "New Orleans Pelicans": "https://a.espncdn.com/i/teamlogos/nba/500/no.png",
+  "New York Knicks": "https://a.espncdn.com/i/teamlogos/nba/500/ny.png",
+  "Knicks": "https://a.espncdn.com/i/teamlogos/nba/500/ny.png",
+  "Oklahoma City Thunder": "https://a.espncdn.com/i/teamlogos/nba/500/okc.png",
+  "Orlando Magic": "https://a.espncdn.com/i/teamlogos/nba/500/orl.png",
+  "Philadelphia 76ers": "https://a.espncdn.com/i/teamlogos/nba/500/phi.png",
+  "Phoenix Suns": "https://a.espncdn.com/i/teamlogos/nba/500/phx.png",
+  "Portland Trail Blazers": "https://a.espncdn.com/i/teamlogos/nba/500/por.png",
+  "Sacramento Kings": "https://a.espncdn.com/i/teamlogos/nba/500/sac.png",
+  "San Antonio Spurs": "https://a.espncdn.com/i/teamlogos/nba/500/sa.png",
+  "Toronto Raptors": "https://a.espncdn.com/i/teamlogos/nba/500/tor.png",
+  "Utah Jazz": "https://a.espncdn.com/i/teamlogos/nba/500/utah.png",
+  "Washington Wizards": "https://a.espncdn.com/i/teamlogos/nba/500/was.png",
+
+  // ==================== PREMIER LEAGUE ====================
   "Arsenal": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
   "Manchester City": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
   "Man City": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
@@ -80,8 +130,9 @@ export const TEAM_LOGOS: Record<string, string> = {
   "Bournemouth": "https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg",
   "Leicester City": "https://upload.wikimedia.org/wikipedia/en/2/2d/Leicester_City_crest.svg",
   "Southampton": "https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg",
-  
-  // La Liga
+  "Ipswich Town": "https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg",
+
+  // ==================== LA LIGA ====================
   "Real Madrid": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
   "Barcelona": "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg",
   "Atletico Madrid": "https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg",
@@ -91,8 +142,9 @@ export const TEAM_LOGOS: Record<string, string> = {
   "Athletic Bilbao": "https://upload.wikimedia.org/wikipedia/en/9/98/Club_Athletic_Bilbao_logo.svg",
   "Real Sociedad": "https://upload.wikimedia.org/wikipedia/en/f/f1/Real_Sociedad_logo.svg",
   "Villarreal": "https://upload.wikimedia.org/wikipedia/en/7/70/Villarreal_CF_logo.svg",
+  "Girona": "https://upload.wikimedia.org/wikipedia/en/9/90/Girona_FC_logo.svg",
 
-  // Serie A
+  // ==================== SERIE A ====================
   "Inter Milan": "https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg",
   "AC Milan": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg",
   "Juventus": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Juventus_FC_2017_icon_%28black%29.svg",
@@ -101,72 +153,99 @@ export const TEAM_LOGOS: Record<string, string> = {
   "Lazio": "https://upload.wikimedia.org/wikipedia/en/e/e4/SS_Lazio_badge.svg",
   "Atalanta": "https://upload.wikimedia.org/wikipedia/en/6/66/AtalantaBC.svg",
 
-  // Bundesliga
+  // ==================== BUNDESLIGA ====================
   "Bayern Munich": "https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg",
   "Borussia Dortmund": "https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg",
   "Bayer Leverkusen": "https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg",
   "RB Leipzig": "https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg",
 
-  // Ligue 1
+  // ==================== LIGUE 1 ====================
   "Paris Saint-Germain": "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
   "PSG": "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
   "Marseille": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Olympique_Marseille_logo.svg",
   "Monaco": "https://upload.wikimedia.org/wikipedia/en/b/ba/AS_Monaco_FC.svg",
   "Lyon": "https://upload.wikimedia.org/wikipedia/en/c/c6/Olympique_Lyonnais.svg",
-
-  // NBA
-  "Los Angeles Lakers": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Los_Angeles_Lakers_logo.svg",
-  "Lakers": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Los_Angeles_Lakers_logo.svg",
-  "Golden State Warriors": "https://upload.wikimedia.org/wikipedia/en/0/01/Golden_State_Warriors_logo.svg",
-  "Warriors": "https://upload.wikimedia.org/wikipedia/en/0/01/Golden_State_Warriors_logo.svg",
-  "Boston Celtics": "https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics.svg",
-  "Celtics": "https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics.svg",
-  "Miami Heat": "https://upload.wikimedia.org/wikipedia/en/d/db/Miami_Heat_logo.svg",
-  "Denver Nuggets": "https://upload.wikimedia.org/wikipedia/en/7/76/Denver_Nuggets.svg",
-  "New York Knicks": "https://upload.wikimedia.org/wikipedia/en/2/25/New_York_Knicks_logo.svg",
-  "Knicks": "https://upload.wikimedia.org/wikipedia/en/2/25/New_York_Knicks_logo.svg",
-  "Milwaukee Bucks": "https://upload.wikimedia.org/wikipedia/en/4/4a/Milwaukee_Bucks_logo.svg",
-  "Dallas Mavericks": "https://upload.wikimedia.org/wikipedia/en/9/97/Dallas_Mavericks_logo.svg",
-  "Phoenix Suns": "https://upload.wikimedia.org/wikipedia/en/d/dc/Phoenix_Suns_logo.svg",
-  "Philadelphia 76ers": "https://upload.wikimedia.org/wikipedia/en/0/0e/Philadelphia_76ers_logo.svg",
-  "Chicago Bulls": "https://upload.wikimedia.org/wikipedia/en/6/67/Chicago_Bulls_logo.svg",
-  "Los Angeles Clippers": "https://upload.wikimedia.org/wikipedia/en/b/bb/Los_Angeles_Clippers_%282024%29.svg",
-  "Minnesota Timberwolves": "https://upload.wikimedia.org/wikipedia/en/c/c2/Minnesota_Timberwolves_logo.svg",
-  "Oklahoma City Thunder": "https://upload.wikimedia.org/wikipedia/en/5/5d/Oklahoma_City_Thunder.svg",
-  "Cleveland Cavaliers": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Cleveland_Cavaliers_logo.svg",
 };
 
 /**
- * Returns a team logo URL or national flag. 
- * Checks countries first, then clubs, then fuzzy matches, before falling back to UI-Avatars.
+ * Keyword-to-team nickname lookup table for fast fuzzy resolution
+ */
+const KEYWORD_LOGOS: Record<string, string> = {
+  // WNBA Nicknames
+  "dream": "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
+  "sparks": "https://a.espncdn.com/i/teamlogos/wnba/500/la.png",
+  "liberty": "https://a.espncdn.com/i/teamlogos/wnba/500/ny.png",
+  "aces": "https://a.espncdn.com/i/teamlogos/wnba/500/lv.png",
+  "lynx": "https://a.espncdn.com/i/teamlogos/wnba/500/min.png",
+  "storm": "https://a.espncdn.com/i/teamlogos/wnba/500/sea.png",
+  "mercury": "https://a.espncdn.com/i/teamlogos/wnba/500/phx.png",
+  "sky": "https://a.espncdn.com/i/teamlogos/wnba/500/chi.png",
+  "fever": "https://a.espncdn.com/i/teamlogos/wnba/500/ind.png",
+  "mystics": "https://a.espncdn.com/i/teamlogos/wnba/500/was.png",
+
+  // NBA Nicknames
+  "celtics": "https://a.espncdn.com/i/teamlogos/nba/500/bos.png",
+  "lakers": "https://a.espncdn.com/i/teamlogos/nba/500/lal.png",
+  "warriors": "https://a.espncdn.com/i/teamlogos/nba/500/gs.png",
+  "knicks": "https://a.espncdn.com/i/teamlogos/nba/500/ny.png",
+  "pacers": "https://a.espncdn.com/i/teamlogos/nba/500/ind.png",
+  "raptors": "https://a.espncdn.com/i/teamlogos/nba/500/tor.png",
+  "pistons": "https://a.espncdn.com/i/teamlogos/nba/500/det.png",
+  "hawks": "https://a.espncdn.com/i/teamlogos/nba/500/atl.png",
+  "grizzlies": "https://a.espncdn.com/i/teamlogos/nba/500/mem.png",
+  "mavericks": "https://a.espncdn.com/i/teamlogos/nba/500/dal.png",
+  "nuggets": "https://a.espncdn.com/i/teamlogos/nba/500/den.png",
+  "bucks": "https://a.espncdn.com/i/teamlogos/nba/500/mil.png",
+  "heat": "https://a.espncdn.com/i/teamlogos/nba/500/mia.png",
+  "suns": "https://a.espncdn.com/i/teamlogos/nba/500/phx.png",
+  "clippers": "https://a.espncdn.com/i/teamlogos/nba/500/lac.png",
+  "timberwolves": "https://a.espncdn.com/i/teamlogos/nba/500/min.png",
+  "thunder": "https://a.espncdn.com/i/teamlogos/nba/500/okc.png",
+  "76ers": "https://a.espncdn.com/i/teamlogos/nba/500/phi.png",
+  "bulls": "https://a.espncdn.com/i/teamlogos/nba/500/chi.png",
+};
+
+/**
+ * Returns a team logo URL or national flag.
+ * Checks exact countries/clubs first, then normalized/keyword matching, before falling back to UI-Avatars.
  */
 export function getTeamLogo(teamName: string): string {
   if (!teamName) return "";
-  
+  const cleaned = teamName.trim();
+  const lower = cleaned.toLowerCase();
+
   // 1. Check exact country flag
-  if (COUNTRY_FLAGS[teamName]) {
-    return COUNTRY_FLAGS[teamName];
+  if (COUNTRY_FLAGS[cleaned]) {
+    return COUNTRY_FLAGS[cleaned];
   }
-  
+
   // 2. Check exact club match
-  if (TEAM_LOGOS[teamName]) {
-    return TEAM_LOGOS[teamName];
+  if (TEAM_LOGOS[cleaned]) {
+    return TEAM_LOGOS[cleaned];
   }
-  
-  // 3. Check fuzzy country match (e.g. "USA National Team" -> "USA")
-  const countryKey = Object.keys(COUNTRY_FLAGS).find(k => teamName.toLowerCase() === k.toLowerCase() || teamName.toLowerCase().includes(k.toLowerCase()));
+
+  // 3. Case-insensitive country match
+  const countryKey = Object.keys(COUNTRY_FLAGS).find(k => lower === k.toLowerCase() || lower.includes(k.toLowerCase()));
   if (countryKey) {
     return COUNTRY_FLAGS[countryKey];
   }
 
-  // 4. Check fuzzy club match (e.g. "Manchester City FC" -> "Manchester City")
-  const clubKey = Object.keys(TEAM_LOGOS).find(k => teamName.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(teamName.toLowerCase()));
-  if (clubKey) {
-    return TEAM_LOGOS[clubKey];
+  // 4. Case-insensitive & substring club match (sort by longest name first to prevent partial clobbering)
+  const clubKeys = Object.keys(TEAM_LOGOS).sort((a, b) => b.length - a.length);
+  const clubMatch = clubKeys.find(k => lower.includes(k.toLowerCase()) || k.toLowerCase().includes(lower));
+  if (clubMatch) {
+    return TEAM_LOGOS[clubMatch];
   }
 
-  // 5. Fallback to UI-Avatars with dark theme styling
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(teamName)}&background=0D1117&color=fff&bold=true&rounded=true`;
+  // 5. Check keyword lookup table (e.g., "Dream" -> Atlanta Dream, "Sparks" -> LA Sparks)
+  for (const [kw, url] of Object.entries(KEYWORD_LOGOS)) {
+    if (lower.includes(kw)) {
+      return url;
+    }
+  }
+
+  // 6. Fallback to UI-Avatars with sleek dark styling
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(cleaned)}&background=138561&color=fff&bold=true&rounded=true&size=128`;
 }
 
 export const LEAGUE_LOGOS: Record<string, string> = {
