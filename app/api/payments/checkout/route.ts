@@ -36,6 +36,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Free plan does not require checkout.' }, { status: 400 });
     }
 
+    // Support multi-currency Pan-African checkout (USD, KES, GHS, NGN, ZAR, UGX)
+    const requestedCurrency = sanitizeString(rawBody?.currency, 10)?.toUpperCase() || plan.currency || 'USD';
+    const exchangeRates: Record<string, number> = {
+      USD: 1,
+      KES: 130,   // Kenyan Shilling (M-Pesa Kenya)
+      GHS: 15.5,  // Ghanaian Cedi (MTN MoMo Ghana)
+      NGN: 1550,  // Nigerian Naira
+      ZAR: 18.5,  // South African Rand
+      UGX: 3700,  // Ugandan Shilling
+    };
+    const targetCurrency = exchangeRates[requestedCurrency] ? requestedCurrency : 'USD';
+    const targetAmount = Math.round(plan.price * (exchangeRates[targetCurrency] || 1) * 100) / 100;
+
     // Format tx_ref strictly as sub_{userId}_{planId}_{timestamp} for webhook handler alignment
     const tx_ref = `sub_${user.id}_${plan.id}_${Date.now()}`;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
@@ -46,8 +59,8 @@ export async function POST(req: Request) {
         data: {
           userId: user.id,
           planId: plan.id,
-          amount: plan.price,
-          currency: plan.currency || 'USD',
+          amount: targetAmount,
+          currency: targetCurrency,
           status: 'PENDING',
           provider: 'FLUTTERWAVE',
           reference: tx_ref,
@@ -78,8 +91,8 @@ export async function POST(req: Request) {
           },
         body: JSON.stringify({
           tx_ref,
-          amount: plan.price,
-          currency: plan.currency || 'USD',
+          amount: targetAmount,
+          currency: targetCurrency,
           redirect_url: `${appUrl}/subscription?flw_return=1&tx_ref=${tx_ref}`,
           customer: {
             email: user.email,
@@ -108,7 +121,9 @@ export async function POST(req: Request) {
 
     // DEV / SIMULATION MODE FALLBACK
     // If no live keys or if testing locally, redirect to simulated success URL
-    console.log('Using Flutterwave Simulation Mode for tx_ref:', tx_ref, 'Reason:', flwErrorMsg);
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Simulation Mode tx_ref:", tx_ref, "Reason:", flwErrorMsg);
+    }
     const simulationUrl = `/subscription?payment=simulated_success&tx_ref=${tx_ref}&planId=${plan.id}&planName=${encodeURIComponent(plan.name)}`;
     
     return NextResponse.json({

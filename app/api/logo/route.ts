@@ -77,11 +77,36 @@ async function searchTheSportsDB(teamName: string): Promise<string | null> {
   return null;
 }
 
+const ALLOWED_LOGO_DOMAINS = [
+  "espncdn.com",
+  "a.espncdn.com",
+  "thesportsdb.com",
+  "www.thesportsdb.com",
+  "ui-avatars.com",
+  "upload.wikimedia.org",
+  "logos-world.net",
+  "ssl.gstatic.com",
+];
+
+function isAllowedDomain(url: string): boolean {
+  try {
+    const hostname = new URL(url).hostname;
+    return ALLOWED_LOGO_DOMAINS.some((d) => hostname === d || hostname.endsWith("." + d));
+  } catch {
+    return false;
+  }
+}
+
 function redirectWithCache(url: string) {
-  return NextResponse.redirect(url, {
+  const safeUrl = isAllowedDomain(url)
+    ? url
+    : `https://ui-avatars.com/api/?name=Team&background=138561&color=fff&bold=true&rounded=true&size=128`;
+
+  return NextResponse.redirect(safeUrl, {
     status: 302,
     headers: {
       "Cache-Control": "public, max-age=86400, s-maxage=604800",
     },
   });
 }
+

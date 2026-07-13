@@ -187,7 +187,7 @@ export async function GET() {
     });
   } catch (err: any) {
     console.error('Error in GET /api/admin/users:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
@@ -275,6 +275,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, user: newUser });
   } catch (err: any) {
     console.error('[POST /api/admin/users]', err);
-    return NextResponse.json({ error: 'An internal error occurred.' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
