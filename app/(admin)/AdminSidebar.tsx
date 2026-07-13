@@ -2,6 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  ChartBarIcon,
+  ZapIcon,
+  UsersIcon,
+  SettingsIcon,
+  ArrowLeftIcon,
+} from "@/components/icons/Icons";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -10,19 +17,19 @@ export default function AdminSidebar() {
     {
       label: "Overview",
       href: "/admin",
-      icon: "📊",
+      icon: <ChartBarIcon size={18} />,
       isActive: pathname === "/admin",
     },
     {
       label: "Add Pro Prediction",
       href: "/admin/predictions",
-      icon: "⚡",
+      icon: <ZapIcon size={18} />,
       isActive: pathname === "/admin/predictions" || pathname.startsWith("/admin/predictions/"),
     },
     {
       label: "Users",
       href: "/admin/users",
-      icon: "👥",
+      icon: <UsersIcon size={18} />,
       isActive: pathname === "/admin/users" || pathname.startsWith("/admin/users/"),
     },
   ];
@@ -30,7 +37,9 @@ export default function AdminSidebar() {
   return (
     <div className="w-64 border-r border-white/10 bg-[#0c0c0e] p-6 flex flex-col shrink-0">
       <div className="flex items-center space-x-2.5 mb-10 text-[var(--color-brand-emerald)] font-heading text-xl">
-        <span className="text-2xl">⚙️</span>
+        <span className="text-2xl text-[var(--color-brand-emerald)]">
+          <SettingsIcon size={22} />
+        </span>
         <span className="font-bold tracking-tight text-white">
           Strike <span className="text-[var(--color-brand-emerald)]">Admin</span>
         </span>
@@ -48,7 +57,7 @@ export default function AdminSidebar() {
                   : "text-zinc-400 hover:bg-white/5 hover:text-white border border-transparent"
               }`}
             >
-              <span className="text-base">{item.icon}</span>
+              <span className="shrink-0 flex items-center justify-center">{item.icon}</span>
               <span>{item.label}</span>
             </Link>
           );
@@ -59,7 +68,7 @@ export default function AdminSidebar() {
             href="/dashboard"
             className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors font-medium text-sm border border-transparent"
           >
-            <span>←</span>
+            <ArrowLeftIcon size={16} />
             <span>Back to App</span>
           </Link>
         </div>

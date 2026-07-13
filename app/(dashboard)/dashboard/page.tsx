@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { getTeamLogo, getLeagueLogo } from "@/lib/logos";
+import {
+  ZapIcon,
+  LockIcon,
+  TicketIcon,
+  CopyIcon,
+  CrownIcon,
+} from "@/components/icons/Icons";
 
 
 
@@ -63,7 +70,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
             
             {isLocked && (
               <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 rounded-lg border border-zinc-800 p-2 text-center">
-                <span className="text-xl mb-1">🔒</span>
+                <LockIcon size={24} className="text-zinc-400 mb-1" />
                 <a href="/dashboard/subscription" className="text-[10px] font-mono font-bold text-[#138561] hover:underline uppercase tracking-widest cursor-pointer">
                   PRO TIER REQUIRED
                 </a>
@@ -89,8 +96,8 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
                   </span>
                 )}
                 {match.isProPick && (
-                  <span className="px-2 py-0.5 rounded bg-[#138561]/20 border border-[#138561]/40 text-[9px] font-mono font-bold text-[#138561] uppercase tracking-wider whitespace-nowrap">
-                    👑 PRO EDGE
+                  <span className="px-2 py-0.5 rounded bg-[#138561]/20 border border-[#138561]/40 text-[9px] font-mono font-bold text-[#138561] uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+                    <CrownIcon size={12} /> PRO EDGE
                   </span>
                 )}
                 {match.tags?.map((tag: string) => (
@@ -112,13 +119,13 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
                   title="Click to copy booking code"
                   className="px-3 py-1.5 bg-gradient-to-r from-[#138561]/25 to-emerald-950/40 rounded-lg border border-[#138561]/60 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-2.5 shadow-[0_0_12px_rgba(19,133,97,0.2)] cursor-pointer hover:border-emerald-400 transition-all group/code"
                 >
-                  <span className="text-[10px] font-mono font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1">
-                    🎟️ {match.bookmaker || 'BOOKING CODE'}:
+                  <span className="text-[10px] font-mono font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <TicketIcon size={14} className="text-[#138561]" /> {match.bookmaker || 'BOOKING CODE'}:
                   </span>
                   <span className="font-mono font-bold text-xs text-white tracking-widest select-all bg-black/40 px-2 py-0.5 rounded border border-white/10 group-hover/code:border-[#138561]">
                     {match.bookingCode}
                   </span>
-                  <span className="text-[10px] text-[#138561] group-hover/code:text-white transition-colors">COPY 📋</span>
+                  <span className="text-[10px] text-[#138561] group-hover/code:text-white transition-colors flex items-center gap-1">COPY <CopyIcon size={12} /></span>
                 </div>
               )}
             </div>
@@ -297,7 +304,9 @@ export default function PredictionsFeed() {
             })
           ) : (
             <div className="p-12 mt-4 rounded-xl bg-[#09090b] border border-dashed border-zinc-800 text-center flex flex-col items-center justify-center text-zinc-400 font-mono">
-              <div className="w-12 h-12 rounded-2xl bg-[#138561]/10 border border-[#138561]/30 flex items-center justify-center text-[#138561] mb-4 text-xl shadow-[0_0_15px_rgba(19,133,97,0.15)] font-mono font-bold">⚡</div>
+              <div className="w-12 h-12 rounded-2xl bg-[#138561]/10 border border-[#138561]/30 flex items-center justify-center text-[#138561] mb-4 shadow-[0_0_15px_rgba(19,133,97,0.15)]">
+                <ZapIcon size={24} className="text-[#138561]" />
+              </div>
               <h3 className="text-base text-white font-heading tracking-wide uppercase mb-2">NO ACTIVE {activeFilter !== "All" ? activeFilter.toUpperCase() : ""} FIXTURES RIGHT NOW</h3>
               <p className="text-xs max-w-md text-zinc-400 leading-relaxed font-sans mb-6">
                 Our proprietary Strike-IQ quantitative engines are continuously scanning upcoming schedules and market odds. New high-confidence algorithmic predictions will appear here automatically once lines open.

@@ -2,17 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import {
+  ZapIcon,
+  ChartBarIcon,
+  TrophyIcon,
+  UserIcon,
+  CrownIcon,
+  SettingsIcon,
+} from "@/components/icons/Icons";
 
 const navigation = [
-  { name: "Predictions Feed", href: "/dashboard", icon: "⚡" },
-  { name: "AI Performance", href: "/dashboard/analytics", icon: "📊" },
-  { name: "Leagues", href: "/dashboard/leagues", icon: "🏆" },
-  { name: "My Profile", href: "/dashboard/profile", icon: "👤" },
-  { name: "Subscription", href: "/dashboard/subscription", icon: "👑" },
-  { name: "Settings", href: "/dashboard/settings", icon: "⚙️" },
+  { name: "Predictions Feed", href: "/dashboard", icon: <ZapIcon size={18} /> },
+  { name: "AI Performance", href: "/dashboard/analytics", icon: <ChartBarIcon size={18} /> },
+  { name: "Leagues", href: "/dashboard/leagues", icon: <TrophyIcon size={18} /> },
+  { name: "My Profile", href: "/dashboard/profile", icon: <UserIcon size={18} /> },
+  { name: "Subscription", href: "/dashboard/subscription", icon: <CrownIcon size={18} /> },
+  { name: "Settings", href: "/dashboard/settings", icon: <SettingsIcon size={18} /> },
 ];
-
-import { useState, useEffect } from "react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -52,7 +59,9 @@ export default function Sidebar() {
       `}>
         <div className="p-6 flex items-center justify-between border-b border-zinc-900">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-[#138561] rounded-md flex items-center justify-center font-bold text-white text-lg">⚡</div>
+            <div className="w-8 h-8 bg-[#138561] rounded-md flex items-center justify-center font-bold text-white shadow-sm">
+              <ZapIcon size={18} className="text-white" />
+            </div>
             <span className="text-xl font-heading text-white tracking-wider uppercase font-bold">Strike<span className="text-[#138561]">IQ</span></span>
           </div>
           <button onClick={() => setIsOpen(false)} className="lg:hidden text-zinc-400 hover:text-white">
@@ -73,7 +82,7 @@ export default function Sidebar() {
                     : "text-zinc-400 hover:bg-[#09090b] hover:text-white"
                 }`}
               >
-                <span className="text-base">{item.icon}</span>
+                <span className="shrink-0 flex items-center justify-center">{item.icon}</span>
                 <span>{item.name}</span>
               </Link>
             );
@@ -84,7 +93,7 @@ export default function Sidebar() {
           <div className="p-4 rounded-xl bg-[#09090b] border border-zinc-800/80 shadow-md">
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#138561]">Pro Tier</span>
-              <span className="text-sm">👑</span>
+              <span className="text-[#138561]"><CrownIcon size={16} /></span>
             </div>
             <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed font-sans">Unlock real-time AI rationales and high-confidence predictions.</p>
             <Link href="/dashboard/subscription" className="block text-center text-xs font-mono font-bold bg-[#138561] text-white py-2.5 rounded-lg hover:bg-[#0f6b4d] transition-colors uppercase tracking-wider shadow-[0_0_15px_rgba(19,133,97,0.3)]">
