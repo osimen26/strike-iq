@@ -96,8 +96,14 @@ export default function Sidebar() {
               <span className="text-[#138561]"><CrownIcon size={16} /></span>
             </div>
             <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed font-sans">Unlock real-time AI rationales and high-confidence predictions.</p>
-            <Link href="/dashboard/subscription" className="block text-center text-xs font-mono font-bold bg-[#138561] text-white py-2.5 rounded-lg hover:bg-[#0f6b4d] transition-colors uppercase tracking-wider shadow-[0_0_15px_rgba(19,133,97,0.3)]">
-              Upgrade Pro
+            <Link 
+              href="/dashboard/subscription" 
+              className="group relative block w-full text-center text-xs font-mono font-bold bg-gradient-to-r from-[#138561] via-[#10b981] to-[#138561] bg-[length:200%_auto] text-white py-2.5 rounded-lg border border-emerald-400/60 uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.5),0_0_40px_rgba(19,133,97,0.3)] hover:shadow-[0_0_28px_rgba(16,185,129,0.85),0_0_55px_rgba(19,133,97,0.5)] hover:border-emerald-300 transition-all duration-300 overflow-hidden"
+            >
+              <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/25 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-in-out" />
+              <span className="relative z-10 flex items-center justify-center gap-1.5">
+                UPGRADE PRO
+              </span>
             </Link>
           </div>
         </div>

@@ -391,18 +391,21 @@ function SubscriptionContent() {
                     <button
                       onClick={() => handleUpgrade(plan)}
                       disabled={upgradingId === plan.id}
-                      className="w-full py-3.5 px-4 rounded-xl font-extrabold text-xs uppercase bg-[#138561] text-white hover:bg-[#0f6b4d] transition-all shadow-lg shadow-[#138561]/20 flex items-center justify-center gap-2 transform active:scale-95"
+                      className="group relative w-full py-3.5 px-4 rounded-xl font-extrabold text-xs uppercase bg-gradient-to-r from-[#138561] via-[#10b981] to-[#138561] bg-[length:200%_auto] text-white transition-all shadow-[0_0_20px_rgba(16,185,129,0.5),0_0_40px_rgba(19,133,97,0.3)] hover:shadow-[0_0_28px_rgba(16,185,129,0.85),0_0_55px_rgba(19,133,97,0.5)] border border-emerald-400/60 hover:border-emerald-300 flex items-center justify-center gap-2 transform active:scale-95 overflow-hidden"
                     >
-                      {upgradingId === plan.id ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>Securing Checkout...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>UPGRADE TO PRO ⚡</span>
-                        </>
-                      )}
+                      <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/25 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-in-out" />
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        {upgradingId === plan.id ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>Securing Checkout...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>UPGRADE TO PRO ⚡</span>
+                          </>
+                        )}
+                      </span>
                     </button>
                   )}
                 </div>
