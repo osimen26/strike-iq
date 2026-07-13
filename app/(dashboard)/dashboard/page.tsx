@@ -10,6 +10,7 @@ import {
   TicketIcon,
   CopyIcon,
   CrownIcon,
+  SparklesIcon,
 } from "@/components/icons/Icons";
 
 
@@ -107,7 +108,10 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
                 ))}
               </div>
               <div className="px-3.5 py-2 bg-[#121215] rounded-lg border border-zinc-800/80 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-3 shadow-sm">
-                <span className="text-xs font-mono text-zinc-400 uppercase">MODEL PICK:</span>
+                <span className="text-[11px] font-mono font-semibold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <SparklesIcon size={13} className="text-[#138561]" />
+                  AI PREDICTION:
+                </span>
                 <span className="font-mono font-bold text-sm text-[#138561] tracking-tight">{match.prediction}</span>
               </div>
               {match.bookingCode && (
@@ -174,7 +178,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
           >
             <span className={`w-1.5 h-1.5 rounded-full ${isLocked ? 'bg-zinc-600' : 'bg-[#138561] animate-pulse'}`}></span>
             <span className="text-[11px] font-mono font-bold text-zinc-300 group-hover/btn:text-white transition-colors uppercase">
-              {isLocked ? "LOCK // UNLOCK ANALYSIS" : showAnalysis ? "CLOSE ANALYSIS" : "READ RATIONALE"}
+              {isLocked ? "UNLOCK PRO INSIGHTS" : showAnalysis ? "HIDE ANALYSIS" : "VIEW AI ANALYSIS"}
             </span>
           </button>
         </div>
@@ -186,9 +190,16 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
           showAnalysis && !isLocked ? "max-h-96 opacity-100 py-5" : "max-h-0 opacity-0 py-0"
         }`}
       >
-        <div className="px-5 sm:px-6 text-xs text-zinc-300 leading-relaxed font-mono">
-          <span className="font-bold text-[#138561] uppercase mr-2">[RATIONALE // METRICS]:</span>
-          {match.analysis}
+        <div className="px-5 sm:px-6">
+          <div className="flex items-center gap-2 mb-2">
+            <SparklesIcon size={14} className="text-[#138561]" />
+            <span className="font-mono font-bold text-xs text-[#138561] uppercase tracking-wider">
+              QUANT INSIGHTS & RATIONALE
+            </span>
+          </div>
+          <p className="text-xs text-zinc-300 leading-relaxed font-sans">
+            {match.analysis}
+          </p>
         </div>
       </div>
     </div>
