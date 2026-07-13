@@ -244,8 +244,8 @@ export function getTeamLogo(teamName: string): string {
     }
   }
 
-  // 6. Fallback to UI-Avatars with sleek dark styling
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(cleaned)}&background=138561&color=fff&bold=true&rounded=true&size=128`;
+  // 6. Universal global fallback: route through /api/logo which dynamically resolves any team badge globally via TheSportsDB
+  return `/api/logo?team=${encodeURIComponent(cleaned)}`;
 }
 
 export const LEAGUE_LOGOS: Record<string, string> = {
