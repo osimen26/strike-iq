@@ -495,58 +495,130 @@ export default function AddPredictionPage() {
         </button>
       </div>
 
-      {/* AUDIENCE TIER & NOTIFICATION CONTROLS */}
-      <div className="bg-[#121215] border-2 border-[var(--color-brand-emerald)]/50 rounded-xl p-5 mb-8 shadow-lg">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* AUDIENCE TIER & NOTIFICATION CONTROLS (INTERACTIVE STRATEGY DESK) */}
+      <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-6 mb-8 shadow-2xl space-y-5">
+        {/* Header Row */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800/80 pb-4 gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-sm font-bold font-mono uppercase tracking-wider text-white">🎯 Target Audience & Tier Strategy:</span>
-              <span className={`px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-widest ${
-                formData.tier === "FREE" ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 shadow-[0_0_10px_rgba(6,182,212,0.2)]" : "bg-gradient-to-r from-amber-500/20 to-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-[0_0_10px_rgba(19,133,97,0.2)]"
-              }`}>
-                {formData.tier === "FREE" ? "🎁 Free Daily Code (Copyable for All)" : "👑 VIP Pro Lock (Makes Freemium Pay for Pro)"}
-              </span>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-brand-emerald)] animate-pulse"></span>
+              <h2 className="text-sm font-bold font-mono uppercase tracking-wider text-white">
+                ⚡ STEP 1: SELECT AUDIENCE & MONETIZATION STRATEGY
+              </h2>
             </div>
-            <p className="text-xs text-zinc-300 font-sans leading-relaxed">
-              {formData.tier === "FREE" 
-                ? "Sends '🎁 Free Daily Code Dropped' alert. Unlocks the booking code on ALL freemium dashboards so users can copy directly and build trust."
-                : "Sends '🔒 VIP Code Dropped' FOMO teaser. Masks & locks the booking code on freemium dashboards (e.g. BC•••• [LOCKED]), making freemium users upgrade to Pro ($9.99/mo) to copy!"}
+            <p className="text-xs text-zinc-400 font-sans">
+              Choose who can copy this code and how it drives subscription conversions across user dashboards.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 shrink-0">
-            {/* Tier Buttons */}
-            <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800">
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, tier: "PRO" }))}
-                className={`px-4 py-2 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
-                  formData.tier === "PRO" ? "bg-[#138561] text-white shadow-[0_0_15px_rgba(19,133,97,0.3)]" : "text-zinc-400 hover:text-white"
-                }`}
-              >
-                <span>👑</span> VIP Pro Lock ($9.99 Hook)
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, tier: "FREE" }))}
-                className={`px-4 py-2 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
-                  formData.tier === "FREE" ? "bg-cyan-600 text-white shadow-[0_0_15px_rgba(6,182,212,0.3)]" : "text-zinc-400 hover:text-white"
-                }`}
-              >
-                <span>🎁</span> Free Daily Code
-              </button>
+          {/* Push Notification Toggle */}
+          <label className="flex items-center gap-2.5 px-3.5 py-2 bg-black/60 rounded-xl border border-zinc-800 cursor-pointer hover:border-zinc-700 transition-colors self-start sm:self-center shrink-0">
+            <input
+              type="checkbox"
+              checked={formData.notifyUsers}
+              onChange={(e) => setFormData(prev => ({ ...prev, notifyUsers: e.target.checked }))}
+              className="rounded accent-[var(--color-brand-emerald)] w-4 h-4 cursor-pointer"
+            />
+            <span className="text-xs font-mono font-bold text-zinc-300 select-none">🔔 Send Push Notification Alert</span>
+          </label>
+        </div>
+
+        {/* Dual Strategy Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          {/* Card 1: Freemium Daily Marketing Code */}
+          <div
+            onClick={() => setFormData(prev => ({ ...prev, tier: "FREE" }))}
+            className={`group relative p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer flex flex-col justify-between gap-4 ${
+              formData.tier === "FREE"
+                ? "bg-cyan-950/25 border-cyan-500 shadow-[0_0_25px_rgba(6,182,212,0.2)]"
+                : "bg-black/40 border-zinc-800 hover:border-zinc-700 hover:bg-black/60"
+            }`}
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">🎁</span>
+                  <span className="text-base font-bold text-white font-heading tracking-wide">
+                    Free Daily Marketing Code
+                  </span>
+                </div>
+                <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-widest shrink-0 ${
+                  formData.tier === "FREE" ? "bg-cyan-500 text-black font-extrabold" : "bg-zinc-800 text-zinc-400"
+                }`}>
+                  PUBLIC HOOK
+                </span>
+              </div>
+              <p className="text-xs text-zinc-300 font-sans leading-relaxed mb-4">
+                Upload your 2 daily trust-builders. Fully unmasked on all freemium dashboards to prove Strike-IQ win rates.
+              </p>
+              <ul className="space-y-1.5 text-[11px] font-mono text-zinc-400">
+                <li className="flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Unlocked instantly for ALL Freemium & Pro users
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Code is copyable with 1 click to build trust
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Sends '🎁 Free Daily Code Dropped!' push alert
+                </li>
+              </ul>
             </div>
 
-            {/* Notification Toggle */}
-            <label className="flex items-center gap-2 px-3 py-2 bg-[#09090b] rounded-lg border border-zinc-800 cursor-pointer hover:border-zinc-700 transition-colors">
-              <input
-                type="checkbox"
-                checked={formData.notifyUsers}
-                onChange={(e) => setFormData(prev => ({ ...prev, notifyUsers: e.target.checked }))}
-                className="rounded accent-[#138561] w-4 h-4 cursor-pointer"
-              />
-              <span className="text-xs font-mono font-bold text-zinc-300 select-none">Send Drop Alert</span>
-            </label>
+            <div className={`mt-2 py-2 text-center rounded-lg font-mono text-xs font-bold uppercase transition-all ${
+              formData.tier === "FREE"
+                ? "bg-cyan-500 text-black shadow-md"
+                : "bg-white/5 text-zinc-400 group-hover:bg-white/10 group-hover:text-white"
+            }`}>
+              {formData.tier === "FREE" ? "● SELECTED (PUBLIC MARKETING)" : "Click to Select Free Strategy"}
+            </div>
+          </div>
+
+          {/* Card 2: VIP Pro Lock ($9.99 Hook) */}
+          <div
+            onClick={() => setFormData(prev => ({ ...prev, tier: "PRO" }))}
+            className={`group relative p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer flex flex-col justify-between gap-4 ${
+              formData.tier === "PRO"
+                ? "bg-emerald-950/25 border-[var(--color-brand-emerald)] shadow-[0_0_25px_rgba(19,133,97,0.25)]"
+                : "bg-black/40 border-zinc-800 hover:border-zinc-700 hover:bg-black/60"
+            }`}
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">👑</span>
+                  <span className="text-base font-bold text-white font-heading tracking-wide">
+                    VIP Pro Lock ($9.99 Hook)
+                  </span>
+                </div>
+                <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-widest shrink-0 ${
+                  formData.tier === "PRO" ? "bg-[var(--color-brand-emerald)] text-white font-extrabold shadow-[0_0_10px_rgba(19,133,97,0.5)]" : "bg-zinc-800 text-zinc-400"
+                }`}>
+                  MONETIZATION ENGINE
+                </span>
+              </div>
+              <p className="text-xs text-zinc-300 font-sans leading-relaxed mb-4">
+                Exclusive syndicate slip. Creates massive FOMO by locking the code on freemium accounts and prompting instant upgrade.
+              </p>
+              <ul className="space-y-1.5 text-[11px] font-mono text-zinc-400">
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span> Masked as <code className="text-white bg-black/60 px-1 rounded">BC•••• [LOCKED]</code> for Freemium users
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span> Shows instant upgrade overlay ($9.99/mo to unlock)
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span> Sends '⚡ VIP Code Dropped!' FOMO push alert
+                </li>
+              </ul>
+            </div>
+
+            <div className={`mt-2 py-2 text-center rounded-lg font-mono text-xs font-bold uppercase transition-all ${
+              formData.tier === "PRO"
+                ? "bg-[var(--color-brand-emerald)] text-white shadow-md shadow-emerald-900/30"
+                : "bg-white/5 text-zinc-400 group-hover:bg-white/10 group-hover:text-white"
+            }`}>
+              {formData.tier === "PRO" ? "● SELECTED (VIP PRO EXCLUSIVE)" : "Click to Select VIP Strategy"}
+            </div>
           </div>
         </div>
       </div>
