@@ -13,11 +13,13 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Fetch active subscription
+    // Fetch active subscription (including cancelled subscriptions that haven't expired yet)
     const activeSub = await prisma.subscription.findFirst({
       where: {
         userId: user.id,
-        status: 'ACTIVE',
+        status: {
+          in: ['ACTIVE', 'CANCELLED', 'COMPLIMENTARY']
+        },
         currentPeriodEnd: {
           gt: new Date()
         }
