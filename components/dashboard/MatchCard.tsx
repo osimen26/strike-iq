@@ -13,6 +13,7 @@ import {
 
 export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean }) {
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Freemium items are NEVER locked, regardless of subscription
   const actuallyLocked = isLocked && !match.isFreePick;
@@ -75,6 +76,19 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
     return "CHECK ANALYSIS FOR CODE";
   };
 
+  const handleCopy = (e: React.MouseEvent, textToCopy: string) => {
+    e.stopPropagation();
+    if (actuallyLocked) {
+      window.location.href = "/dashboard/subscription";
+      return;
+    }
+    navigator.clipboard.writeText(textToCopy);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
   // ==========================================
   // 1. BOOKING CODE SLIP LAYOUT
   // Strictly follows user rules:
@@ -83,6 +97,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
   // - Shows Booking Code + Betting Platform prominently
   // - Strike IQ Logo (/favicon.svg) right beside header
   // - NO AI Prediction row displayed
+  // - NO alert() popups (inline COPIED! ✅ state)
   // ==========================================
   if (isBookingSlip) {
     const bettingPlatform = getBettingPlatform();
@@ -153,23 +168,17 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
 
             {/* ONLY THE BETTING PLATFORM & BOOKING CODE (FLAT MATTE DARK BOX, NO GLOW) */}
             <div
-              onClick={(e) => {
-                e.stopPropagation();
-                if (actuallyLocked) {
-                  window.location.href = "/dashboard/subscription";
-                  return;
-                }
-                navigator.clipboard.writeText(cleanCode);
-                alert(
-                  `Copied ${bettingPlatform} Booking Code: ${cleanCode}`
-                );
-              }}
+              onClick={(e) => handleCopy(e, cleanCode)}
               title={
                 actuallyLocked
                   ? "Upgrade to Pro to copy booking code"
                   : "Click to copy booking code"
               }
-              className={`flex-1 p-5 sm:p-6 rounded-xl border bg-[#121215] border-zinc-800/90 flex flex-col sm:flex-row sm:items-center justify-between gap-5 cursor-pointer transition-all group/code hover:border-zinc-700 ${
+              className={`flex-1 p-5 sm:p-6 rounded-xl border bg-[#121215] flex flex-col sm:flex-row sm:items-center justify-between gap-5 cursor-pointer transition-all group/code ${
+                copied
+                  ? "border-emerald-500/80 bg-emerald-950/20"
+                  : "border-zinc-800/90 hover:border-zinc-700"
+              } ${
                 actuallyLocked
                   ? "blur-sm opacity-40 pointer-events-none select-none"
                   : ""
@@ -177,8 +186,10 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
             >
               <div className="flex items-center gap-4">
                 <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${
-                    match.isFreePick
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border transition-colors ${
+                    copied
+                      ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400"
+                      : match.isFreePick
                       ? "bg-cyan-500/15 border-cyan-500/30 text-cyan-400"
                       : "bg-[#138561]/15 border-[#138561]/30 text-[#138561]"
                   }`}
@@ -194,11 +205,11 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                     <span>BOOKING CODE SLIP</span>
                   </div>
                   <div
-                    className={`font-mono font-extrabold text-2xl sm:text-3xl text-white tracking-widest select-all mt-1.5 ${
-                      match.isFreePick
-                        ? "group-hover/code:text-cyan-300"
-                        : "group-hover/code:text-emerald-300"
-                    } transition-colors`}
+                    className={`font-mono font-extrabold text-2xl sm:text-3xl tracking-widest select-all mt-1.5 transition-colors ${
+                      copied
+                        ? "text-emerald-400 scale-[1.01]"
+                        : "text-white group-hover/code:text-emerald-300"
+                    }`}
                   >
                     {actuallyLocked
                       ? `${cleanCode.slice(0, 2)}•••• [LOCKED]`
@@ -209,13 +220,21 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
 
               <div
                 className={`px-5 py-3 rounded-lg border font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all shrink-0 ${
-                  match.isFreePick
+                  copied
+                    ? "bg-emerald-500 text-black border-emerald-400 scale-105 shadow-md font-extrabold"
+                    : match.isFreePick
                     ? "bg-cyan-500 text-black border-cyan-400 group-hover/code:bg-cyan-400"
                     : "bg-[#138561] text-white border-emerald-400 group-hover/code:bg-emerald-600"
                 }`}
               >
-                <span>{actuallyLocked ? "LOCK 🔒" : "COPY CODE"}</span>
-                {!actuallyLocked && <CopyIcon size={15} />}
+                <span>
+                  {actuallyLocked
+                    ? "LOCK 🔒"
+                    : copied
+                    ? "COPIED! ✅"
+                    : "COPY CODE"}
+                </span>
+                {!actuallyLocked && !copied && <CopyIcon size={15} />}
               </div>
             </div>
 
@@ -323,7 +342,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
 
   // ==========================================
   // 2. STANDARD 1v1 MATCH CARD LAYOUT
-  // Flat matte design with no glow effects
+  // Flat matte design with no glow effects and inline copy confirmation
   // ==========================================
   return (
     <div className="relative group rounded-xl bg-[#09090b] border border-zinc-800/90 overflow-hidden transition-all duration-200 hover:border-zinc-700">
@@ -473,25 +492,17 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
               </div>
               {match.bookingCode && (
                 <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (actuallyLocked) {
-                      window.location.href = "/dashboard/subscription";
-                      return;
-                    }
-                    navigator.clipboard.writeText(match.bookingCode);
-                    alert(
-                      `Copied ${match.bookmaker || "Booking"} Code: ${
-                        match.bookingCode
-                      }`
-                    );
-                  }}
+                  onClick={(e) => handleCopy(e, match.bookingCode)}
                   title={
                     actuallyLocked
                       ? "Upgrade to Pro to copy booking code"
                       : "Click to copy booking code"
                   }
-                  className="px-3 py-1.5 rounded-lg border bg-[#121215] border-zinc-800 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-2.5 cursor-pointer transition-all group/code hover:border-zinc-700"
+                  className={`px-3 py-1.5 rounded-lg border bg-[#121215] w-full lg:w-auto flex items-center justify-between lg:justify-end gap-2.5 cursor-pointer transition-all group/code ${
+                    copied
+                      ? "border-emerald-500 bg-emerald-950/30"
+                      : "border-zinc-800 hover:border-zinc-700"
+                  }`}
                 >
                   <span className="text-[10px] font-mono font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
                     <TicketIcon
@@ -503,10 +514,10 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                     {match.bookmaker || "BOOKING CODE"}:
                   </span>
                   <span
-                    className={`font-mono font-bold text-xs text-white tracking-widest select-all bg-black/40 px-2 py-0.5 rounded border border-zinc-800 ${
-                      match.isFreePick
-                        ? "group-hover/code:border-cyan-400"
-                        : "group-hover/code:border-[#138561]"
+                    className={`font-mono font-bold text-xs tracking-widest select-all bg-black/40 px-2 py-0.5 rounded border ${
+                      copied
+                        ? "text-emerald-400 border-emerald-500/60"
+                        : "text-white border-zinc-800 group-hover/code:border-[#138561]"
                     }`}
                   >
                     {actuallyLocked
@@ -514,14 +525,20 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                       : match.bookingCode}
                   </span>
                   <span
-                    className={`text-[10px] transition-colors flex items-center gap-1 ${
-                      match.isFreePick
+                    className={`text-[10px] transition-colors flex items-center gap-1 font-bold ${
+                      copied
+                        ? "text-emerald-400"
+                        : match.isFreePick
                         ? "text-cyan-400 group-hover/code:text-white"
                         : "text-[#138561] group-hover/code:text-white"
                     }`}
                   >
-                    {actuallyLocked ? "LOCK 🔒" : "COPY"}{" "}
-                    {!actuallyLocked && <CopyIcon size={12} />}
+                    {actuallyLocked
+                      ? "LOCK 🔒"
+                      : copied
+                      ? "COPIED! ✅"
+                      : "COPY"}{" "}
+                    {!actuallyLocked && !copied && <CopyIcon size={12} />}
                   </span>
                 </div>
               )}
