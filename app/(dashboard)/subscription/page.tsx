@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { ZapIcon } from '@/components/icons/Icons';
 
 interface Plan {
   id: string;
@@ -204,8 +205,9 @@ function SubscriptionContent() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading">
               Subscription & Pro Access
             </h1>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-[var(--color-brand-emerald)]/20 to-[var(--color-brand-electricGreen)]/20 border border-[var(--color-brand-emerald)]/40 text-[var(--color-brand-electricGreen)] animate-pulse">
-              INSTANT PRO ACCESS ⚡
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-[var(--color-brand-emerald)]/20 to-[var(--color-brand-electricGreen)]/20 border border-[var(--color-brand-emerald)]/40 text-[var(--color-brand-electricGreen)] animate-pulse flex items-center gap-1.5">
+              <span>INSTANT PRO ACCESS</span>
+              <ZapIcon size={14} />
             </span>
           </div>
           <p className="text-[var(--color-accent-mutedSage)] mt-2 text-sm md:text-base">
@@ -222,7 +224,8 @@ function SubscriptionContent() {
                 <span className="text-gray-300">Free Tier</span>
               ) : (
                 <span className="text-[var(--color-brand-electricGreen)] flex items-center gap-1.5">
-                  ⚡ {planName}
+                  <ZapIcon size={16} />
+                  <span>{planName}</span>
                 </span>
               )}
             </div>
@@ -404,9 +407,10 @@ function SubscriptionContent() {
                             <span>Securing Checkout...</span>
                           </>
                         ) : (
-                          <>
-                            <span>UPGRADE TO PRO ⚡</span>
-                          </>
+                          <span className="flex items-center gap-1.5">
+                            <span>UPGRADE TO PRO</span>
+                            <ZapIcon size={16} className="text-amber-400 shrink-0" />
+                          </span>
                         )}
                       </span>
                     </button>
