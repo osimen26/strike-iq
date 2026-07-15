@@ -31,12 +31,10 @@ export async function POST(request: Request) {
 
     // Auto-migrate schema & refresh PostgREST schema cache to guarantee booking_code column exists
     try {
-      await prisma.$executeRawUnsafe(`
-        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS booking_code TEXT;
-        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS bookmaker TEXT;
-        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS created_by TEXT;
-        NOTIFY pgrst, 'reload schema';
-      `);
+      await prisma.$executeRawUnsafe(`ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS booking_code TEXT`);
+      await prisma.$executeRawUnsafe(`ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS bookmaker TEXT`);
+      await prisma.$executeRawUnsafe(`ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS created_by TEXT`);
+      await prisma.$executeRawUnsafe(`NOTIFY pgrst, 'reload schema'`);
     } catch (migErr) {
       console.warn("Schema check/reload notice:", migErr);
     }
