@@ -72,6 +72,10 @@ export async function GET() {
         timeLabel = `${p.match_time} GMT`;
       }
 
+      const isFreePick = Array.isArray(p.tags) && p.tags.some((t: any) => 
+        typeof t === 'string' && (t.toUpperCase().includes('FREE') || t.toUpperCase().includes('COMMUNITY'))
+      );
+
       return {
         id: p.id,
         homeTeam: p.home_team,
@@ -87,7 +91,8 @@ export async function GET() {
         tags: Array.isArray(p.tags) ? p.tags : [],
         bookingCode: p.booking_code || null,
         bookmaker: p.bookmaker || null,
-        isProPick: true, // All admin-published picks are Pro Picks
+        isProPick: !isFreePick, // If tagged as FREE TEASER/COMMUNITY, unlocked for all users!
+        isFreePick: isFreePick,
         createdAt: p.created_at,
       };
     });

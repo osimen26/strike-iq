@@ -35,6 +35,9 @@ function SubscriptionContent() {
   const [daysRemaining, setDaysRemaining] = useState<number>(0);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY');
+  const [selectedCurrency, setSelectedCurrency] = useState<'USD' | 'KES' | 'GHS' | 'NGN' | 'ZAR' | 'UGX'>('USD');
+  const currencySymbols: Record<string, string> = { USD: '$', KES: 'KSh ', GHS: 'GH₵ ', NGN: '₦', ZAR: 'R ', UGX: 'USh ' };
+  const currencyRates: Record<string, number> = { USD: 1, KES: 130, GHS: 15.5, NGN: 1550, ZAR: 18.5, UGX: 3700 };
   const [loading, setLoading] = useState(true);
   const [upgradingId, setUpgradingId] = useState<string | null>(null);
   const [alertMsg, setAlertMsg] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);

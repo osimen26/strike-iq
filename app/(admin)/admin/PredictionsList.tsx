@@ -59,29 +59,46 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
             </tr>
           </thead>
           <tbody className="divide-y divide-white/10">
-            {predictions.map((p) => (
-              <tr key={p.id} className="hover:bg-white/5 transition-colors">
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                      <img src={getLeagueLogo(p.league, p.sport)} alt={p.league} className="max-w-full max-h-full object-contain opacity-80" />
+            {predictions.map((p) => {
+              const isFreeTier = p.tags?.some((t: string) => String(t).toUpperCase().includes("FREE"));
+              return (
+                <tr key={p.id} className="hover:bg-white/5 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                        <img src={getLeagueLogo(p.league, p.sport)} alt={p.league} className="max-w-full max-h-full object-contain opacity-80" />
+                      </div>
+                      <span className="font-semibold text-white whitespace-nowrap">{p.home_team} vs {p.away_team}</span>
                     </div>
-                    <span className="font-semibold text-white whitespace-nowrap">{p.home_team} vs {p.away_team}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="text-gray-300 text-sm">{p.league}</span>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-white">{p.match_date}</div>
-                  <div className="text-xs text-gray-500 font-mono">{p.match_time}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <span className="text-[var(--color-brand-mint)] font-bold text-sm">{p.prediction}</span>
-                    <span className="text-xs text-gray-400">{p.confidence}% Confidence</span>
-                  </div>
-                </td>
+                    <div className="flex items-center gap-2 flex-wrap mt-1">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${
+                        isFreeTier 
+                          ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" 
+                          : "bg-[#138561]/20 text-[#138561] border border-[#138561]/40"
+                      }`}>
+                        {isFreeTier ? "🎁 FREE MARKETING CODE" : "👑 VIP PRO LOCK"}
+                      </span>
+                      {p.booking_code && (
+                        <span className="px-2 py-0.5 rounded bg-black/60 text-zinc-300 border border-zinc-700 text-[10px] font-mono font-bold uppercase flex items-center gap-1">
+                          <span>🎟️ {p.bookmaker || 'CODE'}:</span>
+                          <span className="text-emerald-400 font-bold">{p.booking_code}</span>
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-gray-300 text-sm">{p.league}</span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-white">{p.match_date}</div>
+                    <div className="text-xs text-gray-500 font-mono">{p.match_time}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col">
+                      <span className="text-[var(--color-brand-mint)] font-bold text-sm">{p.prediction}</span>
+                      <span className="text-xs text-gray-400">{p.confidence}% Confidence</span>
+                    </div>
+                  </td>
                 <td className="px-6 py-4">
                   {p.status === 'WON' && <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono text-xs font-bold border border-emerald-500/30">✅ WON</span>}
                   {p.status === 'LOST' && <span className="px-2 py-1 rounded bg-red-500/20 text-red-400 font-mono text-xs font-bold border border-red-500/30">❌ LOST</span>}
@@ -106,7 +123,8 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
                   </div>
                 </td>
               </tr>
-            ))}
+            );
+          })}
           </tbody>
         </table>
       </div>

@@ -173,8 +173,8 @@ export default function AdminUsersPage() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <div className="relative flex-1 md:w-56">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 w-full md:w-auto">
+          <div className="relative w-full sm:w-56">
             <input
               type="text"
               placeholder="Search email or name..."
@@ -187,7 +187,7 @@ export default function AdminUsersPage() {
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="px-4 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[var(--color-brand-emerald)] cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[var(--color-brand-emerald)] cursor-pointer"
           >
             <option value="ALL">All Roles & Tiers</option>
             <option value="ADMIN">VIP Admins Only</option>
@@ -198,7 +198,7 @@ export default function AdminUsersPage() {
           <select
             value={referralFilter}
             onChange={(e) => setReferralFilter(e.target.value)}
-            className="px-4 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[var(--color-brand-emerald)] cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[var(--color-brand-emerald)] cursor-pointer"
           >
             <option value="ALL">🏷️ All Referrals ({uniqueReferrals.length})</option>
             {uniqueReferrals.map((code) => (
@@ -206,34 +206,36 @@ export default function AdminUsersPage() {
             ))}
           </select>
 
-          <button
-            onClick={() => {
-              setCustomRefCode("");
-              setCopiedLink(false);
-              setShowReferralModal(true);
-            }}
-            className="px-4 py-2 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-bold rounded-xl text-xs transition-colors shadow-[0_0_15px_rgba(19,133,97,0.2)] cursor-pointer flex items-center gap-1.5"
-          >
-            <span>🔗</span>
-            <span>Create Referral Link</span>
-          </button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              onClick={() => {
+                setCustomRefCode("");
+                setCopiedLink(false);
+                setShowReferralModal(true);
+              }}
+              className="flex-1 sm:flex-initial px-3 py-2 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-bold rounded-xl text-xs transition-colors shadow-[0_0_15px_rgba(19,133,97,0.2)] cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <span>🔗</span>
+              <span>Referral Link</span>
+            </button>
 
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-xs transition-colors shadow-[0_0_15px_rgba(19,133,97,0.3)] cursor-pointer"
-          >
-            + Add User
-          </button>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex-1 sm:flex-initial px-3.5 py-2 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-xs transition-colors shadow-[0_0_15px_rgba(19,133,97,0.3)] cursor-pointer text-center"
+            >
+              + Add User
+            </button>
 
-          <button
-            onClick={fetchUsersAndSubscriptions}
-            className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-gray-300 transition-colors cursor-pointer"
-            aria-label={loading ? 'Refreshing users...' : 'Refresh users list'}
-          >
-            <svg className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-          </button>
+            <button
+              onClick={fetchUsersAndSubscriptions}
+              className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-gray-300 transition-colors cursor-pointer shrink-0 flex items-center justify-center"
+              aria-label={loading ? 'Refreshing users...' : 'Refresh users list'}
+            >
+              <svg className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -261,7 +263,7 @@ export default function AdminUsersPage() {
           </div>
 
           {/* Payout Breakdown */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <div className="bg-black/50 p-3.5 rounded-xl border border-white/10">
               <div className="text-[10px] text-gray-400 font-mono uppercase">Referred Signups</div>
               <div className="text-xl font-bold text-white mt-1">{referredUsersCount} Users</div>

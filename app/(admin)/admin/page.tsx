@@ -47,9 +47,9 @@ export default async function AdminOverviewPage() {
       </div>
 
       <div className="mt-8">
-        <div className="flex justify-between items-end mb-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
           <h2 className="text-xl font-semibold text-white">Manage Pro Predictions</h2>
-          <a href="/admin/predictions" className="px-6 py-2.5 bg-[var(--color-brand-emerald)] hover:bg-[var(--color-brand-actionGreen)] text-white font-bold rounded-lg transition-colors text-sm shadow-[0_0_15px_rgba(33,205,141,0.2)]">
+          <a href="/admin/predictions" className="px-6 py-2.5 bg-[var(--color-brand-emerald)] hover:bg-[var(--color-brand-actionGreen)] text-white font-bold rounded-lg transition-colors text-sm shadow-[0_0_15px_rgba(33,205,141,0.2)] text-center">
             + Add Prediction
           </a>
         </div>
