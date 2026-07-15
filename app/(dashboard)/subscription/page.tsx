@@ -625,7 +625,7 @@ function SubscriptionContent() {
               <h2 id="cancel-modal-title" className="text-lg font-bold text-white">Stop Auto-Renewal?</h2>
             </div>
             <p className="text-sm text-gray-300 leading-relaxed">
-              Are you sure you want to stop your recurring subscription? You will continue to enjoy full <span className="text-emerald-400 font-semibold">Pro VIP access</span> until your current billing period ends — you will not lose access immediately.
+              Are you sure you want to stop your recurring subscription? You will continue to enjoy full <span className="text-emerald-400 font-semibold">Pro VIP access</span> until your current billing period ends. <span className="block mt-2 text-xs text-amber-300/90 font-medium">⚠️ Note: All subscription sales are final. Stopping renewal simply prevents automatic card billing next month without issuing a refund.</span>
             </p>
             <div className="flex items-center gap-3 pt-2">
               <button
