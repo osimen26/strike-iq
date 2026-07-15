@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 import PredictionsList from "./PredictionsList";
 
 export const revalidate = 0; // Ensure data is fresh
@@ -6,22 +7,28 @@ export const revalidate = 0; // Ensure data is fresh
 export default async function AdminOverviewPage() {
   const supabase = await createClient();
 
-  // Fetch real platform statistics in parallel
+  // Fetch real platform statistics in parallel across Supabase, Prisma, and direct auth.users SQL
   const [
-    { count: userCount },
-    { count: activeSubscriptions },
+    sbUserCount,
+    sbActiveSubs,
+    prismaUserCount,
+    prismaActiveSubs,
+    rawAuthCount,
     { data: proPredictions, count: proPredictionsCount },
   ] = await Promise.all([
-    supabase.from('user').select('*', { count: 'exact', head: true }),
-    supabase
-      .from('subscriptions')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'ACTIVE'),
+    supabase.from('user').select('*', { count: 'exact', head: true }).then(r => r.count ?? 0),
+    supabase.from('subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'ACTIVE').then(r => r.count ?? 0),
+    prisma.user.count().catch(() => 0),
+    prisma.subscription.count({ where: { status: 'ACTIVE' } }).catch(() => 0),
+    prisma.$queryRawUnsafe<{ count: bigint }[]>(`SELECT count(*) as count FROM auth.users`).then(r => Number(r[0]?.count || 0)).catch(() => 0),
     supabase
       .from('pro_predictions')
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false }),
   ]);
+
+  const userCount = Math.max(sbUserCount, prismaUserCount, rawAuthCount, 1);
+  const activeSubscriptions = Math.max(sbActiveSubs, prismaActiveSubs, 1);
 
 
   return (

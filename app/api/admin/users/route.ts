@@ -31,16 +31,38 @@ export async function GET(request: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
     );
 
-    // 1. Fetch real users from Supabase Auth engine (auth.users) if Admin key is available
+    // 1. Fetch real users from Supabase Auth engine (auth.users)
     let authEngineUsers: any[] = [];
     if (supabaseAdmin) {
       try {
         const { data: authData } = await supabaseAdmin.auth.admin.listUsers();
-        if (authData?.users) {
+        if (authData?.users && authData.users.length > 0) {
           authEngineUsers = authData.users;
         }
       } catch (authErr) {
         console.warn('Supabase Auth admin listUsers fetch warning:', authErr);
+      }
+    }
+
+    // Direct SQL fallback: query auth.users directly via Prisma if listUsers did not return results
+    if (authEngineUsers.length === 0) {
+      try {
+        const rawUsers: any[] = await prisma.$queryRawUnsafe(`
+          SELECT id, email, raw_user_meta_data as meta, created_at, email_confirmed_at 
+          FROM auth.users 
+          ORDER BY created_at DESC
+        `);
+        if (rawUsers && rawUsers.length > 0) {
+          authEngineUsers = rawUsers.map(ru => ({
+            id: ru.id,
+            email: ru.email,
+            user_metadata: (typeof ru.meta === 'string' ? JSON.parse(ru.meta) : ru.meta) || {},
+            email_confirmed_at: ru.email_confirmed_at,
+            created_at: ru.created_at || new Date().toISOString()
+          }));
+        }
+      } catch (sqlErr) {
+        console.warn('Direct SQL auth.users fetch warning:', sqlErr);
       }
     }
 
@@ -60,20 +82,29 @@ export async function GET(request: Request) {
       console.warn('Prisma fetch failed in /api/admin/users:', dbErr);
     }
 
-    // 3. Fetch real users and subscriptions from Supabase public tables
+    // 3. Fetch real users and subscriptions from Supabase public tables (using authenticated server client first)
     let supabaseUsers: any[] = [];
     let supabaseSubs: any[] = [];
     try {
-      const { data: uData } = await supabasePublic
+      const { data: uData } = await supabase
         .from('user')
         .select('*')
         .order('createdAt', { ascending: false });
       supabaseUsers = uData || [];
 
-      const { data: sData } = await supabasePublic
+      if (supabaseUsers.length === 0) {
+        const { data: uDataPublic } = await supabasePublic.from('user').select('*');
+        supabaseUsers = uDataPublic || [];
+      }
+
+      const { data: sData } = await supabase
         .from('subscriptions')
         .select('*');
       supabaseSubs = sData || [];
+      if (supabaseSubs.length === 0) {
+        const { data: sDataPublic } = await supabasePublic.from('subscriptions').select('*');
+        supabaseSubs = sDataPublic || [];
+      }
     } catch (sbErr) {
       console.warn('Supabase fetch failed in /api/admin/users:', sbErr);
     }
