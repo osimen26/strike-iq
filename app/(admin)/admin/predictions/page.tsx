@@ -491,7 +491,7 @@ export default function AddPredictionPage() {
           }`}
         >
           <span>🎟️</span>
-          <span>Independent VIP Booking Code</span>
+          <span>Independent Booking Code</span>
         </button>
       </div>
 
@@ -697,7 +697,7 @@ export default function AddPredictionPage() {
             disabled={publishingBatchCodes}
             className="w-full py-4 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_25px_rgba(19,133,97,0.4)] disabled:opacity-50 text-base uppercase font-mono tracking-wider cursor-pointer"
           >
-            {publishingBatchCodes ? `Publishing All ${draftCodes.length} VIP Codes...` : `🚀 Publish All ${draftCodes.length} Queued VIP Codes at Once (1-Click Batch)`}
+            {publishingBatchCodes ? `Publishing All ${draftCodes.length} Queued Booking Codes...` : `🚀 Publish All ${draftCodes.length} Queued Booking Codes at Once (Free & Pro Batch)`}
           </button>
         </div>
       )}
@@ -707,7 +707,7 @@ export default function AddPredictionPage() {
         <div className="bg-[#121215] border border-[var(--color-brand-emerald)]/40 rounded-xl p-6 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800/80 pb-4 gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-base font-bold text-white tracking-wide">🎟️ Publish Standalone Booking Code Slip</span>
+              <span className="text-base font-bold text-white tracking-wide">🎟️ Publish Independent Booking Code Slip (Free & Pro Tiers)</span>
             </div>
             <span className={`text-[11px] uppercase tracking-wider px-2.5 py-0.5 rounded font-bold ${
               formData.tier === "FREE" ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" : "bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] border border-[var(--color-brand-emerald)]/40"
