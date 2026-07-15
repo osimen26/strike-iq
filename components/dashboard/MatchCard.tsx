@@ -78,9 +78,10 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
   // ==========================================
   // 1. BOOKING CODE SLIP LAYOUT
   // Strictly follows user rules:
+  // - No glowing effects or shadows
   // - No VS (not a 1v1 match)
   // - Shows Booking Code + Betting Platform prominently
-  // - Strike IQ Logo right beside FREE DAILY/Header
+  // - Strike IQ Logo (/favicon.svg) right beside header
   // - NO AI Prediction row displayed
   // ==========================================
   if (isBookingSlip) {
@@ -89,23 +90,15 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
     const headerTitle = match.league || "FREE DAILY TEASER";
 
     return (
-      <div
-        className={`relative group rounded-xl bg-[#09090b] border ${
-          match.isFreePick
-            ? "border-cyan-500/80 shadow-[0_0_20px_rgba(6,182,212,0.18)]"
-            : match.isProPick
-            ? "border-[#138561]/80 shadow-[0_0_20px_rgba(19,133,97,0.15)]"
-            : "border-zinc-800/80"
-        } overflow-hidden transition-all duration-200 hover:border-zinc-700`}
-      >
+      <div className="relative group rounded-xl bg-[#09090b] border border-zinc-800/90 overflow-hidden transition-all duration-200 hover:border-zinc-700">
         <div className="relative z-10 p-5 sm:p-6">
           {/* Top Header: Strike IQ Logo + Header Title + Badges + Date */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-zinc-800/80">
             <div className="flex flex-wrap items-center gap-3">
               {/* Strike IQ Logo right beside the Free Daily header */}
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-[#121215] border border-[#138561]/50 flex items-center justify-center p-1.5 shrink-0 shadow-[0_0_12px_rgba(19,133,97,0.3)]">
-                  <img src="/logo.png" alt="Strike IQ" className="w-full h-full object-contain" />
+                <div className="w-7 h-7 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center p-1.5 shrink-0">
+                  <img src="/favicon.svg" alt="Strike IQ" className="w-full h-full object-contain" />
                 </div>
                 <span className="text-sm font-mono font-bold text-white uppercase tracking-wider">
                   {headerTitle}
@@ -113,17 +106,17 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
               </div>
 
               {match.isFreePick && (
-                <span className="px-2.5 py-0.5 rounded bg-cyan-500/20 border border-cyan-500/40 text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                <span className="px-2.5 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">
                   🎁 FREE COMMUNITY SLIP
                 </span>
               )}
               {match.isProPick && !match.isFreePick && (
-                <span className="px-2.5 py-0.5 rounded bg-[#138561]/20 border border-[#138561]/40 text-[10px] font-mono font-bold text-[#138561] uppercase tracking-wider flex items-center gap-1">
+                <span className="px-2.5 py-0.5 rounded bg-[#138561]/15 border border-[#138561]/30 text-[10px] font-mono font-bold text-[#138561] uppercase tracking-wider flex items-center gap-1">
                   <CrownIcon size={13} /> PRO EDGE
                 </span>
               )}
               {match.homeTeam?.toLowerCase().includes("odd") && (
-                <span className="px-2.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider">
+                <span className="px-2.5 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider">
                   🔥 {match.homeTeam}
                 </span>
               )}
@@ -136,7 +129,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
             </div>
           </div>
 
-          {/* Center: Betting Platform + Booking Code & AI Rating Ring (NO VS, NO AI PREDICTION) */}
+          {/* Center: Betting Platform + Booking Code & AI Rating Ring (NO GLOW, NO VS, NO AI PREDICTION) */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 relative">
             {actuallyLocked && (
               <div
@@ -144,9 +137,9 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                   e.stopPropagation();
                   window.location.href = "/dashboard/subscription";
                 }}
-                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/85 rounded-xl border border-emerald-500/50 p-4 text-center cursor-pointer hover:bg-black/90 hover:border-emerald-400 transition-all shadow-[0_0_20px_rgba(19,133,97,0.3)] group/lock"
+                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 rounded-xl border border-zinc-700 p-4 text-center cursor-pointer hover:bg-black transition-all group/lock"
               >
-                <div className="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mb-1 group-hover/lock:scale-110 transition-transform">
+                <div className="w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center mb-1 group-hover/lock:scale-110 transition-transform">
                   <LockIcon size={18} className="text-emerald-400" />
                 </div>
                 <span className="text-xs font-mono font-bold text-white uppercase tracking-wider mb-0.5">
@@ -158,7 +151,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
               </div>
             )}
 
-            {/* ONLY THE BETTING PLATFORM & BOOKING CODE */}
+            {/* ONLY THE BETTING PLATFORM & BOOKING CODE (FLAT MATTE DARK BOX, NO GLOW) */}
             <div
               onClick={(e) => {
                 e.stopPropagation();
@@ -176,22 +169,18 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                   ? "Upgrade to Pro to copy booking code"
                   : "Click to copy booking code"
               }
-              className={`flex-1 p-5 sm:p-6 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-5 cursor-pointer transition-all group/code ${
+              className={`flex-1 p-5 sm:p-6 rounded-xl border bg-[#121215] border-zinc-800/90 flex flex-col sm:flex-row sm:items-center justify-between gap-5 cursor-pointer transition-all group/code hover:border-zinc-700 ${
                 actuallyLocked
                   ? "blur-sm opacity-40 pointer-events-none select-none"
                   : ""
-              } ${
-                match.isFreePick
-                  ? "bg-gradient-to-r from-cyan-500/15 via-[#09090b] to-emerald-950/20 border-cyan-500/60 shadow-[0_0_25px_rgba(6,182,212,0.18)] hover:border-cyan-300"
-                  : "bg-gradient-to-r from-[#138561]/15 via-[#09090b] to-emerald-950/20 border-[#138561]/60 shadow-[0_0_20px_rgba(19,133,97,0.15)] hover:border-emerald-400"
               }`}
             >
               <div className="flex items-center gap-4">
                 <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border shadow-inner ${
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${
                     match.isFreePick
-                      ? "bg-cyan-500/20 border-cyan-500/40 text-cyan-400"
-                      : "bg-[#138561]/20 border-[#138561]/40 text-[#138561]"
+                      ? "bg-cyan-500/15 border-cyan-500/30 text-cyan-400"
+                      : "bg-[#138561]/15 border-[#138561]/30 text-[#138561]"
                   }`}
                 >
                   <TicketIcon size={24} />
@@ -219,10 +208,10 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
               </div>
 
               <div
-                className={`px-5 py-3 rounded-lg border font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all shrink-0 shadow-md ${
+                className={`px-5 py-3 rounded-lg border font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all shrink-0 ${
                   match.isFreePick
-                    ? "bg-cyan-500 text-black border-cyan-400 group-hover/code:bg-cyan-400 group-hover/code:scale-105"
-                    : "bg-[#138561] text-white border-emerald-400 group-hover/code:bg-emerald-600 group-hover/code:scale-105"
+                    ? "bg-cyan-500 text-black border-cyan-400 group-hover/code:bg-cyan-400"
+                    : "bg-[#138561] text-white border-emerald-400 group-hover/code:bg-emerald-600"
                 }`}
               >
                 <span>{actuallyLocked ? "LOCK 🔒" : "COPY CODE"}</span>
@@ -334,18 +323,10 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
 
   // ==========================================
   // 2. STANDARD 1v1 MATCH CARD LAYOUT
-  // Displays teams, VS, verdict, booking code, rating, analysis
+  // Flat matte design with no glow effects
   // ==========================================
   return (
-    <div
-      className={`relative group rounded-xl bg-[#09090b] border ${
-        match.isFreePick
-          ? "border-cyan-500/80 shadow-[0_0_20px_rgba(6,182,212,0.18)]"
-          : match.isProPick
-          ? "border-[#138561]/80 shadow-[0_0_20px_rgba(19,133,97,0.15)]"
-          : "border-zinc-800/80"
-      } overflow-hidden transition-all duration-200 hover:border-zinc-700`}
-    >
+    <div className="relative group rounded-xl bg-[#09090b] border border-zinc-800/90 overflow-hidden transition-all duration-200 hover:border-zinc-700">
       <div className="relative z-10 p-5 sm:p-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           {/* LEFT: Match Info & Teams */}
@@ -377,7 +358,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
             {/* Teams */}
             <div className="flex-1 flex items-center justify-center md:justify-start gap-4 w-full">
               <div className="flex flex-col items-center gap-2 w-2/5">
-                <div className="w-12 h-12 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center overflow-hidden p-2 shadow-inner">
+                <div className="w-12 h-12 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center overflow-hidden p-2">
                   <img
                     src={getTeamLogo(match.homeTeam)}
                     alt={match.homeTeam}
@@ -397,7 +378,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
               </div>
 
               <div className="flex flex-col items-center gap-2 w-2/5">
-                <div className="w-12 h-12 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center overflow-hidden p-2 shadow-inner">
+                <div className="w-12 h-12 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-center overflow-hidden p-2">
                   <img
                     src={getTeamLogo(match.awayTeam)}
                     alt={match.awayTeam}
@@ -422,9 +403,9 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                   e.stopPropagation();
                   window.location.href = "/dashboard/subscription";
                 }}
-                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/85 rounded-lg border border-emerald-500/50 p-3 text-center cursor-pointer hover:bg-black/90 hover:border-emerald-400 transition-all shadow-[0_0_20px_rgba(19,133,97,0.3)] group/lock"
+                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 rounded-lg border border-zinc-700 p-3 text-center cursor-pointer hover:bg-black transition-all group/lock"
               >
-                <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mb-1 group-hover/lock:scale-110 transition-transform">
+                <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center mb-1 group-hover/lock:scale-110 transition-transform">
                   <LockIcon size={16} className="text-emerald-400" />
                 </div>
                 <span className="text-[11px] font-mono font-bold text-white uppercase tracking-wider mb-0.5">
@@ -448,27 +429,27 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
             >
               <div className="flex flex-wrap gap-1.5 mb-0.5">
                 {match.status === "WON" && (
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40 text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-wider whitespace-nowrap shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                  <span className="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-wider whitespace-nowrap">
                     ✅ WON (+0.85u)
                   </span>
                 )}
                 {match.status === "LOST" && (
-                  <span className="px-2 py-0.5 rounded bg-red-500/20 border border-red-500/40 text-[9px] font-mono font-bold text-red-400 uppercase tracking-wider whitespace-nowrap">
+                  <span className="px-2 py-0.5 rounded bg-red-500/15 border border-red-500/30 text-[9px] font-mono font-bold text-red-400 uppercase tracking-wider whitespace-nowrap">
                     ❌ LOST (-1.0u)
                   </span>
                 )}
                 {match.status === "VOID" && (
-                  <span className="px-2 py-0.5 rounded bg-zinc-500/20 border border-zinc-500/40 text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap">
+                  <span className="px-2 py-0.5 rounded bg-zinc-500/15 border border-zinc-500/30 text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap">
                     ⚪ VOID
                   </span>
                 )}
                 {match.isFreePick && (
-                  <span className="px-2 py-0.5 rounded bg-cyan-500/20 border border-cyan-500/40 text-[9px] font-mono font-bold text-cyan-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                  <span className="px-2 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-[9px] font-mono font-bold text-cyan-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
                     🎁 FREE COMMUNITY SLIP
                   </span>
                 )}
                 {match.isProPick && !match.isFreePick && (
-                  <span className="px-2 py-0.5 rounded bg-[#138561]/20 border border-[#138561]/40 text-[9px] font-mono font-bold text-[#138561] uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded bg-[#138561]/15 border border-[#138561]/30 text-[9px] font-mono font-bold text-[#138561] uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
                     <CrownIcon size={12} /> PRO EDGE
                   </span>
                 )}
@@ -481,7 +462,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                   </span>
                 ))}
               </div>
-              <div className="px-3.5 py-2 bg-[#121215] rounded-lg border border-zinc-800/80 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-3 shadow-sm">
+              <div className="px-3.5 py-2 bg-[#121215] rounded-lg border border-zinc-800/80 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-3">
                 <span className="text-[11px] font-mono font-semibold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
                   <SparklesIcon size={13} className="text-[#138561]" />
                   AI PREDICTION:
@@ -510,11 +491,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                       ? "Upgrade to Pro to copy booking code"
                       : "Click to copy booking code"
                   }
-                  className={`px-3 py-1.5 rounded-lg border w-full lg:w-auto flex items-center justify-between lg:justify-end gap-2.5 cursor-pointer transition-all group/code ${
-                    match.isFreePick
-                      ? "bg-gradient-to-r from-cyan-500/25 via-emerald-950/40 to-black border-cyan-500/60 shadow-[0_0_15px_rgba(6,182,212,0.25)] hover:border-cyan-300"
-                      : "bg-gradient-to-r from-[#138561]/25 to-emerald-950/40 border-[#138561]/60 shadow-[0_0_12px_rgba(19,133,97,0.2)] hover:border-emerald-400"
-                  }`}
+                  className="px-3 py-1.5 rounded-lg border bg-[#121215] border-zinc-800 w-full lg:w-auto flex items-center justify-between lg:justify-end gap-2.5 cursor-pointer transition-all group/code hover:border-zinc-700"
                 >
                   <span className="text-[10px] font-mono font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
                     <TicketIcon
@@ -526,7 +503,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                     {match.bookmaker || "BOOKING CODE"}:
                   </span>
                   <span
-                    className={`font-mono font-bold text-xs text-white tracking-widest select-all bg-black/40 px-2 py-0.5 rounded border border-white/10 ${
+                    className={`font-mono font-bold text-xs text-white tracking-widest select-all bg-black/40 px-2 py-0.5 rounded border border-zinc-800 ${
                       match.isFreePick
                         ? "group-hover/code:border-cyan-400"
                         : "group-hover/code:border-[#138561]"
