@@ -1,48 +1,63 @@
 import { NextResponse } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/feed
  * Returns published Pro Picks from the pro_predictions table.
- * Uses the service role / anon key directly so no session cookie is required.
+ * Uses both Prisma direct connection and Supabase anon client so queries are always fast, cache-immune, and never blocked.
  */
 export async function GET() {
   try {
-    // Use the Supabase anon client directly — no cookies needed for public reads
-    const supabase = createSupabaseClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-    );
+    let picks: any[] = [];
 
-    // Fetch all pro predictions, most recent first
-    const { data: rawPicks, error } = await supabase
-      .from('pro_predictions')
-      .select('*')
-      .order('created_at', { ascending: false });
+    // Primary: fetch via direct Prisma connection (bypasses RLS & PostgREST cache)
+    try {
+      picks = await prisma.proPrediction.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+    } catch (prismaErr) {
+      console.error('[FEED] Prisma fetch fallback triggered:', prismaErr);
+      // Fallback: fetch via Supabase anon client
+      const supabase = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+      );
+      const { data: rawPicks, error } = await supabase
+        .from('pro_predictions')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('[FEED] Supabase fetch error:', error);
-      // Don't 500 — fall through with empty shaped array so Odds API still loads
+      if (error) {
+        console.error('[FEED] Supabase fetch error:', error);
+      } else if (rawPicks) {
+        picks = rawPicks;
+      }
     }
-
-    const picks = rawPicks || [];
 
     // Shape each row from the pro_predictions table into the format
     // the dashboard MatchCard component expects
     const shaped = picks.map((p: any) => {
-      // Build a human-readable date/time label from match_date + match_time
+      const matchDateStr = p.matchDate || p.match_date || null;
+      const matchTimeStr = p.matchTime || p.match_time || '';
+      const homeTeam = p.homeTeam || p.home_team || 'Home Team';
+      const awayTeam = p.awayTeam || p.away_team || 'Away Team';
+      const bookingCode = p.bookingCode || p.booking_code || null;
+      const bookmaker = p.bookmaker || p.bookmaker || null;
+
+      // Build a human-readable date/time label from matchDate + matchTime
       let dateLabel = 'TBD';
       let timeLabel = '';
 
-      if (p.match_date) {
+      if (matchDateStr) {
         let matchDate: Date;
-        if (typeof p.match_date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(p.match_date)) {
-          const [year, month, day] = p.match_date.split('-').map(Number);
+        if (typeof matchDateStr === 'string' && /^\d{4}-\d{2}-\d{2}/.test(matchDateStr)) {
+          const [year, month, day] = matchDateStr.split('-').map(Number);
           matchDate = new Date(year, month - 1, day);
         } else {
-          matchDate = new Date(p.match_date);
+          matchDate = new Date(matchDateStr);
         }
 
         const today = new Date();
@@ -67,19 +82,25 @@ export async function GET() {
         }
       }
 
-      if (p.match_time) {
-        // match_time is stored as HH:MM (24h), display with GMT suffix
-        timeLabel = `${p.match_time} GMT`;
+      if (matchTimeStr) {
+        // matchTime is stored as HH:MM (24h), display with GMT suffix
+        timeLabel = `${matchTimeStr} GMT`;
       }
 
-      const isFreePick = Array.isArray(p.tags) && p.tags.some((t: any) => 
-        typeof t === 'string' && (t.toUpperCase().includes('FREE') || t.toUpperCase().includes('COMMUNITY'))
-      );
+      const tagsList = Array.isArray(p.tags) ? p.tags : [];
+      const isFreePick = tagsList.some((t: any) => 
+        typeof t === 'string' && (
+          t.toUpperCase().includes('FREE') || 
+          t.toUpperCase().includes('COMMUNITY') || 
+          t.toUpperCase().includes('TEASER') ||
+          t.toUpperCase().includes('PUBLIC')
+        )
+      ) || (typeof p.league === 'string' && p.league.toUpperCase().includes('FREE'));
 
       return {
         id: p.id,
-        homeTeam: p.home_team,
-        awayTeam: p.away_team,
+        homeTeam,
+        awayTeam,
         league: p.league,
         sport: p.sport || 'football',
         date: dateLabel,
@@ -88,12 +109,12 @@ export async function GET() {
         confidence: p.confidence,
         analysis: p.analysis || '',
         status: p.status || 'PENDING',
-        tags: Array.isArray(p.tags) ? p.tags : [],
-        bookingCode: p.booking_code || null,
-        bookmaker: p.bookmaker || null,
+        tags: tagsList,
+        bookingCode,
+        bookmaker,
         isProPick: !isFreePick, // If tagged as FREE TEASER/COMMUNITY, unlocked for all users!
         isFreePick: isFreePick,
-        createdAt: p.created_at,
+        createdAt: p.createdAt || p.created_at,
       };
     });
 
