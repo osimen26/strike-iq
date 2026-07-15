@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { TargetIcon, TicketIcon, TrashIcon } from "@/components/icons/Icons";
+import { TargetIcon, TicketIcon, TrashIcon, ZapIcon } from "@/components/icons/Icons";
 
 export default function EditPredictionPage() {
   const supabase = createClient();
@@ -328,9 +328,10 @@ export default function EditPredictionPage() {
               type="button"
               onClick={handlePublishBookingCode}
               disabled={publishingCode}
-              className="px-4 py-2.5 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all shadow-[0_0_15px_rgba(19,133,97,0.3)] disabled:opacity-50 shrink-0 cursor-pointer"
+              className="px-4 py-2.5 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all shadow-[0_0_15px_rgba(19,133,97,0.3)] disabled:opacity-50 shrink-0 cursor-pointer flex items-center gap-1.5"
             >
-              {publishingCode ? "Publishing Code..." : "⚡ Publish VIP Code Only"}
+              <ZapIcon size={14} />
+              <span>{publishingCode ? "Publishing Code..." : "Publish VIP Code Only"}</span>
             </button>
           </div>
         </div>

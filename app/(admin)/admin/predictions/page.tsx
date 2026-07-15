@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { TargetIcon, SparklesIcon, TrashIcon, RefreshCwIcon, GiftIcon } from "@/components/icons/Icons";
+import { TargetIcon, SparklesIcon, TrashIcon, RefreshCwIcon, GiftIcon, ZapIcon, CrownIcon } from "@/components/icons/Icons";
 
 interface DraftGame {
   id: string;
@@ -503,9 +503,10 @@ export default function AddPredictionPage() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-brand-emerald)] animate-pulse"></span>
-              <h2 className="text-sm font-bold font-mono uppercase tracking-wider text-white">
-                ⚡ STEP 1: SELECT AUDIENCE & MONETIZATION STRATEGY
-              </h2>
+              <div className="flex items-center gap-1.5 text-sm font-bold font-mono uppercase tracking-wider text-white">
+                <ZapIcon size={16} className="text-amber-400" />
+                <span>STEP 1: SELECT AUDIENCE & MONETIZATION STRATEGY</span>
+              </div>
             </div>
             <p className="text-xs text-zinc-400 font-sans">
               Choose who can copy this code and how it drives subscription conversions across user dashboards.
@@ -586,9 +587,9 @@ export default function AddPredictionPage() {
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="text-2xl">👑</span>
+                  <CrownIcon size={22} className="text-[var(--color-brand-emerald)]" />
                   <span className="text-base font-bold text-white font-heading tracking-wide">
-                    VIP Pro Lock ($9.99 Hook)
+                    VIP Pro Exclusive ($9.99 Lock)
                   </span>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-widest shrink-0 ${
@@ -740,12 +741,16 @@ export default function AddPredictionPage() {
                     <div className="font-bold font-mono text-white tracking-wide flex items-center gap-2 flex-wrap">
                       <span>{codeItem.bookingCode}</span>
                       <span className="text-[var(--color-brand-emerald)] font-sans text-xs">({codeItem.bookmaker})</span>
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase flex items-center gap-1 ${
                         codeItem.tier === "FREE" 
                           ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" 
                           : "bg-emerald-950 text-emerald-400 border border-emerald-500/40"
                       }`}>
-                        {codeItem.tier === "FREE" ? "🎁 FREE TEASER FOR ALL" : "👑 VIP PRO LOCK ($9.99 HOOK)"}
+                        {codeItem.tier === "FREE" ? (
+                          <><GiftIcon size={11} className="text-cyan-400" /><span>FREE TEASER FOR ALL</span></>
+                        ) : (
+                          <><CrownIcon size={11} className="text-emerald-400" /><span>VIP PRO LOCK ($9.99 HOOK)</span></>
+                        )}
                       </span>
                     </div>
                     <div className="text-xs text-zinc-400 truncate mt-1">
@@ -782,10 +787,14 @@ export default function AddPredictionPage() {
             <div className="flex items-center gap-2">
               <span className="text-base font-bold text-white tracking-wide">🎟️ Publish Independent Booking Code Slip (Free & Pro Tiers)</span>
             </div>
-            <span className={`text-[11px] uppercase tracking-wider px-2.5 py-0.5 rounded font-bold ${
-              formData.tier === "FREE" ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" : "bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] border border-[var(--color-brand-emerald)]/40"
+            <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 ${
+              formData.tier === "FREE" ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30" : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
             }`}>
-              {formData.tier === "FREE" ? "🎁 Free Daily Marketing Slip" : "👑 VIP Pro Exclusive ($9.99 Lock)"}
+              {formData.tier === "FREE" ? (
+                <><GiftIcon size={14} className="text-cyan-400" /><span>Free Daily Marketing Slip</span></>
+              ) : (
+                <><CrownIcon size={14} className="text-emerald-400" /><span>VIP Pro Exclusive ($9.99 Lock)</span></>
+              )}
             </span>
           </div>
 
@@ -874,9 +883,10 @@ export default function AddPredictionPage() {
               type="button"
               onClick={handlePublishBookingCode}
               disabled={publishingCode}
-              className="py-4 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(19,133,97,0.3)] disabled:opacity-50 text-base font-mono uppercase tracking-wider cursor-pointer"
+              className="py-4 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(19,133,97,0.3)] disabled:opacity-50 text-base font-mono uppercase tracking-wider cursor-pointer flex items-center justify-center gap-2"
             >
-              {publishingCode ? "Publishing VIP Code..." : "⚡ Publish Single Code Instantly"}
+              <ZapIcon size={18} />
+              <span>{publishingCode ? "Publishing VIP Code..." : "Publish Single Code Instantly"}</span>
             </button>
           </div>
         </div>
@@ -1033,7 +1043,8 @@ export default function AddPredictionPage() {
               disabled={loading}
               className="py-4 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all disabled:opacity-50 text-base shadow-[0_0_20px_rgba(19,133,97,0.3)] flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>⚡ Publish Single Game Instantly</span>
+              <ZapIcon size={18} />
+              <span>Publish Single Game Instantly</span>
             </button>
           </div>
         </form>

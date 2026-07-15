@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { getLeagueLogo } from "@/lib/logos";
-import { TrashIcon } from "@/components/icons/Icons";
+import { TrashIcon, GiftIcon, CrownIcon, TicketIcon } from "@/components/icons/Icons";
 
 export default function PredictionsList({ initialPredictions }: { initialPredictions: any[] }) {
   const [predictions, setPredictions] = useState(initialPredictions);
@@ -72,16 +72,21 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
                       <span className="font-semibold text-white whitespace-nowrap">{p.home_team} vs {p.away_team}</span>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap mt-1">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1 ${
                         isFreeTier 
                           ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" 
                           : "bg-[#138561]/20 text-[#138561] border border-[#138561]/40"
                       }`}>
-                        {isFreeTier ? "🎁 FREE MARKETING CODE" : "👑 VIP PRO LOCK"}
+                        {isFreeTier ? (
+                          <><GiftIcon size={11} className="text-cyan-400" /><span>FREE MARKETING CODE</span></>
+                        ) : (
+                          <><CrownIcon size={11} className="text-[#138561]" /><span>VIP PRO LOCK</span></>
+                        )}
                       </span>
                       {p.booking_code && (
                         <span className="px-2 py-0.5 rounded bg-black/60 text-zinc-300 border border-zinc-700 text-[10px] font-mono font-bold uppercase flex items-center gap-1">
-                          <span>🎟️ {p.bookmaker || 'CODE'}:</span>
+                          <TicketIcon size={12} className="text-emerald-400" />
+                          <span>{p.bookmaker || 'CODE'}:</span>
                           <span className="text-emerald-400 font-bold">{p.booking_code}</span>
                         </span>
                       )}

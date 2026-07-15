@@ -160,8 +160,9 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                 <span className="text-xs font-mono font-bold text-white uppercase tracking-wider mb-0.5">
                   {bettingPlatform} BOOKING CODE LOCKED
                 </span>
-                <span className="text-[11px] font-mono font-bold text-emerald-400 underline underline-offset-2 tracking-widest">
-                  ⚡ UPGRADE TO PRO ($9.99) TO COPY SLIP
+                <span className="flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-400 underline underline-offset-2 tracking-widest">
+                  <ZapIcon size={12} />
+                  <span>UPGRADE TO PRO ($9.99) TO COPY SLIP</span>
                 </span>
               </div>
             )}
@@ -432,8 +433,9 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                     ? `${match.bookmaker || "VIP"} CODE LOCKED`
                     : "VIP GAME VERDICT LOCKED"}
                 </span>
-                <span className="text-[10px] font-mono font-bold text-emerald-400 underline underline-offset-2 tracking-widest">
-                  ⚡ UPGRADE TO PRO ($9.99) TO COPY SLIP
+                <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-400 underline underline-offset-2 tracking-widest">
+                  <ZapIcon size={12} />
+                  <span>UPGRADE TO PRO ($9.99) TO COPY SLIP</span>
                 </span>
               </div>
             )}
