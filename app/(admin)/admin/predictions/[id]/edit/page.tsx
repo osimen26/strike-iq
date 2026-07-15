@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { TargetIcon, TicketIcon, TrashIcon } from "@/components/icons/Icons";
 
 export default function EditPredictionPage() {
   const supabase = createClient();
@@ -261,7 +262,8 @@ export default function EditPredictionPage() {
         {/* Section 2: AI Verdict & Confidence */}
         <div className="bg-[#121215] border border-zinc-800 rounded-xl p-6 space-y-6">
           <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-4">
-            <span className="text-base font-bold text-white tracking-wide">🎯 AI Verdict & Confidence Rating</span>
+            <TargetIcon size={18} className="text-[var(--color-brand-emerald)]" />
+            <span className="text-base font-bold text-white tracking-wide">AI Verdict & Confidence Rating</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -288,7 +290,10 @@ export default function EditPredictionPage() {
         {/* Section 3: Pro VIP Booking Code & Platform */}
         <div className="bg-[#121215] border border-[var(--color-brand-emerald)]/40 rounded-xl p-6 space-y-6">
           <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
-            <span className="text-sm font-mono font-bold text-[var(--color-brand-emerald)] uppercase tracking-wider">🎟️ Pro VIP Betting Code (Visible ONLY to Pro Members)</span>
+            <div className="flex items-center gap-2">
+              <TicketIcon size={16} className="text-[var(--color-brand-emerald)]" />
+              <span className="text-sm font-mono font-bold text-[var(--color-brand-emerald)] uppercase tracking-wider">Pro VIP Betting Code (Visible ONLY to Pro Members)</span>
+            </div>
             <span className="text-[11px] uppercase tracking-wider bg-[var(--color-brand-emerald)]/10 text-[var(--color-brand-emerald)] px-2 py-0.5 rounded font-bold">Pro Feed Exclusive</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -384,9 +389,10 @@ export default function EditPredictionPage() {
             type="button"
             onClick={handleDelete}
             disabled={loading || deleting}
-            className="w-full sm:w-auto px-8 py-4 bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-400 font-bold rounded-xl transition-colors disabled:opacity-50 text-lg"
+            className="w-full sm:w-auto px-8 py-4 bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-400 font-bold rounded-xl transition-colors disabled:opacity-50 text-lg flex items-center justify-center gap-2"
           >
-            {deleting ? "Deleting..." : "🗑️ Delete Pick"}
+            <TrashIcon size={18} />
+            <span>{deleting ? "Deleting..." : "Delete Pick"}</span>
           </button>
         </div>
 

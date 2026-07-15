@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { TargetIcon, SparklesIcon, TrashIcon, RefreshCwIcon, GiftIcon } from "@/components/icons/Icons";
 
 interface DraftGame {
   id: string;
@@ -537,7 +538,7 @@ export default function AddPredictionPage() {
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="text-2xl">🎁</span>
+                  <GiftIcon size={22} className="text-cyan-400" />
                   <span className="text-base font-bold text-white font-heading tracking-wide">
                     Free Daily Marketing Code
                   </span>
@@ -981,15 +982,17 @@ export default function AddPredictionPage() {
             <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
               <div className="flex items-center gap-2">
                 <span className="w-6 h-6 rounded-full bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] flex items-center justify-center font-mono text-xs font-bold">3</span>
-                <span className="text-base font-bold text-white tracking-wide">🎯 AI Verdict & Confidence Rating</span>
+                <TargetIcon size={18} className="text-[var(--color-brand-emerald)]" />
+                <span className="text-base font-bold text-white tracking-wide">AI Verdict & Confidence Rating</span>
               </div>
               <button
                 type="button"
                 onClick={handleGenerateAI}
                 disabled={generatingAI}
-                className="px-3.5 py-1.5 bg-[var(--color-brand-emerald)]/20 hover:bg-[var(--color-brand-emerald)] text-[var(--color-brand-emerald)] hover:text-white text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all border border-[var(--color-brand-emerald)]/40 cursor-pointer"
+                className="px-3.5 py-1.5 bg-[var(--color-brand-emerald)]/20 hover:bg-[var(--color-brand-emerald)] text-[var(--color-brand-emerald)] hover:text-white text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all border border-[var(--color-brand-emerald)]/40 cursor-pointer flex items-center gap-1.5"
               >
-                {generatingAI ? "AI Analyzing..." : "✨ Auto-Generate AI Verdict & Confidence"}
+                <SparklesIcon size={14} />
+                <span>{generatingAI ? "AI Analyzing..." : "Auto-Generate AI Verdict & Confidence"}</span>
               </button>
             </div>
 
@@ -1049,9 +1052,10 @@ export default function AddPredictionPage() {
           <button
             type="button"
             onClick={loadLivePredictions}
-            className="text-xs text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded border border-zinc-700 transition-colors cursor-pointer"
+            className="text-xs text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded border border-zinc-700 transition-colors cursor-pointer flex items-center gap-1.5"
           >
-            🔄 Refresh List
+            <RefreshCwIcon size={13} />
+            <span>Refresh List</span>
           </button>
         </div>
 
@@ -1102,9 +1106,10 @@ export default function AddPredictionPage() {
                             type="button"
                             onClick={() => handleDeleteLivePrediction(p.id)}
                             disabled={deletingId === p.id}
-                            className="text-xs font-bold text-red-400 hover:text-red-300 px-2.5 py-1 rounded bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-colors disabled:opacity-50 cursor-pointer"
+                            className="text-xs font-bold text-red-400 hover:text-red-300 px-2.5 py-1 rounded bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-colors disabled:opacity-50 cursor-pointer flex items-center gap-1"
                           >
-                            {deletingId === p.id ? "Deleting..." : "🗑️ Delete"}
+                            <TrashIcon size={13} />
+                            <span>{deletingId === p.id ? "Deleting..." : "Delete"}</span>
                           </button>
                         </div>
                       </td>

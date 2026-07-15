@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { getLeagueLogo } from "@/lib/logos";
+import { TrashIcon } from "@/components/icons/Icons";
 
 export default function PredictionsList({ initialPredictions }: { initialPredictions: any[] }) {
   const [predictions, setPredictions] = useState(initialPredictions);
@@ -116,9 +117,10 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
                     <button 
                       onClick={() => handleDelete(p.id)}
                       disabled={deletingId === p.id}
-                      className="text-sm font-medium text-red-400 hover:text-red-300 px-3 py-1.5 rounded-lg border border-red-500/20 hover:bg-red-500/10 transition-colors disabled:opacity-50"
+                      className="text-sm font-medium text-red-400 hover:text-red-300 px-3 py-1.5 rounded-lg border border-red-500/20 hover:bg-red-500/10 transition-colors disabled:opacity-50 flex items-center gap-1.5"
                     >
-                      {deletingId === p.id ? "Deleting..." : "Delete"}
+                      <TrashIcon size={15} />
+                      <span>{deletingId === p.id ? "Deleting..." : "Delete"}</span>
                     </button>
                   </div>
                 </td>
