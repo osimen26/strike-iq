@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
 import { sanitizePayload, sanitizeNumber } from '@/lib/security/validator';
 import { requireMasterAdmin, logAdminAudit } from '@/lib/security/adminGuard';
 import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
@@ -28,8 +29,21 @@ export async function POST(request: Request) {
       tagsArray.unshift('FREE TEASER');
     }
 
+    // Auto-migrate schema & refresh PostgREST schema cache to guarantee booking_code column exists
+    try {
+      await prisma.$executeRawUnsafe(`
+        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS booking_code TEXT;
+        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS bookmaker TEXT;
+        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS created_by TEXT;
+        NOTIFY pgrst, 'reload schema';
+      `);
+    } catch (migErr) {
+      console.warn("Schema check/reload notice:", migErr);
+    }
+
     // 1. Insert the Pro Prediction with sanitized fields
-    const { data, error } = await supabase
+    let insertedData: any = null;
+    const { data: sbData, error: sbError } = await supabase
       .from('pro_predictions')
       .insert([
         {
@@ -50,9 +64,28 @@ export async function POST(request: Request) {
       ])
       .select();
 
-    if (error) {
-      console.error("Supabase Insertion Error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (sbError || !sbData) {
+      console.warn("Supabase insert fallback to Prisma due to error:", sbError);
+      const created = await prisma.proPrediction.create({
+        data: {
+          homeTeam: body.homeTeam,
+          awayTeam: body.awayTeam,
+          league: body.league,
+          sport: body.sport,
+          matchDate: body.matchDate,
+          matchTime: body.matchTime,
+          prediction: body.prediction,
+          confidence: sanitizeNumber(body.confidence, 0, 100, 75),
+          analysis: body.analysis,
+          bookingCode: body.bookingCode || null,
+          bookmaker: body.bookmaker || null,
+          tags: tagsArray,
+          createdBy: user.id
+        }
+      });
+      insertedData = [created];
+    } else {
+      insertedData = sbData;
     }
 
     // 2. Fetch all user IDs and subscriptions to send targeted notifications (if enabled)
@@ -120,7 +153,7 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({ success: true, data: insertedData });
 
   } catch (error: any) {
     console.error("Pro Prediction API Error:", error);

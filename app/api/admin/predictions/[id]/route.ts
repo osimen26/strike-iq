@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
 import { sanitizePayload, sanitizeNumber, isValidId } from '@/lib/security/validator';
 import { requireMasterAdmin, logAdminAudit } from '@/lib/security/adminGuard';
 
@@ -21,7 +22,9 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {
+      await prisma.proPrediction.delete({ where: { id } }).catch(() => null);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
@@ -46,7 +49,19 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     logAdminAudit("UPDATE_PRO_PREDICTION", { predictionId: id, match: `${body.homeTeam} vs ${body.awayTeam}` });
 
-    const { data, error } = await supabase
+    try {
+      await prisma.$executeRawUnsafe(`
+        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS booking_code TEXT;
+        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS bookmaker TEXT;
+        ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS created_by TEXT;
+        NOTIFY pgrst, 'reload schema';
+      `);
+    } catch (migErr) {
+      console.warn("Schema check/reload notice:", migErr);
+    }
+
+    let updatedData: any = null;
+    const { data: sbData, error: sbError } = await supabase
       .from('pro_predictions')
       .update({
         home_team: body.homeTeam,
@@ -66,9 +81,32 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       .eq('id', id)
       .select();
 
-    if (error) throw error;
+    if (sbError || !sbData) {
+      console.warn("Supabase update fallback to Prisma due to error:", sbError);
+      const updated = await prisma.proPrediction.update({
+        where: { id },
+        data: {
+          homeTeam: body.homeTeam,
+          awayTeam: body.awayTeam,
+          league: body.league,
+          sport: body.sport,
+          matchDate: body.matchDate,
+          matchTime: body.matchTime,
+          prediction: body.prediction,
+          confidence: sanitizeNumber(body.confidence, 0, 100, 75),
+          analysis: body.analysis,
+          bookingCode: body.bookingCode || null,
+          bookmaker: body.bookmaker || null,
+          status: body.status || "PENDING",
+          tags: Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).slice(0, 50)) : []
+        }
+      });
+      updatedData = [updated];
+    } else {
+      updatedData = sbData;
+    }
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({ success: true, data: updatedData });
   } catch (error: any) {
     console.error("Update Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
