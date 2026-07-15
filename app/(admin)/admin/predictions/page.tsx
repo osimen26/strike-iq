@@ -510,7 +510,7 @@ export default function AddPredictionPage() {
             <p className="text-xs text-zinc-300 font-sans leading-relaxed">
               {formData.tier === "FREE" 
                 ? "Sends '🎁 Free Daily Code Dropped' alert. Unlocks the booking code on ALL freemium dashboards so users can copy directly and build trust."
-                : "Sends '🔒 VIP Code Dropped' FOMO teaser. Masks & locks the booking code on freemium dashboards (e.g. BC•••• [LOCKED]), making freemium users upgrade to Pro ($29.99/mo) to copy!"}
+                : "Sends '🔒 VIP Code Dropped' FOMO teaser. Masks & locks the booking code on freemium dashboards (e.g. BC•••• [LOCKED]), making freemium users upgrade to Pro ($9.99/mo) to copy!"}
             </p>
           </div>
 
@@ -524,7 +524,7 @@ export default function AddPredictionPage() {
                   formData.tier === "PRO" ? "bg-[#138561] text-white shadow-[0_0_15px_rgba(19,133,97,0.3)]" : "text-zinc-400 hover:text-white"
                 }`}
               >
-                <span>👑</span> VIP Pro Lock ($29.99 Hook)
+                <span>👑</span> VIP Pro Lock ($9.99 Hook)
               </button>
               <button
                 type="button"
@@ -672,7 +672,7 @@ export default function AddPredictionPage() {
                           ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" 
                           : "bg-emerald-950 text-emerald-400 border border-emerald-500/40"
                       }`}>
-                        {codeItem.tier === "FREE" ? "🎁 FREE TEASER FOR ALL" : "👑 VIP PRO LOCK ($29.99 HOOK)"}
+                        {codeItem.tier === "FREE" ? "🎁 FREE TEASER FOR ALL" : "👑 VIP PRO LOCK ($9.99 HOOK)"}
                       </span>
                     </div>
                     <div className="text-xs text-zinc-400 truncate mt-1">
@@ -712,7 +712,7 @@ export default function AddPredictionPage() {
             <span className={`text-[11px] uppercase tracking-wider px-2.5 py-0.5 rounded font-bold ${
               formData.tier === "FREE" ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" : "bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] border border-[var(--color-brand-emerald)]/40"
             }`}>
-              {formData.tier === "FREE" ? "🎁 Free Daily Marketing Slip" : "👑 VIP Pro Exclusive ($29.99 Lock)"}
+              {formData.tier === "FREE" ? "🎁 Free Daily Marketing Slip" : "👑 VIP Pro Exclusive ($9.99 Lock)"}
             </span>
           </div>
 

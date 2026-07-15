@@ -84,7 +84,7 @@ function MatchCard({ match, isLocked }: { match: any, isLocked?: boolean }) {
                   {match.bookingCode ? `${match.bookmaker || 'VIP'} CODE LOCKED` : "VIP GAME VERDICT LOCKED"}
                 </span>
                 <span className="text-[10px] font-mono font-bold text-emerald-400 underline underline-offset-2 tracking-widest">
-                  ⚡ UPGRADE TO PRO ($29.99) TO COPY SLIP
+                  ⚡ UPGRADE TO PRO ($9.99) TO COPY SLIP
                 </span>
               </div>
             )}

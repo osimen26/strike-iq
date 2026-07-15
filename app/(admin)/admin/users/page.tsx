@@ -270,7 +270,7 @@ export default function AdminUsersPage() {
             </div>
             <div className="bg-black/50 p-3.5 rounded-xl border border-white/10">
               <div className="text-[10px] text-gray-400 font-mono uppercase">Pro VIP Conversions</div>
-              <div className="text-xl font-bold text-emerald-400 mt-1">{referredProCount} PRO ($29.99/mo)</div>
+              <div className="text-xl font-bold text-emerald-400 mt-1">{referredProCount} PRO ($9.99/mo)</div>
             </div>
             <div className="bg-emerald-950/40 p-3.5 rounded-xl border border-emerald-500/30">
               <div className="flex items-center justify-between">
@@ -287,13 +287,13 @@ export default function AdminUsersPage() {
                 </select>
               </div>
               <div className="text-xl font-bold text-emerald-300 mt-1">
-                ${((referredProCount * 29.99 * commissionRate) / 100).toFixed(2)} / mo
+                ${((referredProCount * 9.99 * commissionRate) / 100).toFixed(2)} / mo
               </div>
             </div>
             <div className="bg-black/70 p-3.5 rounded-xl border border-white/10">
               <div className="text-[10px] text-gray-400 font-mono uppercase">Strike IQ Net Profit</div>
               <div className="text-xl font-bold text-white mt-1">
-                ${((referredProCount * 29.99 * (100 - commissionRate)) / 100).toFixed(2)} / mo
+                ${((referredProCount * 9.99 * (100 - commissionRate)) / 100).toFixed(2)} / mo
               </div>
             </div>
           </div>
