@@ -9,6 +9,11 @@ import {
   CopyIcon,
   CrownIcon,
   SparklesIcon,
+  HourglassIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  AlertCircleIcon,
+  GiftIcon,
 } from "@/components/icons/Icons";
 
 export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean }) {
@@ -121,8 +126,9 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
               </div>
 
               {match.isFreePick && (
-                <span className="px-2.5 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">
-                  🎁 FREE COMMUNITY SLIP
+                <span className="px-2.5 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1">
+                  <GiftIcon size={12} />
+                  <span>FREE COMMUNITY SLIP</span>
                 </span>
               )}
               {match.isProPick && !match.isFreePick && (
@@ -450,23 +456,33 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
             >
               <div className="flex flex-wrap gap-1.5 mb-0.5">
                 {match.status === "WON" && (
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-wider whitespace-nowrap">
-                    ✅ WON (+0.85u)
+                  <span className="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+                    <CheckCircleIcon size={12} />
+                    <span>WON (+0.85u)</span>
                   </span>
                 )}
                 {match.status === "LOST" && (
-                  <span className="px-2 py-0.5 rounded bg-red-500/15 border border-red-500/30 text-[9px] font-mono font-bold text-red-400 uppercase tracking-wider whitespace-nowrap">
-                    ❌ LOST (-1.0u)
+                  <span className="px-2 py-0.5 rounded bg-red-500/15 border border-red-500/30 text-[9px] font-mono font-bold text-red-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+                    <XCircleIcon size={12} />
+                    <span>LOST (-1.0u)</span>
                   </span>
                 )}
                 {match.status === "VOID" && (
-                  <span className="px-2 py-0.5 rounded bg-zinc-500/15 border border-zinc-500/30 text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap">
-                    ⚪ VOID
+                  <span className="px-2 py-0.5 rounded bg-zinc-500/15 border border-zinc-500/30 text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+                    <AlertCircleIcon size={12} />
+                    <span>VOID</span>
+                  </span>
+                )}
+                {match.status === "PENDING" && (
+                  <span className="px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-[9px] font-mono font-bold text-amber-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+                    <HourglassIcon size={12} />
+                    <span>PENDING</span>
                   </span>
                 )}
                 {match.isFreePick && (
                   <span className="px-2 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-[9px] font-mono font-bold text-cyan-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
-                    🎁 FREE COMMUNITY SLIP
+                    <GiftIcon size={12} />
+                    <span>FREE COMMUNITY SLIP</span>
                   </span>
                 )}
                 {match.isProPick && !match.isFreePick && (

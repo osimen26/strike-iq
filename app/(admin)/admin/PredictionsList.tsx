@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { getLeagueLogo } from "@/lib/logos";
-import { TrashIcon, GiftIcon, CrownIcon, TicketIcon } from "@/components/icons/Icons";
+import { TrashIcon, GiftIcon, CrownIcon, TicketIcon, HourglassIcon, CheckCircleIcon, XCircleIcon, AlertCircleIcon } from "@/components/icons/Icons";
 
 export default function PredictionsList({ initialPredictions }: { initialPredictions: any[] }) {
   const [predictions, setPredictions] = useState(initialPredictions);
@@ -106,10 +106,10 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
                     </div>
                   </td>
                 <td className="px-6 py-4">
-                  {p.status === 'WON' && <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono text-xs font-bold border border-emerald-500/30">✅ WON</span>}
-                  {p.status === 'LOST' && <span className="px-2 py-1 rounded bg-red-500/20 text-red-400 font-mono text-xs font-bold border border-red-500/30">❌ LOST</span>}
-                  {p.status === 'VOID' && <span className="px-2 py-1 rounded bg-zinc-500/20 text-zinc-400 font-mono text-xs font-bold border border-zinc-500/30">⚪ VOID</span>}
-                  {(!p.status || p.status === 'PENDING') && <span className="px-2 py-1 rounded bg-amber-500/20 text-amber-400 font-mono text-xs font-bold border border-amber-500/30">⏳ PENDING</span>}
+                  {p.status === 'WON' && <span className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono text-xs font-bold border border-emerald-500/30 flex items-center gap-1.5 w-fit"><CheckCircleIcon size={14} /><span>WON</span></span>}
+                  {p.status === 'LOST' && <span className="px-2.5 py-1 rounded bg-red-500/20 text-red-400 font-mono text-xs font-bold border border-red-500/30 flex items-center gap-1.5 w-fit"><XCircleIcon size={14} /><span>LOST</span></span>}
+                  {p.status === 'VOID' && <span className="px-2.5 py-1 rounded bg-zinc-500/20 text-zinc-400 font-mono text-xs font-bold border border-zinc-500/30 flex items-center gap-1.5 w-fit"><AlertCircleIcon size={14} /><span>VOID</span></span>}
+                  {(!p.status || p.status === 'PENDING') && <span className="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 font-mono text-xs font-bold border border-amber-500/30 flex items-center gap-1.5 w-fit"><HourglassIcon size={14} /><span>PENDING</span></span>}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-3">

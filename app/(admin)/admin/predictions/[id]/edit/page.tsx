@@ -346,10 +346,10 @@ export default function EditPredictionPage() {
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Match Outcome Status (For AI Analytics)</label>
               <select name="status" value={formData.status} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors">
-                <option value="PENDING">⏳ PENDING (Awaiting Match)</option>
-                <option value="WON">✅ WON (+0.85u ROI)</option>
-                <option value="LOST">❌ LOST (-1.0u ROI)</option>
-                <option value="VOID">⚪ VOID / POSTPONED</option>
+                <option value="PENDING">PENDING (Awaiting Match)</option>
+                <option value="WON">WON (+0.85u ROI)</option>
+                <option value="LOST">LOST (-1.0u ROI)</option>
+                <option value="VOID">VOID / POSTPONED</option>
               </select>
             </div>
             <div>
