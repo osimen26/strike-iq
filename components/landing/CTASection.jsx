@@ -88,7 +88,7 @@ function CTASection() {
           </h1>
           
           <div className="cta-button-wrapper mt-4">
-            <a href="/login" className="cta-button inline-block text-center">
+            <a href="/dashboard" className="cta-button inline-block text-center">
               ACCESS PRO PREDICTIONS NOW
             </a>
           </div>
