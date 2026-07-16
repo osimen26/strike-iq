@@ -48,9 +48,10 @@ export function MatchCard({
         t.toUpperCase().includes("FREE"))
     );
 
-  // Freemium items (isFreePick) are NEVER locked
-  // If user is guest and viewing any booking slip or pro pick, trigger 300ms teaser then lock for login
-  const requiresGuestAuth = Boolean(isGuest && (isBookingSlip || match.isProPick) && !match.isFreePick);
+  // For guests (unauthenticated users), ALL predictions on the dashboard start visible for 300ms (teaser)
+  // and then blur out, requiring them to sign in or register to copy code or unlock signals.
+  // For logged-in users (!isGuest), freemium items (isFreePick) are unlocked, while Pro picks require a subscription.
+  const requiresGuestAuth = Boolean(isGuest);
   const requiresProAuth = Boolean(!isGuest && isLocked && !match.isFreePick);
   const actuallyLocked = requiresGuestAuth || requiresProAuth;
 
