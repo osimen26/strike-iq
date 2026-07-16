@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ZapIcon } from '@/components/icons/Icons';
+import { ZapIcon, CrownIcon, CheckCircleIcon, XCircleIcon } from '@/components/icons/Icons';
 import { useRegionalPricing } from '@/lib/pricing/useRegionalPricing';
 import { PaymentHistorySection } from '@/components/subscription/PaymentHistorySection';
 import { SubscriptionModals } from '@/components/subscription/SubscriptionModals';
@@ -326,8 +326,9 @@ function SubscriptionContent() {
               >
                 {/* Pro Badge */}
                 {isPro && (
-                  <div className="absolute -top-3.5 right-6 bg-gradient-to-r from-[var(--color-brand-emerald)] to-emerald-400 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                    👑 RECOMMENDATION
+                  <div className="absolute -top-3.5 right-6 bg-gradient-to-r from-[var(--color-brand-emerald)] to-emerald-400 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
+                    <CrownIcon size={13} className="text-amber-300 shrink-0" />
+                    <span>RECOMMENDATION</span>
                   </div>
                 )}
 
@@ -364,7 +365,7 @@ function SubscriptionContent() {
                     <ul className="space-y-2.5">
                       {plan.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start gap-2.5 text-xs text-gray-200">
-                          <span className="text-[var(--color-brand-emerald)] font-bold shrink-0 mt-0.5">✓</span>
+                          <CheckCircleIcon size={16} className="text-[var(--color-brand-emerald)] shrink-0 mt-0.5" />
                           <span className="leading-relaxed">{feature}</span>
                         </li>
                       ))}
@@ -380,15 +381,17 @@ function SubscriptionContent() {
                         disabled
                         className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-white/10 text-gray-400 border border-white/5 cursor-not-allowed flex items-center justify-center gap-2"
                       >
-                        <span>✓ Current Plan</span>
+                        <CheckCircleIcon size={15} className="text-emerald-400 shrink-0" />
+                        <span>Current Plan</span>
                       </button>
                       {isPro && (
                         <button
                           onClick={() => setShowCancelConfirm(true)}
                           disabled={isCancelling}
-                          className="w-full py-2 px-3 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-300 text-[11px] font-semibold border border-red-500/30 transition-colors cursor-pointer disabled:opacity-50"
+                          className="w-full py-2 px-3 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-300 text-[11px] font-semibold border border-red-500/30 transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
                         >
-                          {isCancelling ? 'Cancelling...' : '🛑 Cancel Auto-Renewal'}
+                          <XCircleIcon size={14} className="text-red-400 shrink-0" />
+                          <span>{isCancelling ? 'Cancelling...' : 'Cancel Auto-Renewal'}</span>
                         </button>
                       )}
                     </div>
