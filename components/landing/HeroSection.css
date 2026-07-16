@@ -59,19 +59,20 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1200px;
-  padding: 0 20px;
+  max-width: 1250px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
-  flex-wrap: wrap;
+  gap: 32px;
+  flex-wrap: nowrap;
 }
 
 .hero-content {
   margin-top: 80px; /* Accounts for navbar */
-  width: 100%;
-  max-width: 750px;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 740px;
 }
 
 .hero-title {

@@ -11,7 +11,8 @@
   margin-bottom: 40px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
-  min-width: 260px;
+  min-width: 280px;
+  flex-shrink: 0;
 }
 
 .live-indicator {
