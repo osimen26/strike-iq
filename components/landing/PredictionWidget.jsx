@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import './PredictionWidget.css';
 
 const REAL_FALLBACK_MATCHES = [
@@ -114,22 +113,20 @@ function PredictionWidget() {
   const currentMatch = matches[currentIndex] || REAL_FALLBACK_MATCHES[0];
 
   return (
-    <Link href="/predictions" className="block transition-transform hover:scale-[1.02] cursor-pointer" title="Click to view live interactive predictions feed">
-      <div className="prediction-widget">
-        <div className="live-indicator">
-          <span className="live-dot"></span>
-          <span className="live-text">REAL MATCH ODDS &rarr; CLICK TO VIEW FEED</span>
-        </div>
-        <div className={`prediction-content ${fade ? 'fade-in' : 'fade-out'}`}>
-          <p className="match-title">
-            {currentMatch.league} · {currentMatch.home} vs {currentMatch.away}
-          </p>
-          <p className="prediction-detail">
-            {currentMatch.prediction} &rarr; {currentMatch.confidence}% confidence
-          </p>
-        </div>
+    <div className="prediction-widget">
+      <div className="live-indicator">
+        <span className="live-dot"></span>
+        <span className="live-text">REAL MATCH ODDS</span>
       </div>
-    </Link>
+      <div className={`prediction-content ${fade ? 'fade-in' : 'fade-out'}`}>
+        <p className="match-title">
+          {currentMatch.league} · {currentMatch.home} vs {currentMatch.away}
+        </p>
+        <p className="prediction-detail">
+          {currentMatch.prediction} &rarr; {currentMatch.confidence}% confidence
+        </p>
+      </div>
+    </div>
   );
 }
 

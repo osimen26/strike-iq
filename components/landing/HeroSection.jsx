@@ -89,7 +89,7 @@ function HeroSection() {
             StrikeIQ analyzes thousands of quantitative data points across every game to deliver predictions you can trust — covering Europe's Top 5 Football Leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), UEFA Champions League (UCL), and NBA, all powered by AI.
           </p>
           <div className="hero-cta-group">
-            <Link href="/predictions" className="cta-primary text-center inline-block">VIEW LIVE PREDICTIONS</Link>
+            <a href="/login" className="cta-primary text-center inline-block">GET FREE PREDICTION</a>
             <a href="#how-it-works" className="cta-secondary text-center inline-block">SEE HOW IT WORKS</a>
           </div>
         </div>
