@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
+import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 const API_KEY = process.env.THE_ODDS_API_KEY;
 
 export async function GET(request: Request) {
+  const ip = getClientIp(request);
+  const rl = checkRateLimit(`matches:${ip}`, RATE_LIMITS.PUBLIC);
+  if (!rl.success) return rateLimitResponse(rl);
+
   const { searchParams } = new URL(request.url);
   const sport = searchParams.get('sport') || 'upcoming';
   
@@ -70,11 +75,8 @@ export async function GET(request: Request) {
     }).sort((a: any, b: any) => new Date(a.commence_time).getTime() - new Date(b.commence_time).getTime()).slice(0, 50);
     
     return NextResponse.json({ success: true, data: filteredData });
-  } catch (error: any) {
-    console.error("Odds API Error:", error);
-    return NextResponse.json({ 
-      success: false, 
-      error: error.message 
-    }, { status: 500 });
+  } catch (error) {
+    console.error('[MATCHES] Odds API Error:', error);
+    return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
   }
 }

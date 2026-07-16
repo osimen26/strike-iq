@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { getClientIp } from '@/lib/security/rateLimit';
+import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +10,10 @@ export const dynamic = 'force-dynamic';
  * Defaults to 'US' (USD) if detection fails or times out.
  */
 export async function GET(req: Request) {
+  const ip = getClientIp(req);
+  const rl = checkRateLimit(`location:${ip}`, RATE_LIMITS.PUBLIC);
+  if (!rl.success) return rateLimitResponse(rl);
+
   try {
     // 1. Check if user already has a saved preference cookie
     const cookieStore = await cookies();
@@ -59,7 +63,7 @@ export async function GET(req: Request) {
             });
           }
         }
-      } catch (lookupErr) {
+      } catch (_) {
         clearTimeout(timeoutId);
         // Fall through to default if external API times out or fails
       }
@@ -71,8 +75,8 @@ export async function GET(req: Request) {
       countryCode: 'US',
       source: 'default_fallback'
     });
-  } catch (error: any) {
-    console.error('Error detecting location:', error);
+  } catch (error) {
+    console.error('[LOCATION] Error detecting location:', error);
     return NextResponse.json({
       success: true,
       countryCode: 'US',

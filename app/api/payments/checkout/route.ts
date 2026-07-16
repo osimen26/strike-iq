@@ -138,8 +138,8 @@ export async function POST(req: Request) {
       message: flwErrorMsg ? `Flutterwave API Note: ${flwErrorMsg}` : 'Redirecting via Dev Simulation Mode (no live Flutterwave key detected).'
     });
 
-  } catch (error: any) {
-    console.error('Error initiating Flutterwave checkout:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+  } catch (error) {
+    console.error('[CHECKOUT] Error initiating Flutterwave checkout:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

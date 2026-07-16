@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { prisma } from '@/lib/prisma';
+import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +10,11 @@ export const dynamic = 'force-dynamic';
  * Returns published Pro Picks from the pro_predictions table.
  * Uses both Prisma direct connection and Supabase anon client so queries are always fast, cache-immune, and never blocked.
  */
-export async function GET() {
+export async function GET(req: Request) {
+  const ip = getClientIp(req);
+  const rl = checkRateLimit(`feed:${ip}`, RATE_LIMITS.PUBLIC);
+  if (!rl.success) return rateLimitResponse(rl);
+
   try {
     let picks: any[] = [];
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,6 +20,10 @@ const DEFAULT_LEAGUES = [
 ];
 
 export async function GET(req: Request) {
+  const ip = getClientIp(req);
+  const rl = checkRateLimit(`leagues:${ip}`, RATE_LIMITS.PUBLIC);
+  if (!rl.success) return rateLimitResponse(rl);
+
   try {
     const { searchParams } = new URL(req.url);
     const sportSlug = searchParams.get('sport');
