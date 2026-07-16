@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ZapIcon } from '@/components/icons/Icons';
 import { useRegionalPricing } from '@/lib/pricing/useRegionalPricing';
-import CountrySelector from '@/components/pricing/CountrySelector';
 import { PaymentHistorySection } from '@/components/subscription/PaymentHistorySection';
 import { SubscriptionModals } from '@/components/subscription/SubscriptionModals';
 
@@ -42,7 +41,7 @@ function SubscriptionContent() {
   const [daysRemaining, setDaysRemaining] = useState<number>(0);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY');
-  const { countryCode, config, setCountryCode } = useRegionalPricing();
+  const { countryCode, config } = useRegionalPricing();
   const [loading, setLoading] = useState(true);
   const [upgradingId, setUpgradingId] = useState<string | null>(null);
   const [alertMsg, setAlertMsg] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
@@ -214,17 +213,10 @@ function SubscriptionContent() {
               <ZapIcon size={14} />
             </span>
           </div>
-          <div className="flex flex-wrap items-center gap-3 mt-3">
+          <div className="mt-3">
             <p className="text-[var(--color-accent-mutedSage)] text-sm md:text-base">
               Manage your Strike IQ intelligence tiers, billing history, and Pro Pick entitlements.
             </p>
-            <CountrySelector
-              currentCountryCode={countryCode}
-              onSelectCountry={(code) => {
-                setCountryCode(code);
-                fetchData(code);
-              }}
-            />
           </div>
         </div>
 

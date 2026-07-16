@@ -5,7 +5,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useRegionalPricing } from '@/lib/pricing/useRegionalPricing';
-import CountrySelector from '@/components/pricing/CountrySelector';
 import './PricingSection.css';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -14,7 +13,7 @@ function PricingSection() {
   const sectionRef = useRef(null);
   const router = useRouter();
   const [billingCycle, setBillingCycle] = useState('monthly');
-  const { countryCode, config, setCountryCode } = useRegionalPricing();
+  const { config } = useRegionalPricing();
 
   const plans = [
     {
@@ -109,9 +108,8 @@ function PricingSection() {
         <div className="pricing-header">
           <div className="pricing-title-bg">PRICING</div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, gap: '16px' }}>
-            <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className="flex items-center justify-center">
               <h2 className="pricing-subtitle !mb-0">SIMPLE PLANS FOR EVERY PLAYER</h2>
-              <CountrySelector currentCountryCode={countryCode} onSelectCountry={setCountryCode} />
             </div>
             
             <div className="pricing-toggle-wrapper">
