@@ -69,7 +69,10 @@ export default function Register() {
         setVerificationSent(true);
         setLoading(false);
       } else {
-        router.push("/dashboard");
+        const targetPath = typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("redirect") || new URLSearchParams(window.location.search).get("next") || "/dashboard"
+          : "/dashboard";
+        router.push(targetPath);
         router.refresh();
       }
     }
@@ -78,10 +81,13 @@ export default function Register() {
   const handleGoogleLogin = async () => {
     setLoading(true);
     setError(null);
+    const targetPath = typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("redirect") || new URLSearchParams(window.location.search).get("next") || "/dashboard"
+      : "/dashboard";
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(targetPath)}`,
       },
     });
     if (error) {

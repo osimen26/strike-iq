@@ -25,7 +25,7 @@ export default function SignInModal({ isOpen, onClose, reason = "copy this booki
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback?next=/predictions`,
         },
       });
       if (error) {
@@ -98,7 +98,7 @@ export default function SignInModal({ isOpen, onClose, reason = "copy this booki
 
           {/* Email Login & Sign Up */}
           <Link
-            href="/login"
+            href="/login?redirect=/predictions"
             className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-[var(--color-brand-emerald)] to-[#0f6b4d] text-white hover:opacity-90 transition-all text-center flex items-center justify-center gap-2 border border-emerald-500/40"
           >
             <ZapIcon size={16} />
@@ -106,7 +106,7 @@ export default function SignInModal({ isOpen, onClose, reason = "copy this booki
           </Link>
 
           <Link
-            href="/register"
+            href="/register?redirect=/predictions"
             className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 transition-all text-center"
           >
             Create Free Account

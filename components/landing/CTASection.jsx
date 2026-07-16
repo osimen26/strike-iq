@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef } from 'react';
+import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -88,9 +89,9 @@ function CTASection() {
           </h1>
           
           <div className="cta-button-wrapper mt-4">
-            <a href="/login" className="cta-button inline-block text-center">
-              ACCESS PRO PREDICTIONS NOW
-            </a>
+            <Link href="/predictions" className="cta-button inline-block text-center">
+              EXPLORE LIVE PREDICTIONS &rarr;
+            </Link>
           </div>
         </div>
       </div>
