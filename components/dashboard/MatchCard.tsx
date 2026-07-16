@@ -16,12 +16,22 @@ import {
   GiftIcon,
 } from "@/components/icons/Icons";
 
-export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean }) {
+export function MatchCard({
+  match,
+  isLocked,
+  isGuest = false,
+  onRequireLogin,
+}: {
+  match: any;
+  isLocked?: boolean;
+  isGuest?: boolean;
+  onRequireLogin?: (reason?: string) => void;
+}) {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Freemium items are NEVER locked, regardless of subscription
-  const actuallyLocked = isLocked && !match.isFreePick;
+  // Freemium items are NEVER locked unless you are a guest attempting restricted access
+  const actuallyLocked = (isLocked || (isGuest && match.isProPick)) && !match.isFreePick;
 
   // Determine if this item is a Booking Code / Accumulator Slip
   // (e.g. Free Daily Teaser, Community Slip, or any pick with a booking code)
@@ -83,6 +93,14 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
 
   const handleCopy = (e: React.MouseEvent, textToCopy: string) => {
     e.stopPropagation();
+    if (isGuest) {
+      if (onRequireLogin) {
+        onRequireLogin("copy this booking code and unlock live quantitative intelligence");
+      } else {
+        window.location.href = "/login?redirect=/predictions";
+      }
+      return;
+    }
     if (actuallyLocked) {
       window.location.href = "/dashboard/subscription";
       return;

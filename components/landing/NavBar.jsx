@@ -35,6 +35,9 @@ function NavBar() {
               <a href="#accuracy" className="nav-link" onClick={toggleMenu}>ACCURACY</a>
             </div>
             <div className="nav-link-wrapper">
+              <Link href="/predictions" className="nav-link text-emerald-400 font-bold" onClick={toggleMenu}>LIVE PREVIEW</Link>
+            </div>
+            <div className="nav-link-wrapper">
               <a href="#pricing" className="nav-link" onClick={toggleMenu}>PRICING</a>
             </div>
           </div>
