@@ -15,18 +15,7 @@ export async function GET(req: Request) {
   if (!rl.success) return rateLimitResponse(rl);
 
   try {
-    // 1. Check if user already has a saved preference cookie
-    const cookieStore = await cookies();
-    const savedRegion = cookieStore.get('strikeiq_region')?.value;
-    if (savedRegion && /^[A-Z]{2}$/i.test(savedRegion)) {
-      return NextResponse.json({
-        success: true,
-        countryCode: savedRegion.toUpperCase(),
-        source: 'cookie_preference'
-      });
-    }
-
-    // 2. Check edge proxy geolocation headers (Vercel, Cloudflare, AWS CloudFront)
+    // 1. Check edge proxy geolocation headers (Vercel, Cloudflare, AWS CloudFront)
     const edgeCountry =
       req.headers.get('x-vercel-ip-country') ||
       req.headers.get('cf-ipcountry') ||
@@ -40,9 +29,9 @@ export async function GET(req: Request) {
       });
     }
 
-    // 3. Fallback: Perform server-side IP geolocation lookup with strict 2s timeout
+    // 2. Perform server-side IP geolocation lookup with strict 2s timeout (if public IP)
     const ip = getClientIp(req);
-    if (ip && ip !== '127.0.0.1' && ip !== '::1' && !ip.startsWith('192.168.') && !ip.startsWith('10.')) {
+    if (ip && ip !== '127.0.0.1' && ip !== '::1' && !ip.startsWith('192.168.') && !ip.startsWith('10.') && ip !== 'unknown') {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 2000);
 
@@ -65,11 +54,41 @@ export async function GET(req: Request) {
         }
       } catch (_) {
         clearTimeout(timeoutId);
-        // Fall through to default if external API times out or fails
       }
     }
 
-    // 4. If all automatic detection fails (or running locally offline), default to USD ('US')
+    // 3. Check client timezone header (sent by useRegionalPricing for offline/localhost detection)
+    const clientTz = req.headers.get('x-timezone') || '';
+    if (clientTz) {
+      if (clientTz.includes('Lagos') || clientTz.includes('Nigeria')) {
+        return NextResponse.json({ success: true, countryCode: 'NG', source: 'timezone_detection' });
+      }
+      if (clientTz.includes('Accra') || clientTz.includes('Ghana')) {
+        return NextResponse.json({ success: true, countryCode: 'GH', source: 'timezone_detection' });
+      }
+      if (clientTz.includes('Johannesburg') || clientTz.includes('South_Africa')) {
+        return NextResponse.json({ success: true, countryCode: 'ZA', source: 'timezone_detection' });
+      }
+      if (clientTz.includes('Nairobi') || clientTz.includes('Kenya')) {
+        return NextResponse.json({ success: true, countryCode: 'KE', source: 'timezone_detection' });
+      }
+      if (clientTz.includes('Cairo') || clientTz.includes('Egypt')) {
+        return NextResponse.json({ success: true, countryCode: 'EG', source: 'timezone_detection' });
+      }
+    }
+
+    // 4. Fallback to saved cookie preference only if live IP/header/timezone detection failed
+    const cookieStore = await cookies();
+    const savedRegion = cookieStore.get('strikeiq_region')?.value;
+    if (savedRegion && /^[A-Z]{2}$/i.test(savedRegion)) {
+      return NextResponse.json({
+        success: true,
+        countryCode: savedRegion.toUpperCase(),
+        source: 'cookie_preference'
+      });
+    }
+
+    // 5. If all automatic detection fails, default to USD ('US')
     return NextResponse.json({
       success: true,
       countryCode: 'US',

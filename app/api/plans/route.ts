@@ -54,13 +54,16 @@ const DEFAULT_PLANS = [
 ];
 
 export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const queryCountry = url.searchParams.get('country');
+  let cookieCountry = 'US';
   try {
-    const url = new URL(req.url);
-    const queryCountry = url.searchParams.get('country');
     const cookieStore = await cookies();
-    const cookieCountry = cookieStore.get('strikeiq_region')?.value;
-    const targetCountry = queryCountry || cookieCountry || 'US';
+    cookieCountry = cookieStore.get('strikeiq_region')?.value || 'US';
+  } catch (_) {}
+  const targetCountry = queryCountry || cookieCountry || 'US';
 
+  try {
     let plans = await prisma.plan.findMany({
       where: { isActive: true },
       orderBy: { price: 'asc' },
@@ -94,10 +97,22 @@ export async function GET(req: Request) {
     return NextResponse.json({ success: true, data: localizedPlans, countryCode: targetCountry.toUpperCase() });
   } catch (error: any) {
     console.error('Error fetching/seeding plans:', error);
-    // Return fallback plans gracefully if DB connection fails during static checks or offline dev
+    // Return localized fallback plans gracefully if DB connection fails during static checks or offline dev
+    const localizedFallback = DEFAULT_PLANS.map((p, idx) => {
+      const loc = getLocalizedPlanPrice(p.name, p.interval || 'MONTHLY', targetCountry);
+      return {
+        id: `fallback-${idx}`,
+        ...p,
+        price: loc.price,
+        currency: loc.currency,
+        formattedPrice: loc.formattedPrice,
+        savingsBadge: loc.savingsBadge
+      };
+    });
     return NextResponse.json({
       success: true,
-      data: DEFAULT_PLANS.map((p, idx) => ({ id: `fallback-${idx}`, ...p })),
+      data: localizedFallback,
+      countryCode: targetCountry.toUpperCase(),
       fallback: true
     });
   }

@@ -56,6 +56,12 @@ function SubscriptionContent() {
   const activationProcessed = useRef(false);
 
   useEffect(() => {
+    if (countryCode) {
+      fetchData(countryCode);
+    }
+  }, [countryCode]);
+
+  useEffect(() => {
     fetchData();
 
     // Check URL params for payment redirect completion

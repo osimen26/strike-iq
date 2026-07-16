@@ -34,8 +34,22 @@ export function useRegionalPricing() {
   useEffect(() => {
     let isMounted = true;
 
+    // Helper to detect country from browser timezone when offline / localhost
+    const getCountryFromTimezone = (): string => {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        if (tz.includes('Lagos') || tz.includes('Nigeria')) return 'NG';
+        if (tz.includes('Accra') || tz.includes('Ghana')) return 'GH';
+        if (tz.includes('Johannesburg') || tz.includes('South_Africa')) return 'ZA';
+        if (tz.includes('Nairobi') || tz.includes('Kenya')) return 'KE';
+        if (tz.includes('Cairo') || tz.includes('Egypt')) return 'EG';
+        if (tz.includes('Europe/London')) return 'GB';
+      } catch (_) {}
+      return 'US';
+    };
+
     async function initializeRegion() {
-      // 1. Check local storage first for immediate zero-latency hydration
+      // 1. Check local storage first for instant zero-latency hydration
       if (typeof window !== 'undefined') {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored && /^[A-Z]{2}$/i.test(stored)) {
@@ -44,18 +58,24 @@ export function useRegionalPricing() {
             setConfig(getRegionalConfig(stored.toUpperCase()));
             setIsLoading(false);
           }
-          // Sync cookie just in case
-          persistRegion(stored.toUpperCase());
-          return;
         }
       }
 
-      // 2. Otherwise, fetch automatic detection from server location API
+      // 2. Always fetch automatic detection from server location API to ensure live accuracy
       try {
-        const res = await fetch('/api/location');
+        const tz = typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone || '' : '';
+        const res = await fetch('/api/location', {
+          headers: { 'x-timezone': tz }
+        });
         if (res.ok) {
           const data = await res.json();
-          const detected = data?.countryCode || 'US';
+          let detected = data?.countryCode || 'US';
+          if (data?.source === 'default_fallback' || detected === 'US') {
+            const tzCountry = getCountryFromTimezone();
+            if (tzCountry !== 'US') {
+              detected = tzCountry;
+            }
+          }
           if (isMounted) {
             setCountryState(detected);
             setConfig(getRegionalConfig(detected));
@@ -65,14 +85,16 @@ export function useRegionalPricing() {
           return;
         }
       } catch (err) {
-        console.warn('Failed to fetch location API, defaulting to USD:', err);
+        console.warn('Failed to fetch location API, trying timezone:', err);
       }
 
-      // 3. Fallback to USD ('US') if API failed and no stored preference
+      // 3. Fallback to browser timezone or USD ('US')
       if (isMounted) {
-        setCountryState('US');
-        setConfig(REGIONAL_PRICING_CONFIG.US);
+        const fallbackCountry = getCountryFromTimezone();
+        setCountryState(fallbackCountry);
+        setConfig(getRegionalConfig(fallbackCountry));
         setIsLoading(false);
+        persistRegion(fallbackCountry);
       }
     }
 
