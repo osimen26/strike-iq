@@ -4,6 +4,10 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ZapIcon } from '@/components/icons/Icons';
+import { useRegionalPricing } from '@/lib/pricing/useRegionalPricing';
+import CountrySelector from '@/components/pricing/CountrySelector';
+import { PaymentHistorySection } from '@/components/subscription/PaymentHistorySection';
+import { SubscriptionModals } from '@/components/subscription/SubscriptionModals';
 
 interface Plan {
   id: string;
@@ -11,6 +15,8 @@ interface Plan {
   description?: string;
   price: number;
   currency: string;
+  formattedPrice?: string;
+  savingsBadge?: string;
   interval: string;
   features: string[];
 }
@@ -36,9 +42,7 @@ function SubscriptionContent() {
   const [daysRemaining, setDaysRemaining] = useState<number>(0);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY');
-  const [selectedCurrency, setSelectedCurrency] = useState<'USD' | 'KES' | 'GHS' | 'NGN' | 'ZAR' | 'UGX'>('USD');
-  const currencySymbols: Record<string, string> = { USD: '$', KES: 'KSh ', GHS: 'GH₵ ', NGN: '₦', ZAR: 'R ', UGX: 'USh ' };
-  const currencyRates: Record<string, number> = { USD: 1, KES: 130, GHS: 15.5, NGN: 1550, ZAR: 18.5, UGX: 3700 };
+  const { countryCode, config, setCountryCode } = useRegionalPricing();
   const [loading, setLoading] = useState(true);
   const [upgradingId, setUpgradingId] = useState<string | null>(null);
   const [alertMsg, setAlertMsg] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
@@ -108,12 +112,12 @@ function SubscriptionContent() {
     }
   }, [searchParams]);
 
-  async function fetchData() {
+  async function fetchData(targetCode = countryCode) {
     const controller = new AbortController();
     try {
       setLoading(true);
       const [plansRes, subRes] = await Promise.all([
-        fetch('/api/plans', { signal: controller.signal }),
+        fetch(`/api/plans?country=${targetCode}`, { signal: controller.signal }),
         fetch('/api/subscriptions/current', { signal: controller.signal })
       ]);
 
@@ -170,7 +174,7 @@ function SubscriptionContent() {
       const res = await fetch('/api/payments/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: plan.id }),
+        body: JSON.stringify({ planId: plan.id, countryCode }),
       });
 
       const data = await res.json();
@@ -210,9 +214,18 @@ function SubscriptionContent() {
               <ZapIcon size={14} />
             </span>
           </div>
-          <p className="text-[var(--color-accent-mutedSage)] mt-2 text-sm md:text-base">
-            Manage your Strike IQ intelligence tiers, billing history, and Pro Pick entitlements.
-          </p>
+          <div className="flex flex-wrap items-center gap-3 mt-3">
+            <p className="text-[var(--color-accent-mutedSage)] text-sm md:text-base">
+              Manage your Strike IQ intelligence tiers, billing history, and Pro Pick entitlements.
+            </p>
+            <CountrySelector
+              currentCountryCode={countryCode}
+              onSelectCountry={(code) => {
+                setCountryCode(code);
+                fetchData(code);
+              }}
+            />
+          </div>
         </div>
 
         {/* Current Tier Status Card */}
@@ -289,11 +302,6 @@ function SubscriptionContent() {
             }`}
           >
             <span>Yearly Billing</span>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-              billingCycle === 'YEARLY' ? 'bg-black text-[var(--color-brand-electricGreen)]' : 'bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-electricGreen)]'
-            }`}>
-              SAVE 10%
-            </span>
           </button>
         </div>
       </div>
@@ -336,7 +344,7 @@ function SubscriptionContent() {
                   {/* Price */}
                   <div className="mt-6 flex items-baseline gap-1">
                     <span className="text-4xl font-extrabold text-white">
-                      ${plan.price}
+                      {plan.formattedPrice || `$${plan.price}`}
                     </span>
                     <span className="text-xs text-gray-400 font-medium">
                       /{plan.interval === 'YEARLY' ? 'year' : 'month'}
@@ -344,7 +352,7 @@ function SubscriptionContent() {
                   </div>
                   {plan.interval === 'YEARLY' && plan.price > 0 && (
                     <div className="text-[11px] text-[var(--color-brand-electricGreen)] font-semibold mt-1">
-                      Billed annually ($8.99/month equivalent)
+                      {plan.savingsBadge ? `${plan.savingsBadge} vs Monthly` : 'Billed annually'}
                     </div>
                   )}
 
@@ -421,235 +429,22 @@ function SubscriptionContent() {
           })}
         </div>
       )}
+      {/* Billing History Section & Syndicate Banner */}
+      <PaymentHistorySection payments={payments} />
 
-      {/* Billing History Section */}
-      <div className="mt-14 bg-[var(--color-background-surface)] border border-white/10 rounded-2xl p-6 md:p-8">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-          <div>
-            <h2 className="text-xl font-bold text-white font-heading">Billing & Transaction History</h2>
-            <p className="text-xs text-[var(--color-accent-mutedSage)] mt-1">
-              All billing history and subscription payments are recorded here.
-            </p>
-          </div>
-          <div className="text-xs text-gray-400">
-            Currency: <span className="text-white font-bold">USD / NGN</span>
-          </div>
-        </div>
-
-        {payments.length === 0 ? (
-          <div className="text-center py-12 text-gray-500 text-sm">
-            No previous payment transactions recorded yet.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/10 text-[11px] uppercase tracking-wider text-gray-400 bg-black/20">
-                  <th className="py-3 px-4 font-semibold">Date</th>
-                  <th className="py-3 px-4 font-semibold">Reference</th>
-                  <th className="py-3 px-4 font-semibold">Plan</th>
-                  <th className="py-3 px-4 font-semibold">Amount</th>
-                  <th className="py-3 px-4 font-semibold">Method</th>
-                  <th className="py-3 px-4 font-semibold text-right">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5 text-xs">
-                {payments.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-white/5 transition-colors">
-                    <td className="py-3.5 px-4 text-gray-300">
-                      {new Date(tx.createdAt).toLocaleDateString()}{' '}
-                      <span className="text-gray-500 text-[10px]">
-                        {new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-4 font-mono text-[11px] text-gray-400">
-                      {tx.reference}
-                    </td>
-                    <td className="py-3.5 px-4 font-bold text-white">
-                      {tx.plan?.name || 'Pro Plan'}
-                    </td>
-                    <td className="py-3.5 px-4 font-bold text-[var(--color-brand-electricGreen)]">
-                      ${tx.amount.toFixed(2)}
-                    </td>
-                    <td className="py-3.5 px-4 text-gray-300 uppercase">
-                      {tx.paymentMethod || 'Card / Bank'}
-                    </td>
-                    <td className="py-3.5 px-4 text-right">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${
-                          tx.status === 'SUCCESSFUL'
-                            ? 'bg-emerald-500/20 text-[var(--color-brand-electricGreen)] border border-emerald-500/30'
-                            : tx.status === 'PENDING'
-                            ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                            : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                        }`}
-                      >
-                        {tx.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Syndicate Support Banner */}
-      <div className="bg-gradient-to-r from-emerald-950/60 via-black to-emerald-950/40 border border-[var(--color-brand-emerald)]/30 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-        <div className="space-y-1 text-center md:text-left">
-          <h3 className="text-lg font-bold text-white">Serious volume or high-roller betting syndicate?</h3>
-          <p className="text-xs text-[var(--color-accent-mutedSage)] max-w-xl">
-            Meet <span className="text-white font-bold">Strike IQ Syndicate</span>. Get direct API webhook access to our deep-learning inference engines, custom odds models, and priority risk management alerts.
-          </p>
-        </div>
-        <Link
-          href="mailto:syndicate@strikeiq.ai"
-          className="px-6 py-3 rounded-xl font-bold text-xs uppercase bg-white text-black hover:bg-gray-200 transition-all shrink-0 shadow-lg"
-        >
-          Talk to Syndicate Desk
-        </Link>
-      </div>
-
-      {/* Flutterwave Checkout Modal (Pop-Up) */}
-      {flwModalPlan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-md rounded-3xl bg-[#0A0E27] border border-[#F5A623]/40 shadow-2xl overflow-hidden p-6 text-white space-y-6">
-            {/* Header */}
-            <div className="flex justify-between items-center border-b border-white/10 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#F5A623]/20 flex items-center justify-center border border-[#F5A623]">
-                  <span className="text-xl">🟡</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg font-heading tracking-wide">Secure Checkout</h3>
-                  <p className="text-xs text-gray-400">Strike IQ Pro Entitlement • Instant Activation</p>
-                </div>
-              </div>
-              <button
-                onClick={() => {
-                  setFlwModalPlan(null);
-                  setFlwSimUrl(null);
-                  setFlwProcessing(false);
-                }}
-                className="text-gray-400 hover:text-white text-xl p-1 rounded-lg hover:bg-white/10"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Order Summary */}
-            <div className="bg-white/5 p-4 rounded-2xl border border-white/10 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Plan:</span>
-                <span className="font-bold text-white">{flwModalPlan.name}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Billing Cycle:</span>
-                <span className="font-bold text-[var(--color-brand-emerald)]">{flwModalPlan.interval}</span>
-              </div>
-              <div className="flex justify-between text-base font-extrabold border-t border-white/10 pt-2 mt-2">
-                <span>Total Amount:</span>
-                <span className="text-[#F5A623]">${flwModalPlan.price.toFixed(2)} USD</span>
-              </div>
-            </div>
-
-            {/* Simulated Payment Methods */}
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Select Payment Method</p>
-              <div className="grid grid-cols-3 gap-2">
-                <button className="py-2.5 px-3 rounded-xl bg-[#F5A623]/20 border border-[#F5A623] text-xs font-bold text-white flex flex-col items-center gap-1 shadow-sm">
-                  <span>💳</span> Card
-                </button>
-                <button className="py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-all">
-                  <span>🏦</span> Bank
-                </button>
-                <button className="py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-all">
-                  <span>📱</span> USSD / M-Pesa
-                </button>
-              </div>
-            </div>
-
-            {/* Developer Notice & Error Display */}
-            <div className="bg-amber-500/10 border border-amber-500/30 p-3.5 rounded-xl text-xs text-amber-200 leading-relaxed space-y-2">
-              <div className="flex items-center gap-1.5 font-bold text-amber-300">
-                <span>⚠️</span>
-                <span>Why is this Pop-up showing in Demo/Sandbox Mode?</span>
-              </div>
-              {flwErrorMsg ? (
-                <div className="bg-black/40 p-2.5 rounded-lg border border-amber-500/20 font-mono text-[11px] text-amber-100">
-                  <span className="text-red-400 font-bold">Flutterwave API Note:</span> "{flwErrorMsg}"
-                </div>
-              ) : (
-                <p className="text-[11px] opacity-90">
-                  No valid live key was detected in Vercel environment variables.
-                </p>
-              )}
-              <p className="text-[11px] text-gray-300">
-                <span className="font-semibold text-white">💡 Pro Tip:</span> If you just added your live secret key, ensure USD international card payments are enabled on your Flutterwave merchant account!
-              </p>
-            </div>
-
-            {/* Action Button */}
-            <button
-              disabled={flwProcessing}
-              onClick={() => {
-                if (!flwSimUrl) return;
-                setFlwProcessing(true);
-                setTimeout(() => {
-                  window.location.href = flwSimUrl;
-                }, 1500);
-              }}
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#F5A623] to-[#E08D00] hover:from-[#FFB53D] hover:to-[#F5A623] text-black font-extrabold text-base uppercase tracking-wider shadow-lg shadow-[#F5A623]/30 transition-all flex items-center justify-center gap-2"
-            >
-              {flwProcessing ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                  <span>Processing Payment...</span>
-                </>
-              ) : (
-                <span>Pay ${flwModalPlan.price.toFixed(2)} USD Now</span>
-              )}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Custom Cancel Confirmation Modal — replaces browser confirm() */}
-      {showCancelConfirm && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="cancel-modal-title"
-        >
-          <div className="bg-[#121215] border border-red-500/40 rounded-2xl p-6 max-w-sm w-full space-y-5 shadow-2xl shadow-red-900/20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-red-950/60 flex items-center justify-center text-xl" aria-hidden="true">🛑</div>
-              <h2 id="cancel-modal-title" className="text-lg font-bold text-white">Stop Auto-Renewal?</h2>
-            </div>
-            <p className="text-sm text-gray-300 leading-relaxed">
-              Are you sure you want to stop your recurring subscription? You will continue to enjoy full <span className="text-emerald-400 font-semibold">Pro VIP access</span> until your current billing period ends. <span className="block mt-2 text-xs text-amber-300/90 font-medium">⚠️ Note: All subscription sales are final. Stopping renewal simply prevents automatic card billing next month without issuing a refund.</span>
-            </p>
-            <div className="flex items-center gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowCancelConfirm(false)}
-                className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl text-sm transition-colors"
-              >
-                Keep Subscription
-              </button>
-              <button
-                type="button"
-                onClick={handleCancelSubscription}
-                className="flex-1 py-3 bg-red-900/80 hover:bg-red-800 border border-red-500/40 text-red-200 font-bold rounded-xl text-sm transition-colors"
-              >
-                Yes, Stop Renewal
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modals (Flutterwave Checkout & Cancel Subscription) */}
+      <SubscriptionModals
+        flwModalPlan={flwModalPlan}
+        flwSimUrl={flwSimUrl}
+        flwProcessing={flwProcessing}
+        flwErrorMsg={flwErrorMsg}
+        setFlwModalPlan={setFlwModalPlan}
+        setFlwSimUrl={setFlwSimUrl}
+        setFlwProcessing={setFlwProcessing}
+        showCancelConfirm={showCancelConfirm}
+        setShowCancelConfirm={setShowCancelConfirm}
+        handleCancelSubscription={handleCancelSubscription}
+      />
     </div>
   );
 }

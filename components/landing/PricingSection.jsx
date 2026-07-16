@@ -4,46 +4,49 @@ import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useRegionalPricing } from '@/lib/pricing/useRegionalPricing';
+import CountrySelector from '@/components/pricing/CountrySelector';
 import './PricingSection.css';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-const plans = [
-  {
-    id: 1,
-    title: "Starter Plan",
-    description: "Perfect for beginners taking their first steps into data-driven betting.",
-    monthlyPrice: "$0",
-    yearlyPrice: "$0",
-    period: "/ TIER",
-    features: [
-      "ACCESS TO BASIC AI PREDICTIONS",
-      "DAILY MATCH CONFIDENCE SCORES",
-      "TOP 2 LEAGUES COVERED",
-      "7-DAY FREE TRIAL OF PRO MODEL"
-    ]
-  },
-  {
-    id: 2,
-    title: "Pro Plan",
-    description: "For serious bettors who want the ultimate edge over the bookmakers.",
-    monthlyPrice: "$9.99",
-    yearlyPrice: "$8.99",
-    period: "/ MONTH",
-    subprice: "Billed annually ($107.88/yr)",
-    features: [
-      "ALL 6 LEAGUES & BASKETBALL",
-      "PREMIUM HIGH-CONFIDENCE PICKS",
-      "DEEP DATA & MATCH INSIGHTS",
-      "PRIORITY ALERTS & LIVE UPDATES"
-    ]
-  }
-];
 
 function PricingSection() {
   const sectionRef = useRef(null);
   const router = useRouter();
   const [billingCycle, setBillingCycle] = useState('monthly');
+  const { countryCode, config, setCountryCode } = useRegionalPricing();
+
+  const plans = [
+    {
+      id: 1,
+      title: "Starter Plan",
+      description: "Perfect for beginners taking their first steps into data-driven betting.",
+      monthlyPrice: config.plans.free.formattedPrice,
+      yearlyPrice: config.plans.free.formattedPrice,
+      period: "/ TIER",
+      features: [
+        "ACCESS TO BASIC AI PREDICTIONS",
+        "DAILY MATCH CONFIDENCE SCORES",
+        "TOP 2 LEAGUES COVERED",
+        "7-DAY FREE TRIAL OF PRO MODEL"
+      ]
+    },
+    {
+      id: 2,
+      title: "Pro Plan",
+      description: "For serious bettors who want the ultimate edge over the bookmakers.",
+      monthlyPrice: config.plans.pro_monthly.formattedPrice,
+      yearlyPrice: billingCycle === 'yearly' ? config.plans.pro_yearly.formattedPrice : config.plans.pro_monthly.formattedPrice,
+      period: billingCycle === 'monthly' ? config.plans.pro_monthly.periodLabel : config.plans.pro_yearly.periodLabel,
+      subprice: billingCycle === 'yearly' ? config.plans.pro_yearly.subpriceLabel : undefined,
+      features: [
+        "ALL 6 LEAGUES & BASKETBALL",
+        "PREMIUM HIGH-CONFIDENCE PICKS",
+        "DEEP DATA & MATCH INSIGHTS",
+        "PRIORITY ALERTS & LIVE UPDATES"
+      ]
+    }
+  ];
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -105,8 +108,11 @@ function PricingSection() {
         {/* Header Area with Watermark */}
         <div className="pricing-header">
           <div className="pricing-title-bg">PRICING</div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, gap: '20px' }}>
-            <h2 className="pricing-subtitle">SIMPLE PLANS FOR EVERY PLAYER</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, gap: '16px' }}>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <h2 className="pricing-subtitle !mb-0">SIMPLE PLANS FOR EVERY PLAYER</h2>
+              <CountrySelector currentCountryCode={countryCode} onSelectCountry={setCountryCode} />
+            </div>
             
             <div className="pricing-toggle-wrapper">
               <span className={`toggle-label ${billingCycle === 'monthly' ? 'active' : ''}`}>Monthly</span>
@@ -114,7 +120,7 @@ function PricingSection() {
                 <div className={`toggle-knob ${billingCycle}`}></div>
               </div>
               <span className={`toggle-label ${billingCycle === 'yearly' ? 'active' : ''}`}>
-                Yearly <span className="save-badge">Save 10%</span>
+                Yearly
               </span>
             </div>
           </div>

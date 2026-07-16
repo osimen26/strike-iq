@@ -589,7 +589,7 @@ export default function AddPredictionPage() {
                 <div className="flex items-center gap-2.5">
                   <CrownIcon size={22} className="text-[var(--color-brand-emerald)]" />
                   <span className="text-base font-bold text-white font-heading tracking-wide">
-                    VIP Pro Exclusive ($9.99 Lock)
+                    VIP Pro Exclusive (Regional Lock)
                   </span>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-widest shrink-0 ${
@@ -606,7 +606,7 @@ export default function AddPredictionPage() {
                   <span className="text-emerald-400 font-bold">✓</span> Masked as <code className="text-white bg-black/60 px-1 rounded">BC•••• [LOCKED]</code> for Freemium users
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-emerald-400 font-bold">✓</span> Shows instant upgrade overlay ($9.99/mo to unlock)
+                  <span className="text-emerald-400 font-bold">✓</span> Shows instant upgrade overlay (Localized regional price to unlock)
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-emerald-400 font-bold">✓</span> Sends '⚡ VIP Code Dropped!' FOMO push alert
@@ -749,7 +749,7 @@ export default function AddPredictionPage() {
                         {codeItem.tier === "FREE" ? (
                           <><GiftIcon size={11} className="text-cyan-400" /><span>FREE TEASER FOR ALL</span></>
                         ) : (
-                          <><CrownIcon size={11} className="text-emerald-400" /><span>VIP PRO LOCK ($9.99 HOOK)</span></>
+                          <><CrownIcon size={11} className="text-emerald-400" /><span>VIP PRO LOCK (REGIONAL HOOK)</span></>
                         )}
                       </span>
                     </div>
@@ -793,7 +793,7 @@ export default function AddPredictionPage() {
               {formData.tier === "FREE" ? (
                 <><GiftIcon size={14} className="text-cyan-400" /><span>Free Daily Marketing Slip</span></>
               ) : (
-                <><CrownIcon size={14} className="text-emerald-400" /><span>VIP Pro Exclusive ($9.99 Lock)</span></>
+                <><CrownIcon size={14} className="text-emerald-400" /><span>VIP Pro Exclusive (Regional Lock)</span></>
               )}
             </span>
           </div>

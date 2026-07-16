@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
+import { getLocalizedPlanPrice } from '@/lib/pricing/regional';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,8 +37,8 @@ const DEFAULT_PLANS = [
   },
   {
     name: 'Pro Plan Yearly',
-    description: 'Our most popular annual package with maximum savings and syndicate signals.',
-    price: 107.88,
+    description: 'Our complete annual package with full AI transparency and syndicate signals.',
+    price: 119.88,
     currency: 'USD',
     interval: 'YEARLY',
     isActive: true,
@@ -46,13 +48,19 @@ const DEFAULT_PLANS = [
       'DEEP DATA & MATCH INSIGHTS',
       'PRIORITY ALERTS & LIVE UPDATES',
       'FULL AI EXPLANATIONS',
-      '10% ANNUAL DISCOUNT & SYNDICATE SIGNALS'
+      'SYNDICATE SIGNALS & PRIORITY ALERTS'
     ]
   }
 ];
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+    const queryCountry = url.searchParams.get('country');
+    const cookieStore = await cookies();
+    const cookieCountry = cookieStore.get('strikeiq_region')?.value;
+    const targetCountry = queryCountry || cookieCountry || 'US';
+
     let plans = await prisma.plan.findMany({
       where: { isActive: true },
       orderBy: { price: 'asc' },
@@ -72,7 +80,18 @@ export async function GET() {
       plans = seededPlans;
     }
 
-    return NextResponse.json({ success: true, data: plans });
+    const localizedPlans = plans.map((plan) => {
+      const loc = getLocalizedPlanPrice(plan.name, plan.interval || 'MONTHLY', targetCountry);
+      return {
+        ...plan,
+        price: loc.price,
+        currency: loc.currency,
+        formattedPrice: loc.formattedPrice,
+        savingsBadge: loc.savingsBadge
+      };
+    });
+
+    return NextResponse.json({ success: true, data: localizedPlans, countryCode: targetCountry.toUpperCase() });
   } catch (error: any) {
     console.error('Error fetching/seeding plans:', error);
     // Return fallback plans gracefully if DB connection fails during static checks or offline dev

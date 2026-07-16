@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { sanitizeString, isValidId } from '@/lib/security/validator';
 import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
+import { getLocalizedPlanPrice } from '@/lib/pricing/regional';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,18 +44,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Free plan does not require checkout.' }, { status: 400 });
     }
 
-    // Support multi-currency Pan-African checkout (USD, KES, GHS, NGN, ZAR, UGX)
-    const requestedCurrency = sanitizeString(rawBody?.currency, 10)?.toUpperCase() || plan.currency || 'USD';
-    const exchangeRates: Record<string, number> = {
-      USD: 1,
-      KES: 130,   // Kenyan Shilling (M-Pesa Kenya)
-      GHS: 15.5,  // Ghanaian Cedi (MTN MoMo Ghana)
-      NGN: 1550,  // Nigerian Naira
-      ZAR: 18.5,  // South African Rand
-      UGX: 3700,  // Ugandan Shilling
-    };
-    const targetCurrency = exchangeRates[requestedCurrency] ? requestedCurrency : 'USD';
-    const targetAmount = Math.round(plan.price * (exchangeRates[targetCurrency] || 1) * 100) / 100;
+    // Resolve exact scalable regional pricing (e.g. NGN 5,000 for Nigeria, USD 9.99 for International)
+    const cookieStore = await cookies();
+    const cookieCountry = cookieStore.get('strikeiq_region')?.value;
+    const requestedCountry = sanitizeString(rawBody?.countryCode, 5)?.toUpperCase() || cookieCountry || 'US';
+
+    const localized = getLocalizedPlanPrice(plan.name, plan.interval || 'MONTHLY', requestedCountry);
+    const targetCurrency = localized.currency;
+    const targetAmount = localized.price;
 
     // Format tx_ref strictly as sub_{userId}_{planId}_{timestamp} for webhook handler alignment
     const tx_ref = `sub_${user.id}_${plan.id}_${Date.now()}`;

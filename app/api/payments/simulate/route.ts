@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { sanitizeString, isValidId } from '@/lib/security/validator';
 import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from '@/lib/security/adminGuard';
 import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
+import { getLocalizedPlanPrice } from '@/lib/pricing/regional';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,6 +41,10 @@ export async function POST(req: Request) {
     const planName = plan?.name || 'Pro Plan';
     const isYearly = plan?.interval === 'YEARLY';
 
+    const cookieStore = await cookies();
+    const cookieCountry = cookieStore.get('strikeiq_region')?.value || 'US';
+    const localized = getLocalizedPlanPrice(planName, plan?.interval || 'MONTHLY', cookieCountry);
+
     const now = new Date();
     const endDate = new Date(now);
     if (isYearly) {
@@ -55,8 +61,8 @@ export async function POST(req: Request) {
         create: {
           userId: user.id,
           planId: planId,
-          amount: plan?.price || 9.99,
-          currency: plan?.currency || 'USD',
+          amount: localized.price,
+          currency: localized.currency,
           status: 'SUCCESSFUL',
           provider: 'FLUTTERWAVE_DEV_SIMULATION',
           reference: tx_ref,
