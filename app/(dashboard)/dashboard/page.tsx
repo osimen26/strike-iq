@@ -13,16 +13,20 @@ import {
   SparklesIcon,
 } from "@/components/icons/Icons";
 import { MatchCard } from "@/components/dashboard/MatchCard";
+import SignInModal from "@/components/auth/SignInModal";
 
 export default function PredictionsFeed() {
   const [user, setUser] = useState<User | null>(null);
   const [isProUser, setIsProUser] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const supabase = createClient();
   const [activeFilter, setActiveFilter] = useState("All");
   
   const [matches, setMatches] = useState<any[]>([]);
   const [proPicks, setProPicks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const isGuest = !user;
 
   useEffect(() => {
     // Fetch the real user and their subscription status in parallel
@@ -96,7 +100,7 @@ export default function PredictionsFeed() {
               onClick={() => setActiveFilter(filter)}
               className={`px-5 py-2 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap uppercase tracking-wider ${
                 activeFilter === filter 
-                  ? "bg-[#138561] text-white shadow-sm shadow-[#138561]/20" 
+                  ? "bg-[#138561] text-white" 
                   : "text-zinc-400 hover:text-white hover:bg-[#121215]"
               }`}
             >
@@ -119,19 +123,27 @@ export default function PredictionsFeed() {
               // Lock the match if it's a Pro Pick and the user is NOT a Pro User
               const isLocked = match.isProPick && !isProUser;
               
-              return <MatchCard key={match.id} match={match} isLocked={isLocked} />
+              return (
+                <MatchCard 
+                  key={match.id} 
+                  match={match} 
+                  isLocked={isLocked}
+                  isGuest={isGuest}
+                  onRequireLogin={() => setIsAuthModalOpen(true)}
+                />
+              );
             })
           ) : (
             <div className="p-12 mt-4 rounded-xl bg-[#09090b] border border-dashed border-zinc-800 text-center flex flex-col items-center justify-center text-zinc-400 font-mono">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#138561]/25 via-[#138561]/10 to-transparent border border-emerald-500/50 flex items-center justify-center text-[#10b981] mb-5 shadow-[0_0_25px_rgba(16,185,129,0.3)]">
-                <ZapIcon size={28} className="text-[#10b981] drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" />
+              <div className="w-14 h-14 rounded-xl bg-[#121215] border border-zinc-800 flex items-center justify-center text-[#138561] mb-5">
+                <ZapIcon size={28} className="text-[#138561]" />
               </div>
               <h3 className="text-base text-white font-heading tracking-wide uppercase mb-2">NO ACTIVE {activeFilter !== "All" ? activeFilter.toUpperCase() : ""} FIXTURES RIGHT NOW</h3>
               <p className="text-xs max-w-md text-zinc-400 leading-relaxed font-sans mb-6">
                 Our proprietary Strike-IQ quantitative engines are continuously scanning upcoming schedules and market odds. New high-confidence algorithmic predictions will appear here automatically once lines open.
               </p>
               {activeFilter !== "All" && (
-                <button onClick={() => setActiveFilter("All")} className="px-5 py-2 rounded-lg bg-[#138561] text-white text-xs font-mono font-bold hover:bg-[#0f6b4d] transition-all uppercase tracking-wider shadow-md">
+                <button onClick={() => setActiveFilter("All")} className="px-5 py-2 rounded-lg bg-[#138561] text-white text-xs font-mono font-bold hover:bg-[#0f6b4d] transition-all uppercase tracking-wider">
                   View All Markets
                 </button>
               )}
@@ -139,6 +151,12 @@ export default function PredictionsFeed() {
           )}
         </div>
       )}
+
+      <SignInModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        reason="copy this booking code and access live quantitative signals"
+      />
     </div>
   );
 }

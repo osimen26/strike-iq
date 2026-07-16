@@ -40,6 +40,15 @@ export async function proxy(request: NextRequest) {
     if (pathname === "/admin/login") {
       return supabaseResponse;
     }
+    // Allow guest access to /dashboard feeds so unauthenticated users can experience the 300ms teaser blur
+    if (
+      pathname === "/dashboard" ||
+      pathname.startsWith("/dashboard/predictions") ||
+      pathname.startsWith("/dashboard/matches") ||
+      pathname.startsWith("/dashboard/leagues")
+    ) {
+      return supabaseResponse;
+    }
     const url = request.nextUrl.clone();
     url.pathname = pathname.startsWith("/admin") ? "/admin/login" : "/login";
     return NextResponse.redirect(url);

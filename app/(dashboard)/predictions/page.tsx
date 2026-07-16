@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MatchCard } from "@/components/dashboard/MatchCard";
 import { createClient } from "@/lib/supabase/client";
+import SignInModal from "@/components/auth/SignInModal";
 
 export default function PredictionsFeed() {
   const [activeSport, setActiveSport] = useState("All");
@@ -11,9 +12,17 @@ export default function PredictionsFeed() {
   const [predictions, setPredictions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isProUser, setIsProUser] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const supabase = createClient();
 
+  const isGuest = !user;
+
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+
     // Check if user is pro
     fetch("/api/subscriptions/current")
       .then((r) => r.json())
@@ -72,7 +81,7 @@ export default function PredictionsFeed() {
             placeholder="Search teams or leagues..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-[#09090b] border border-zinc-800 rounded-lg text-sm text-white font-mono focus:outline-none focus:border-[#138561] transition-colors shadow-lg"
+            className="w-full pl-10 pr-4 py-2 bg-[#09090b] border border-zinc-800 rounded-lg text-sm text-white font-mono focus:outline-none focus:border-[#138561] transition-colors"
           />
         </div>
       </div>
@@ -85,7 +94,7 @@ export default function PredictionsFeed() {
             onClick={() => setActiveSport(sport)}
             className={`px-5 py-2 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap uppercase tracking-wider ${
               activeSport === sport
-                ? "bg-[#138561] text-white shadow-sm shadow-[#138561]/20"
+                ? "bg-[#138561] text-white"
                 : "text-zinc-400 hover:text-white hover:bg-[#121215]"
             }`}
           >
@@ -114,7 +123,7 @@ export default function PredictionsFeed() {
           {(activeSport !== "All" || searchQuery) && (
             <button
               onClick={() => { setActiveSport("All"); setSearchQuery(""); }}
-              className="px-5 py-2 rounded-lg bg-[#138561] text-white text-xs font-mono font-bold hover:bg-[#0f6b4d] transition-all uppercase tracking-wider shadow-md"
+              className="px-5 py-2 rounded-lg bg-[#138561] text-white text-xs font-mono font-bold hover:bg-[#0f6b4d] transition-all uppercase tracking-wider"
             >
               View All Markets
             </button>
@@ -124,10 +133,24 @@ export default function PredictionsFeed() {
         <div className="space-y-4">
           {filtered.map((pred) => {
             const isLocked = pred.isProPick && !isProUser;
-            return <MatchCard key={pred.id} match={pred} isLocked={isLocked} />;
+            return (
+              <MatchCard
+                key={pred.id}
+                match={pred}
+                isLocked={isLocked}
+                isGuest={isGuest}
+                onRequireLogin={() => setIsAuthModalOpen(true)}
+              />
+            );
           })}
         </div>
       )}
+
+      <SignInModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        reason="copy this booking code and access live quantitative signals"
+      />
     </div>
   );
 }

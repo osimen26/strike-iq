@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getTeamLogo, getLeagueLogo } from "@/lib/logos";
 import {
   ZapIcon,
@@ -16,15 +16,22 @@ import {
   GiftIcon,
 } from "@/components/icons/Icons";
 
-export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean }) {
+export function MatchCard({
+  match,
+  isLocked,
+  isGuest,
+  onRequireLogin,
+}: {
+  match: any;
+  isLocked?: boolean;
+  isGuest?: boolean;
+  onRequireLogin?: () => void;
+}) {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  // Freemium items are NEVER locked, regardless of subscription
-  const actuallyLocked = isLocked && !match.isFreePick;
+  const [isTeasing, setIsTeasing] = useState(false);
 
   // Determine if this item is a Booking Code / Accumulator Slip
-  // (e.g. Free Daily Teaser, Community Slip, or any pick with a booking code)
   const isBookingSlip =
     Boolean(match.bookingCode) ||
     match.isFreePick ||
@@ -40,6 +47,25 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
         t.toUpperCase().includes("SLIP") ||
         t.toUpperCase().includes("FREE"))
     );
+
+  // Freemium items (isFreePick) are NEVER locked
+  // If user is guest and viewing any booking slip or pro pick, trigger 300ms teaser then lock for login
+  const requiresGuestAuth = Boolean(isGuest && (isBookingSlip || match.isProPick) && !match.isFreePick);
+  const requiresProAuth = Boolean(!isGuest && isLocked && !match.isFreePick);
+  const actuallyLocked = requiresGuestAuth || requiresProAuth;
+
+  // 300ms Teaser effect: code starts visible for 300ms, then blurs when timer completes
+  useEffect(() => {
+    if (actuallyLocked) {
+      setIsTeasing(true);
+      const timer = setTimeout(() => {
+        setIsTeasing(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [actuallyLocked]);
+
+  const isBlurred = actuallyLocked && !isTeasing;
 
   const glowColor =
     match.confidence >= 85
@@ -78,12 +104,19 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
     if (match.awayTeam && !match.awayTeam.includes(" ")) {
       return match.awayTeam.toUpperCase();
     }
+    if (match.prediction && !match.prediction.includes(" ")) {
+      return match.prediction.toUpperCase();
+    }
     return "CHECK ANALYSIS FOR CODE";
   };
 
   const handleCopy = (e: React.MouseEvent, textToCopy: string) => {
     e.stopPropagation();
-    if (actuallyLocked) {
+    if (requiresGuestAuth) {
+      if (onRequireLogin) onRequireLogin();
+      return;
+    }
+    if (requiresProAuth) {
       window.location.href = "/dashboard/subscription";
       return;
     }
@@ -152,23 +185,31 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
 
           {/* Center: Betting Platform + Booking Code & AI Rating Ring (NO GLOW, NO VS, NO AI PREDICTION) */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 relative">
-            {actuallyLocked && (
+            {actuallyLocked && !isTeasing && (
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.location.href = "/dashboard/subscription";
+                  if (requiresGuestAuth && onRequireLogin) {
+                    onRequireLogin();
+                  } else {
+                    window.location.href = "/dashboard/subscription";
+                  }
                 }}
-                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 rounded-xl border border-zinc-700 p-4 text-center cursor-pointer hover:bg-black transition-all group/lock"
+                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#09090b]/95 rounded-xl border border-zinc-800 p-4 text-center cursor-pointer hover:bg-black transition-all group/lock animate-fadeIn"
               >
-                <div className="w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center mb-1 group-hover/lock:scale-110 transition-transform">
-                  <LockIcon size={18} className="text-emerald-400" />
+                <div className="w-9 h-9 rounded-xl bg-[#121215] border border-zinc-800 flex items-center justify-center mb-1 transition-transform">
+                  <LockIcon size={18} className="text-[#138561]" />
                 </div>
                 <span className="text-xs font-mono font-bold text-white uppercase tracking-wider mb-0.5">
                   {bettingPlatform} BOOKING CODE LOCKED
                 </span>
-                <span className="flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-400 underline underline-offset-2 tracking-widest">
+                <span className="flex items-center gap-1 text-[11px] font-mono font-bold text-[#138561] tracking-widest">
                   <ZapIcon size={12} />
-                  <span>UPGRADE TO PRO ($9.99) TO COPY SLIP</span>
+                  <span>
+                    {requiresGuestAuth
+                      ? "SIGN IN OR REGISTER TO COPY SLIP"
+                      : "UPGRADE TO PRO ($9.99) TO COPY SLIP"}
+                  </span>
                 </span>
               </div>
             )}
@@ -177,7 +218,9 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
             <div
               onClick={(e) => handleCopy(e, cleanCode)}
               title={
-                actuallyLocked
+                requiresGuestAuth
+                  ? "Sign in to copy booking code"
+                  : requiresProAuth
                   ? "Upgrade to Pro to copy booking code"
                   : "Click to copy booking code"
               }
@@ -186,7 +229,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                   ? "border-emerald-500/80 bg-emerald-950/20"
                   : "border-zinc-800/90 hover:border-zinc-700"
               } ${
-                actuallyLocked
+                isBlurred
                   ? "blur-sm opacity-40 pointer-events-none select-none"
                   : ""
               }`}
@@ -423,25 +466,33 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
 
           {/* RIGHT: AI Prediction & Confidence Ring */}
           <div className="flex items-center justify-between lg:justify-end gap-6 border-t lg:border-t-0 border-zinc-800/80 pt-5 lg:pt-0 w-full lg:w-auto relative">
-            {actuallyLocked && (
+            {actuallyLocked && !isTeasing && (
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.location.href = "/dashboard/subscription";
+                  if (requiresGuestAuth && onRequireLogin) {
+                    onRequireLogin();
+                  } else {
+                    window.location.href = "/dashboard/subscription";
+                  }
                 }}
-                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 rounded-lg border border-zinc-700 p-3 text-center cursor-pointer hover:bg-black transition-all group/lock"
+                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#09090b]/95 rounded-lg border border-zinc-800 p-3 text-center cursor-pointer hover:bg-black transition-all group/lock animate-fadeIn"
               >
-                <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center mb-1 group-hover/lock:scale-110 transition-transform">
-                  <LockIcon size={16} className="text-emerald-400" />
+                <div className="w-8 h-8 rounded-xl bg-[#121215] border border-zinc-800 flex items-center justify-center mb-1 transition-transform">
+                  <LockIcon size={16} className="text-[#138561]" />
                 </div>
                 <span className="text-[11px] font-mono font-bold text-white uppercase tracking-wider mb-0.5">
                   {match.bookingCode
                     ? `${match.bookmaker || "VIP"} CODE LOCKED`
                     : "VIP GAME VERDICT LOCKED"}
                 </span>
-                <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-400 underline underline-offset-2 tracking-widest">
+                <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-[#138561] tracking-widest">
                   <ZapIcon size={12} />
-                  <span>UPGRADE TO PRO ($9.99) TO COPY SLIP</span>
+                  <span>
+                    {requiresGuestAuth
+                      ? "SIGN IN OR REGISTER TO VIEW VERDICT"
+                      : "UPGRADE TO PRO ($9.99) TO UNLOCK"}
+                  </span>
                 </span>
               </div>
             )}
@@ -449,7 +500,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
             {/* The Verdict */}
             <div
               className={`flex flex-col items-start lg:items-end gap-2 flex-1 lg:flex-none ${
-                actuallyLocked
+                isBlurred
                   ? "blur-sm opacity-40 select-none pointer-events-none"
                   : ""
               }`}
@@ -512,7 +563,9 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                 <div
                   onClick={(e) => handleCopy(e, match.bookingCode)}
                   title={
-                    actuallyLocked
+                    requiresGuestAuth
+                      ? "Sign in to copy booking code"
+                      : requiresProAuth
                       ? "Upgrade to Pro to copy booking code"
                       : "Click to copy booking code"
                   }
@@ -538,7 +591,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                         : "text-white border-zinc-800 group-hover/code:border-[#138561]"
                     }`}
                   >
-                    {actuallyLocked
+                    {isBlurred
                       ? `${match.bookingCode.slice(0, 2)}•••• [LOCKED]`
                       : match.bookingCode}
                   </span>
@@ -551,12 +604,12 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
                         : "text-[#138561] group-hover/code:text-white"
                     }`}
                   >
-                    {actuallyLocked
+                    {isBlurred
                       ? "LOCK 🔒"
                       : copied
                       ? "COPIED! ✅"
                       : "COPY"}{" "}
-                    {!actuallyLocked && !copied && <CopyIcon size={12} />}
+                    {!isBlurred && !copied && <CopyIcon size={12} />}
                   </span>
                 </div>
               )}
@@ -565,7 +618,7 @@ export function MatchCard({ match, isLocked }: { match: any; isLocked?: boolean 
             {/* Circular Confidence Gauge */}
             <div
               className={`relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0 ${
-                actuallyLocked ? "blur-sm opacity-40" : ""
+                isBlurred ? "blur-sm opacity-40" : ""
               }`}
             >
               <svg
