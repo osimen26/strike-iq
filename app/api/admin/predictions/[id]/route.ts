@@ -27,7 +27,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Delete Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
@@ -58,7 +58,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       console.warn("Schema check/reload notice:", migErr);
     }
 
-    let updatedData: any = null;
+    let updatedData: unknown = null;
     const { data: sbData, error: sbError } = await supabase
       .from('pro_predictions')
       .update({
@@ -74,7 +74,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         booking_code: body.bookingCode || null,
         bookmaker: body.bookmaker || null,
         status: body.status || "PENDING",
-        tags: Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).slice(0, 50)) : []
+        tags: Array.isArray(body.tags) ? body.tags.map((t: unknown) => String(t).slice(0, 50)) : []
       })
       .eq('id', id)
       .select();
@@ -96,7 +96,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
           bookingCode: body.bookingCode || null,
           bookmaker: body.bookmaker || null,
           status: body.status || "PENDING",
-          tags: Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).slice(0, 50)) : []
+          tags: Array.isArray(body.tags) ? body.tags.map((t: unknown) => String(t).slice(0, 50)) : []
         }
       });
       updatedData = [updated];
@@ -105,7 +105,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
 
     return NextResponse.json({ success: true, data: updatedData });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Update Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }

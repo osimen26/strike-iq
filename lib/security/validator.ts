@@ -14,7 +14,7 @@ const PROTOCOL_REGEX = /(javascript|data|vbscript):/gi;
  * Sanitizes a string input by removing potential XSS scripts, HTML tags, and dangerous protocols.
  * Also truncates strings that exceed maxLength to prevent DoS attacks.
  */
-export function sanitizeString(input: any, maxLength = 2000): string {
+export function sanitizeString(input: unknown, maxLength = 2000): string {
   if (input === null || input === undefined) return '';
   if (typeof input !== 'string') {
     return String(input).slice(0, maxLength);
@@ -54,7 +54,7 @@ export function sanitizePayload<T>(payload: T): T {
   }
 
   if (typeof payload === 'object') {
-    const sanitizedObj: Record<string, any> = {};
+    const sanitizedObj: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(payload)) {
       // Ensure property names are safe alphanumeric strings
       const safeKey = key.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 100);
@@ -89,7 +89,7 @@ export function isValidEmail(email: string): boolean {
 /**
  * Enforces safe numeric boundaries (e.g., confidence percentages between 0 and 100).
  */
-export function sanitizeNumber(input: any, min = 0, max = 1000000, fallback = 0): number {
+export function sanitizeNumber(input: unknown, min = 0, max = 1000000, fallback = 0): number {
   const num = Number(input);
   if (isNaN(num) || !isFinite(num)) return fallback;
   return Math.min(Math.max(num, min), max);

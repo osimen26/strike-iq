@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from "@/lib/security/constants";
 
 interface UserProfile {
   id: string;
@@ -72,7 +73,7 @@ export default function AdminUsersPage() {
           id: u.id,
           email: u.email || "Unknown Email",
           name: u.name || u.email?.split("@")[0] || "User",
-          role: u.email?.toLowerCase() === "osimenvictor04@gmail.com" ? "admin" : "user",
+          role: MASTER_ADMIN_EMAILS.includes(u.email?.toLowerCase()) ? "admin" : "user",
           emailVerified: u.emailVerified ?? true,
           createdAt: u.createdAt || new Date().toISOString(),
           subscriptionStatus: subMap[u.id] || "FREE",
@@ -81,11 +82,11 @@ export default function AdminUsersPage() {
       }
 
       // Ensure Master VIP Admin is always present
-      const hasMaster = formatted.some((u) => u.email.toLowerCase() === "osimenvictor04@gmail.com");
+      const hasMaster = formatted.some((u) => MASTER_ADMIN_EMAILS.includes(u.email.toLowerCase()));
       if (!hasMaster) {
         formatted.unshift({
           id: "master-admin",
-          email: "osimenvictor04@gmail.com",
+          email: MASTER_ADMIN_EMAIL,
           name: "Osimen Victor (Master Admin)",
           role: "admin",
           emailVerified: true,
@@ -513,7 +514,7 @@ export default function AdminUsersPage() {
               </thead>
               <tbody className="divide-y divide-zinc-800/60">
                 {paginatedUsers.map((user) => {
-                  const isAdmin = user.email.toLowerCase() === "osimenvictor04@gmail.com";
+                  const isAdmin = MASTER_ADMIN_EMAILS.includes(user.email.toLowerCase());
                   const isPro = user.subscriptionStatus === "ACTIVE" || isAdmin;
 
                   return (

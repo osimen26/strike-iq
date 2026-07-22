@@ -116,7 +116,7 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json({ success: true, data: leagues });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching/seeding leagues:', error);
     // Graceful fallback for offline dev/demo
     const fallbackLeagues = DEFAULT_LEAGUES.map((l, idx) => ({

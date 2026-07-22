@@ -34,7 +34,7 @@ export async function requireMasterAdmin() {
 /**
  * Logs important administrator actions to the server terminal for security tracing.
  */
-export function logAdminAudit(action: string, details: Record<string, any> = {}) {
+export function logAdminAudit(action: string, details: Record<string, unknown> = {}) {
   const timestamp = new Date().toISOString();
   console.log(`[ADMIN_AUDIT_LOG // ${timestamp}] ACTION: ${action} | ADMIN: ${MASTER_ADMIN_EMAIL} | DETAILS:`, details);
 }

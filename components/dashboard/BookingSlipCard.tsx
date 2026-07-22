@@ -11,9 +11,10 @@ import {
   GiftIcon,
 } from "@/components/icons/Icons";
 import { getBettingPlatformName, getCleanBookingCodeString } from "./MatchCardHelpers";
+import { MatchItem } from "@/types";
 
 interface BookingSlipCardProps {
-  match: any;
+  match: MatchItem;
   actuallyLocked: boolean;
   isTeasing: boolean;
   isBlurred: boolean;
@@ -41,6 +42,7 @@ export function BookingSlipCard({
   const bettingPlatform = getBettingPlatformName(match);
   const cleanCode = getCleanBookingCodeString(match);
   const headerTitle = match.league || "FREE DAILY TEASER";
+  const confidenceVal = match.confidence ?? 0;
 
   const handleCopy = (e: React.MouseEvent, textToCopy: string) => {
     e.stopPropagation();
@@ -212,15 +214,15 @@ export function BookingSlipCard({
                   stroke="currentColor"
                   strokeWidth="2.5"
                 />
-                <path
+                 <path
                   className={
-                    match.confidence >= 85
+                    confidenceVal >= 85
                       ? "text-[#138561]"
-                      : match.confidence >= 75
+                      : confidenceVal >= 75
                       ? "text-emerald-500"
                       : "text-zinc-500"
                   }
-                  strokeDasharray={`${match.confidence}, 100`}
+                  strokeDasharray={`${confidenceVal}, 100`}
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   stroke="currentColor"
@@ -230,7 +232,7 @@ export function BookingSlipCard({
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="font-mono font-bold text-base text-white">
-                  {match.confidence}
+                  {confidenceVal}
                 </span>
                 <span className="text-[9px] text-zinc-500 font-mono -mt-1">%</span>
               </div>

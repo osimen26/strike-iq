@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { MASTER_ADMIN_EMAILS } from "@/lib/security/constants";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -39,7 +40,7 @@ export default function Login() {
             id: userObj.id,
             email: userObj.email.toLowerCase(),
             name: userObj.user_metadata?.full_name || userObj.email.split('@')[0],
-            role: userObj.email.toLowerCase() === "osimenvictor04@gmail.com" ? "admin" : "user",
+            role: MASTER_ADMIN_EMAILS.includes(userObj.email.toLowerCase()) ? "admin" : "user",
             emailVerified: true,
             createdAt: userObj.created_at || new Date().toISOString()
           }]);

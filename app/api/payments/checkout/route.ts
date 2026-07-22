@@ -76,8 +76,9 @@ export async function POST(req: Request) {
     }
 
     // Check if live Flutterwave Secret Key is configured (supports both V3 FLWSECK keys and V4 Client Secrets)
+    // NOTE: Never hardcode key values as a blacklist — if the env var changes the check breaks silently.
     const candidateKeys = [process.env.FLUTTERWAVE_SECRET_KEY, process.env.Flutterwave, process.env.FLUTTERWAVE_KEY];
-    const rawKey = candidateKeys.find(k => k && k.trim() !== '' && !k.includes('your-') && k.trim() !== 'EHvwBlhYvyO7gKb512jaVNMkbReAKflt');
+    const rawKey = candidateKeys.find(k => k && k.trim() !== '' && !k.includes('your-'));
     const flwSecretKey = rawKey ? rawKey.replace(/^["']|["']$/g, '').trim() : null;
     let flwErrorMsg: string | null = null;
 
@@ -123,19 +124,26 @@ export async function POST(req: Request) {
       flwErrorMsg = 'No live secret key found in environment variables (Vercel/local).';
     }
 
-    // DEV / SIMULATION MODE FALLBACK
-    // If no live keys or if testing locally, redirect to simulated success URL
-    if (process.env.NODE_ENV !== "production") {
-      console.log("Simulation Mode tx_ref:", tx_ref, "Reason:", flwErrorMsg);
+    // CRITICAL SECURITY: Never allow simulation flow in production — payment bypass risk.
+    if (process.env.NODE_ENV === 'production') {
+      console.error('[CHECKOUT] Flutterwave live payment failed in production. Cannot fall back to simulation.', flwErrorMsg);
+      return NextResponse.json(
+        { error: 'Payment gateway unavailable. Please try again or contact support.' },
+        { status: 503 }
+      );
     }
+
+    // DEV / SIMULATION MODE FALLBACK — development and staging only
+    console.log('[CHECKOUT] Simulation Mode tx_ref:', tx_ref, 'Reason:', flwErrorMsg);
     const simulationUrl = `/subscription?payment=simulated_success&tx_ref=${tx_ref}&planId=${plan.id}&planName=${encodeURIComponent(plan.name)}`;
-    
+
     return NextResponse.json({
       success: true,
       checkoutUrl: simulationUrl,
       simulated: true,
-      flwError: flwErrorMsg,
-      message: flwErrorMsg ? `Flutterwave API Note: ${flwErrorMsg}` : 'Redirecting via Dev Simulation Mode (no live Flutterwave key detected).'
+      message: flwErrorMsg
+        ? `Dev simulation (Flutterwave note: ${flwErrorMsg})`
+        : 'Redirecting via Dev Simulation Mode (no live Flutterwave key detected).',
     });
 
   } catch (error) {

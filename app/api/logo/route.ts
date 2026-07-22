@@ -88,10 +88,19 @@ const ALLOWED_LOGO_DOMAINS = [
   "a.espncdn.com",
   "thesportsdb.com",
   "www.thesportsdb.com",
+  "r2.thesportsdb.com",
+  "cdn.thesportsdb.com",
   "ui-avatars.com",
   "upload.wikimedia.org",
   "logos-world.net",
   "ssl.gstatic.com",
+  "flagcdn.com",
+  "api-sports.io",
+  "media.api-sports.io",
+  "iconify.design",
+  "api.iconify.design",
+  "crests.football-data.org",
+  "images.fotmob.com",
 ];
 
 function isAllowedDomain(url: string): boolean {

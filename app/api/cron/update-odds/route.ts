@@ -175,12 +175,12 @@ export async function GET(request: Request) {
       timestamp: new Date().toISOString()
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[CRON_UPDATE_ODDS] Fatal cron failure:", error);
     return NextResponse.json({
       success: false,
       error: "Automated cron job failed during execution.",
-      details: error.message
+      details: error instanceof Error ? error.message : "Unknown error occurred"
     }, { status: 500 });
   }
 }

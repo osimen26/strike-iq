@@ -66,7 +66,7 @@ export async function GET() {
       daysRemaining: 0,
       payments,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching subscription status:', error);
     // Graceful fallback for offline dev/demo
     return NextResponse.json({

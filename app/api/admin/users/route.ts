@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { prisma } from '@/lib/prisma';
-import { requireMasterAdmin, logAdminAudit } from '@/lib/security/adminGuard';
+import { requireMasterAdmin, logAdminAudit, MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from '@/lib/security/adminGuard';
 import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
@@ -32,12 +32,19 @@ export async function GET(request: Request) {
     );
 
     // 1. Fetch real users from Supabase Auth engine (auth.users)
-    let authEngineUsers: any[] = [];
+    interface AuthSummaryUser {
+      id: string;
+      email?: string;
+      user_metadata?: Record<string, unknown>;
+      email_confirmed_at?: string | null;
+      created_at?: string;
+    }
+    let authEngineUsers: AuthSummaryUser[] = [];
     if (supabaseAdmin) {
       try {
         const { data: authData } = await supabaseAdmin.auth.admin.listUsers();
         if (authData?.users && authData.users.length > 0) {
-          authEngineUsers = authData.users;
+          authEngineUsers = authData.users as unknown as AuthSummaryUser[];
         }
       } catch (authErr) {
         console.warn('Supabase Auth admin listUsers fetch warning:', authErr);
@@ -47,18 +54,18 @@ export async function GET(request: Request) {
     // Direct SQL fallback: query auth.users directly via Prisma if listUsers did not return results
     if (authEngineUsers.length === 0) {
       try {
-        const rawUsers: any[] = await prisma.$queryRawUnsafe(`
+        const rawUsers = (await prisma.$queryRawUnsafe(`
           SELECT id, email, raw_user_meta_data as meta, created_at, email_confirmed_at 
           FROM auth.users 
           ORDER BY created_at DESC
-        `);
+        `)) as Array<Record<string, unknown>>;
         if (rawUsers && rawUsers.length > 0) {
           authEngineUsers = rawUsers.map(ru => ({
-            id: ru.id,
-            email: ru.email,
-            user_metadata: (typeof ru.meta === 'string' ? JSON.parse(ru.meta) : ru.meta) || {},
-            email_confirmed_at: ru.email_confirmed_at,
-            created_at: ru.created_at || new Date().toISOString()
+            id: String(ru.id || ''),
+            email: String(ru.email || ''),
+            user_metadata: ((typeof ru.meta === 'string' ? JSON.parse(ru.meta) : ru.meta) || {}) as Record<string, unknown>,
+            email_confirmed_at: ru.email_confirmed_at ? String(ru.email_confirmed_at) : null,
+            created_at: String(ru.created_at || new Date().toISOString())
           }));
         }
       } catch (sqlErr) {
@@ -67,78 +74,104 @@ export async function GET(request: Request) {
     }
 
     // 2. Fetch real users and subscriptions from Prisma PostgreSQL
-    let prismaUsers: any[] = [];
-    let prismaSubs: any[] = [];
-    let prismaPayments: any[] = [];
+    interface UserRecord {
+      id: string;
+      email?: string;
+      name?: string | null;
+      role?: string;
+      emailVerified?: boolean | Date | null;
+      createdAt?: string | Date;
+      referralCode?: string | null;
+    }
+    interface SubRecord {
+      userId?: string;
+      status?: string;
+    }
+    interface PayRecord {
+      userId?: string;
+      status?: string;
+    }
+    let prismaUsers: UserRecord[] = [];
+    let prismaSubs: SubRecord[] = [];
+    let prismaPayments: PayRecord[] = [];
     try {
-      prismaUsers = await prisma.user.findMany({
+      prismaUsers = (await prisma.user.findMany({
         orderBy: { createdAt: 'desc' },
-      });
-      prismaSubs = await prisma.subscription.findMany();
-      prismaPayments = await prisma.payment.findMany({
+      })) as unknown as UserRecord[];
+      prismaSubs = (await prisma.subscription.findMany()) as unknown as SubRecord[];
+      prismaPayments = (await prisma.payment.findMany({
         where: { status: 'SUCCESSFUL' },
-      });
+      })) as unknown as PayRecord[];
     } catch (dbErr) {
       console.warn('Prisma fetch failed in /api/admin/users:', dbErr);
     }
 
     // 3. Fetch real users and subscriptions from Supabase public tables (using authenticated server client first)
-    let supabaseUsers: any[] = [];
-    let supabaseSubs: any[] = [];
+    let supabaseUsers: UserRecord[] = [];
+    let supabaseSubs: SubRecord[] = [];
     try {
       const { data: uData } = await supabase
         .from('user')
         .select('*')
         .order('createdAt', { ascending: false });
-      supabaseUsers = uData || [];
+      supabaseUsers = (uData || []) as unknown as UserRecord[];
 
       if (supabaseUsers.length === 0) {
         const { data: uDataPublic } = await supabasePublic.from('user').select('*');
-        supabaseUsers = uDataPublic || [];
+        supabaseUsers = (uDataPublic || []) as unknown as UserRecord[];
       }
 
       const { data: sData } = await supabase
         .from('subscriptions')
         .select('*');
-      supabaseSubs = sData || [];
+      supabaseSubs = (sData || []) as unknown as SubRecord[];
       if (supabaseSubs.length === 0) {
         const { data: sDataPublic } = await supabasePublic.from('subscriptions').select('*');
-        supabaseSubs = sDataPublic || [];
+        supabaseSubs = (sDataPublic || []) as unknown as SubRecord[];
       }
     } catch (sbErr) {
       console.warn('Supabase fetch failed in /api/admin/users:', sbErr);
     }
 
     // 4. Merge & Deduplicate ACTUAL Users by Email
-    const userMap: Record<string, any> = {};
+    interface MergedUserEntry {
+      id: string;
+      email: string;
+      name: string | null;
+      role: string;
+      emailVerified: boolean | Date | null;
+      createdAt: string | Date;
+      referralCode?: string | null;
+    }
+    const userMap: Record<string, MergedUserEntry> = {};
 
     // Add real users from Supabase Auth engine first
     authEngineUsers.forEach((u) => {
       const emailKey = (u.email || '').trim().toLowerCase();
       if (!emailKey) return;
-      const meta = u.user_metadata || {};
-      const fullName = meta.full_name || `${meta.first_name || ''} ${meta.last_name || ''}`.trim() || emailKey.split('@')[0];
+      const meta = (u.user_metadata || {}) as Record<string, unknown>;
+      const fullName = (meta.full_name as string) || `${(meta.first_name as string) || ''} ${(meta.last_name as string) || ''}`.trim() || emailKey.split('@')[0];
       userMap[emailKey] = {
         id: u.id,
         email: emailKey,
         name: fullName,
-        role: meta.role || (emailKey === 'osimenvictor04@gmail.com' ? 'admin' : 'user'),
+        role: (meta.role as string) || (MASTER_ADMIN_EMAILS.includes(emailKey) ? 'admin' : 'user'),
         emailVerified: Boolean(u.email_confirmed_at),
         createdAt: u.created_at || new Date().toISOString(),
-        referralCode: meta.referral_code || meta.referralCode || null,
+        referralCode: (meta.referral_code as string) || (meta.referralCode as string) || null,
       };
     });
 
     // Add real users from Prisma PostgreSQL
-    prismaUsers.forEach((u: any) => {
-      const emailKey = (u.email || '').trim().toLowerCase();
+    prismaUsers.forEach((u: UserRecord) => {
+      const emailKey = (String(u.email || '')).trim().toLowerCase();
       if (!emailKey) return;
       if (!userMap[emailKey]) {
         userMap[emailKey] = {
           id: u.id,
           email: emailKey,
           name: u.name || emailKey.split('@')[0],
-          role: u.role || (emailKey === 'osimenvictor04@gmail.com' ? 'admin' : 'user'),
+          role: u.role || (MASTER_ADMIN_EMAILS.includes(emailKey) ? 'admin' : 'user'),
           emailVerified: u.emailVerified ?? true,
           createdAt: u.createdAt || new Date().toISOString(),
           referralCode: u.referralCode || null,
@@ -152,15 +185,15 @@ export async function GET(request: Request) {
     });
 
     // Add real users from Supabase public table
-    supabaseUsers.forEach((u: any) => {
-      const emailKey = (u.email || '').trim().toLowerCase();
+    supabaseUsers.forEach((u: UserRecord) => {
+      const emailKey = (String(u.email || '')).trim().toLowerCase();
       if (!emailKey) return;
       if (!userMap[emailKey]) {
         userMap[emailKey] = {
           id: u.id,
           email: emailKey,
           name: u.name || emailKey.split('@')[0],
-          role: u.role || (emailKey === 'osimenvictor04@gmail.com' ? 'admin' : 'user'),
+          role: u.role || (MASTER_ADMIN_EMAILS.includes(emailKey) ? 'admin' : 'user'),
           emailVerified: u.emailVerified ?? true,
           createdAt: u.createdAt || new Date().toISOString(),
           referralCode: u.referralCode || null,
@@ -171,7 +204,7 @@ export async function GET(request: Request) {
     });
 
     // Ensure Master VIP Admin is always visible
-    const masterEmail = 'osimenvictor04@gmail.com';
+    const masterEmail = MASTER_ADMIN_EMAIL;
     if (!userMap[masterEmail]) {
       userMap[masterEmail] = {
         id: 'master-admin',
@@ -190,30 +223,31 @@ export async function GET(request: Request) {
     prismaSubs.forEach((sub) => {
       if (sub.status === 'ACTIVE') {
         const u = prismaUsers.find((p) => p.id === sub.userId);
-        if (u?.email) activeSubEmails.add(u.email.toLowerCase());
+        if (u?.email) activeSubEmails.add(String(u.email).toLowerCase());
       }
     });
     prismaPayments.forEach((pay) => {
       if (pay.status === 'SUCCESSFUL') {
         const u = prismaUsers.find((p) => p.id === pay.userId);
-        if (u?.email) activeSubEmails.add(u.email.toLowerCase());
+        if (u?.email) activeSubEmails.add(String(u.email).toLowerCase());
       }
     });
     supabaseSubs.forEach((sub) => {
       if (sub.status === 'ACTIVE' || sub.status === 'ACTIVE PRO') {
         const u = supabaseUsers.find((p) => p.id === sub.userId);
-        if (u?.email) activeSubEmails.add(u.email.toLowerCase());
+        if (u?.email) activeSubEmails.add(String(u.email).toLowerCase());
       }
     });
 
     // Build final combined ACTUAL user list
     const subscriptionsMap: Record<string, string> = {};
-    const mergedUsers = Object.values(userMap).map((u) => {
-      const isPaidPro = activeSubEmails.has(u.email.toLowerCase());
+    const mergedUsers = Object.values(userMap).map((u: MergedUserEntry) => {
+      const emailStr = String(u.email || '');
+      const isPaidPro = activeSubEmails.has(emailStr.toLowerCase());
       subscriptionsMap[u.id] = isPaidPro ? 'ACTIVE' : 'FREE';
       return {
         ...u,
-        role: u.email.toLowerCase() === 'osimenvictor04@gmail.com' ? 'admin' : 'user',
+        role: MASTER_ADMIN_EMAILS.includes(emailStr.toLowerCase()) ? 'admin' : (u.role || 'user'),
       };
     });
 
@@ -222,7 +256,7 @@ export async function GET(request: Request) {
       users: mergedUsers,
       subscriptions: subscriptionsMap,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error in GET /api/admin/users:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
@@ -315,7 +349,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true, user: newUser });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[POST /api/admin/users]', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

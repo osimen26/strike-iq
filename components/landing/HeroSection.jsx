@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useRef } from 'react';
-import Link from 'next/link';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import './HeroSection.css';
@@ -9,9 +8,8 @@ import PredictionWidget from './PredictionWidget';
 gsap.registerPlugin(useGSAP);
 
 function HeroSection() {
-  const heroRef = useRef(null);
   const [isHeroReady, setIsHeroReady] = useState(false);
-
+  const heroRef = useRef(null);
   const imgRef = useRef(null);
 
   React.useEffect(() => {

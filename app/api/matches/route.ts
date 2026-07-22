@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
+import { OddsApiFixture } from '@/types';
 
 const API_KEY = process.env.THE_ODDS_API_KEY;
 
@@ -33,7 +34,7 @@ export async function GET(request: Request) {
       throw new Error(errorData.message || 'Failed to fetch from The Odds API');
     }
 
-    const data = await res.json();
+    const data = (await res.json()) as OddsApiFixture[];
     
     // Allowed leagues: PRD top-5 + UEFA club comps + International & World Football + Basketball
     const ALLOWED_SPORT_KEYS = new Set([
@@ -65,14 +66,14 @@ export async function GET(request: Request) {
     const threeDaysOut = new Date();
     threeDaysOut.setDate(now.getDate() + 4);
 
-    const filteredData = data.filter((match: any) => {
+    const filteredData = data.filter((match: OddsApiFixture) => {
       if (!match || !match.id || !match.home_team || !match.away_team || !match.commence_time) return false;
       const matchDate = new Date(match.commence_time);
       if (matchDate > threeDaysOut) return false;
 
       const k = match.sport_key || '';
       return ALLOWED_SPORT_KEYS.has(k) || k.includes('fifa') || k.includes('world_cup') || k.includes('uefa') || k.includes('copa') || k.includes('nations');
-    }).sort((a: any, b: any) => new Date(a.commence_time).getTime() - new Date(b.commence_time).getTime()).slice(0, 50);
+    }).sort((a: OddsApiFixture, b: OddsApiFixture) => new Date(a.commence_time || 0).getTime() - new Date(b.commence_time || 0).getTime()).slice(0, 50);
     
     return NextResponse.json({ success: true, data: filteredData });
   } catch (error) {

@@ -225,14 +225,11 @@ const AFRICAN_COUNTRY_CODES = new Set([
 
 /**
  * Get the regional pricing configuration for a specific ISO country code.
- * Defaults to Pan-Africa ($4.99 USD) if in Africa, otherwise International ($9.99 USD).
+ * For the Nigeria-Only launch phase, this defaults strictly to Nigeria ('NG' / ₦5,000 NGN).
  */
 export function getRegionalConfig(countryCode?: string | null): RegionalConfig {
-  if (!countryCode) return REGIONAL_PRICING_CONFIG.US;
-  const upperCode = countryCode.toUpperCase().trim();
-  if (REGIONAL_PRICING_CONFIG[upperCode]) return REGIONAL_PRICING_CONFIG[upperCode];
-  if (AFRICAN_COUNTRY_CODES.has(upperCode)) return REGIONAL_PRICING_CONFIG.AF;
-  return REGIONAL_PRICING_CONFIG.US;
+  // Nigeria-Only focus: Lock pricing to NGN (`₦5,000/mo`, `₦60,000/yr`) across all regions
+  return REGIONAL_PRICING_CONFIG.NG;
 }
 
 /**

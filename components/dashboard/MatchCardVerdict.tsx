@@ -14,9 +14,10 @@ import {
   HourglassIcon,
   GiftIcon,
 } from "@/components/icons/Icons";
+import { MatchItem } from "@/types";
 
 interface MatchCardVerdictProps {
-  match: any;
+  match: MatchItem;
   actuallyLocked: boolean;
   isTeasing: boolean;
   isBlurred: boolean;
@@ -45,8 +46,10 @@ export function MatchCardVerdict({
   getTeamLogo,
 }: MatchCardVerdictProps) {
   const [copied, setCopied] = useState(false);
+  const bookingCodeVal = match.bookingCode ?? "";
+  const confidenceVal = match.confidence ?? 0;
 
-  const handleCopy = (e: React.MouseEvent, textToCopy: string) => {
+  const handleCopy = (e: React.MouseEvent, textToCopy: string = "") => {
     e.stopPropagation();
     if (requiresGuestAuth) {
       if (onRequireLogin) onRequireLogin();
@@ -228,7 +231,7 @@ export function MatchCardVerdict({
               </div>
               {match.bookingCode && (
                 <div
-                  onClick={(e) => handleCopy(e, match.bookingCode)}
+                  onClick={(e) => handleCopy(e, bookingCodeVal)}
                   title={
                     requiresGuestAuth
                       ? "Sign in to copy booking code"
@@ -257,8 +260,8 @@ export function MatchCardVerdict({
                     }`}
                   >
                     {isBlurred
-                      ? `${match.bookingCode.slice(0, 2)}•••• [LOCKED]`
-                      : match.bookingCode}
+                      ? `${bookingCodeVal.slice(0, 2)}•••• [LOCKED]`
+                      : bookingCodeVal}
                   </span>
                   <span
                     className={`text-[10px] transition-colors flex items-center gap-1 font-bold ${
@@ -292,13 +295,13 @@ export function MatchCardVerdict({
                 />
                 <path
                   className={
-                    match.confidence >= 85
+                    confidenceVal >= 85
                       ? "text-[#138561]"
-                      : match.confidence >= 75
+                      : confidenceVal >= 75
                       ? "text-emerald-500"
                       : "text-zinc-500"
                   }
-                  strokeDasharray={`${match.confidence}, 100`}
+                  strokeDasharray={`${confidenceVal}, 100`}
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   stroke="currentColor"
@@ -308,7 +311,7 @@ export function MatchCardVerdict({
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="font-mono font-bold text-sm sm:text-base text-white">
-                  {match.confidence}
+                  {confidenceVal}
                 </span>
                 <span className="text-[9px] text-zinc-500 font-mono -mt-1">%</span>
               </div>

@@ -92,32 +92,39 @@ export function SubscriptionModals({
               </div>
             </div>
 
-            {/* Simulated Payment Methods */}
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Select Payment Method
+            {/* Nigeria (NGN) Payment Guidance & Methods */}
+            <div className="bg-emerald-500/10 border border-emerald-500/30 p-3.5 rounded-2xl space-y-2.5">
+              <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs tracking-wide">
+                <span>🇳🇬</span>
+                <span>NIGERIAN CHECKOUT METHODS (FLUTTERWAVE)</span>
+              </div>
+              <p className="text-[11px] text-gray-300 leading-relaxed">
+                When the secure Flutterwave popup opens, choose how you want to pay:
               </p>
-              <div className="grid grid-cols-3 gap-2">
-                <button className="py-2.5 px-3 rounded-xl bg-[#F5A623]/20 border border-[#F5A623] text-xs font-bold text-white flex flex-col items-center gap-1 shadow-sm">
-                  <span>💳</span> Card
-                </button>
-                <button className="py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-all">
-                  <span>🏦</span> Bank
-                </button>
-                <button className="py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-all">
-                  <span>📱</span> USSD / M-Pesa
-                </button>
+              <div className="grid grid-cols-3 gap-2 pt-1 text-[11px]">
+                <div className="bg-white/5 py-2 px-1 rounded-xl border border-emerald-500/30 text-center font-bold text-emerald-300 flex flex-col items-center gap-1">
+                  <span>🟢</span> OPay Wallet
+                </div>
+                <div className="bg-white/5 py-2 px-1 rounded-xl border border-emerald-500/30 text-center font-bold text-emerald-300 flex flex-col items-center gap-1">
+                  <span>🏦</span> Bank Transfer
+                </div>
+                <div className="bg-white/5 py-2 px-1 rounded-xl border border-emerald-500/30 text-center font-bold text-emerald-300 flex flex-col items-center gap-1">
+                  <span>💳</span> Naira Card
+                </div>
+              </div>
+              <div className="bg-black/30 p-2 rounded-xl border border-amber-500/20 text-[10px] text-amber-200/90 leading-relaxed font-medium">
+                💡 <span className="text-amber-300 font-bold">Compliant 30-Day Prepaid Pass:</span> OPay and Bank Transfer checkouts never auto-debit! You get exactly 30 days of Pro access. We will email you before expiration so you can decide when to renew.
               </div>
             </div>
 
             {/* Developer Notice & Error Display */}
-            <div className="bg-amber-500/10 border border-amber-500/30 p-3.5 rounded-xl text-xs text-amber-200 leading-relaxed space-y-2">
-              <div className="flex items-center gap-1.5 font-bold text-amber-300">
+            <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-xs text-amber-200 leading-relaxed space-y-1.5">
+              <div className="flex items-center gap-1.5 font-bold text-amber-300 text-[11px]">
                 <span>⚠️</span>
-                <span>Why is this Pop-up showing in Demo/Sandbox Mode?</span>
+                <span>Why is this showing in Sandbox Mode?</span>
               </div>
               {flwErrorMsg ? (
-                <div className="bg-black/40 p-2.5 rounded-lg border border-amber-500/20 font-mono text-[11px] text-amber-100">
+                <div className="bg-black/40 p-2 rounded-lg border border-amber-500/20 font-mono text-[11px] text-amber-100">
                   <span className="text-red-400 font-bold">Flutterwave API Note:</span> &quot;{flwErrorMsg}&quot;
                 </div>
               ) : (
@@ -125,10 +132,8 @@ export function SubscriptionModals({
                   No valid live key was detected in Vercel environment variables.
                 </p>
               )}
-              <p className="text-[11px] text-gray-300">
-                <span className="font-semibold text-white">💡 Pro Tip:</span> If you just added
-                your live secret key, ensure regional card payments are enabled on your Flutterwave
-                merchant account!
+              <p className="text-[10px] text-gray-300">
+                <span className="font-semibold text-white">💡 Pro Tip:</span> Ensure regional card & OPay payments are checked under your Flutterwave account settings!
               </p>
             </div>
 

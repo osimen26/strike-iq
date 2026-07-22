@@ -7,9 +7,9 @@ const STORAGE_KEY = 'strikeiq_region';
 const COOKIE_NAME = 'strikeiq_region';
 
 export function useRegionalPricing() {
-  const [countryCode, setCountryState] = useState<string>('US');
-  const [config, setConfig] = useState<RegionalConfig>(REGIONAL_PRICING_CONFIG.US);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [countryCode, setCountryState] = useState<string>('NG');
+  const [config, setConfig] = useState<RegionalConfig>(REGIONAL_PRICING_CONFIG.NG);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Helper to persist selection to both localStorage and cookies
   const persistRegion = useCallback((code: string) => {
@@ -44,8 +44,10 @@ export function useRegionalPricing() {
         if (tz.includes('Nairobi') || tz.includes('Kenya')) return 'KE';
         if (tz.includes('Cairo') || tz.includes('Egypt')) return 'EG';
         if (tz.includes('Europe/London')) return 'GB';
-      } catch (_) {}
-      return 'US';
+      } catch {
+        // Optional catch binding
+      }
+      return 'NG'; // Nigeria-Only focus default
     };
 
     async function initializeRegion() {

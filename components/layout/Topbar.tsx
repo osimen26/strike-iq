@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -8,18 +8,18 @@ import type { User } from "@supabase/supabase-js";
 
 export default function Topbar() {
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [user, setUser] = useState<User | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const fetchUnreadCount = async (userId: string) => {
+  const fetchUnreadCount = useCallback(async (userId: string) => {
     const { count } = await supabase
       .from("notifications")
       .select("*", { count: "exact", head: true })
       .eq("userId", userId)
       .eq("isRead", false);
     setUnreadCount(count || 0);
-  };
+  }, [supabase]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -28,7 +28,7 @@ export default function Topbar() {
         fetchUnreadCount(data.user.id);
       }
     });
-  }, []);
+  }, [supabase, fetchUnreadCount]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

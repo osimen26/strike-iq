@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { MASTER_ADMIN_EMAILS } from '@/lib/security/constants'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
+  // SECURITY: Validate `next` is a safe relative path to prevent open redirects.
+  // Reject anything starting with // (protocol-relative), http, or containing @
+  const rawNext = searchParams.get('next') ?? '/dashboard'
+  const next = /^\/[^/\\]/.test(rawNext) && !rawNext.includes('//') ? rawNext : '/dashboard'
+
 
   if (code) {
     const cookieStore = await cookies()
@@ -42,7 +47,7 @@ export async function GET(request: Request) {
             id: u.id,
             email: u.email.toLowerCase(),
             name: u.user_metadata?.full_name || u.email.split('@')[0],
-            role: u.email.toLowerCase() === 'osimenvictor04@gmail.com' ? 'admin' : 'user',
+            role: MASTER_ADMIN_EMAILS.includes(u.email.toLowerCase()) ? 'admin' : 'user',
             emailVerified: true,
             createdAt: u.created_at || new Date().toISOString()
           }])

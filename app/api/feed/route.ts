@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { prisma } from '@/lib/prisma';
 import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
+import { MatchItem, OddsApiFixture, MatchOutcome } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +17,7 @@ export async function GET(req: Request) {
   if (!rl.success) return rateLimitResponse(rl);
 
   try {
-    let picks: any[] = [];
+    let picks: Record<string, unknown>[] = [];
 
     // Primary: fetch via direct Prisma connection (bypasses RLS & PostgREST cache)
     try {
@@ -44,13 +45,36 @@ export async function GET(req: Request) {
 
     // Shape each row from the pro_predictions table into the format
     // the dashboard MatchCard component expects
-    const shaped = picks.map((p: any) => {
+    interface RawPredictionRow {
+      id?: string | number;
+      homeTeam?: string;
+      home_team?: string;
+      awayTeam?: string;
+      away_team?: string;
+      league?: string;
+      sport?: string;
+      matchDate?: string | Date | null;
+      match_date?: string | Date | null;
+      matchTime?: string | null;
+      match_time?: string | null;
+      prediction?: string;
+      confidence?: number | string | null;
+      analysis?: string | null;
+      status?: string;
+      tags?: string[] | unknown;
+      bookingCode?: string | null;
+      booking_code?: string | null;
+      bookmaker?: string | null;
+      createdAt?: string | Date | null;
+      created_at?: string | Date | null;
+    }
+    const shaped: MatchItem[] = (picks as RawPredictionRow[]).map((p: RawPredictionRow): MatchItem => {
       const matchDateStr = p.matchDate || p.match_date || null;
       const matchTimeStr = p.matchTime || p.match_time || '';
-      const homeTeam = p.homeTeam || p.home_team || 'Home Team';
-      const awayTeam = p.awayTeam || p.away_team || 'Away Team';
-      const bookingCode = p.bookingCode || p.booking_code || null;
-      const bookmaker = p.bookmaker || p.bookmaker || null;
+      const homeTeam = String(p.homeTeam || p.home_team || 'Home Team');
+      const awayTeam = String(p.awayTeam || p.away_team || 'Away Team');
+      const bookingCode = p.bookingCode || p.booking_code ? String(p.bookingCode || p.booking_code) : null;
+      const bookmaker = p.bookmaker ? String(p.bookmaker) : null;
 
       // Build a human-readable date/time label from matchDate + matchTime
       let dateLabel = 'TBD';
@@ -92,8 +116,8 @@ export async function GET(req: Request) {
         timeLabel = `${matchTimeStr} GMT`;
       }
 
-      const tagsList = Array.isArray(p.tags) ? p.tags : [];
-      const isFreePick = tagsList.some((t: any) => 
+      const tagsList = Array.isArray(p.tags) ? (p.tags as string[]) : [];
+      const isFreePick = tagsList.some((t: string) => 
         typeof t === 'string' && (
           t.toUpperCase().includes('FREE') || 
           t.toUpperCase().includes('COMMUNITY') || 
@@ -103,28 +127,28 @@ export async function GET(req: Request) {
       ) || (typeof p.league === 'string' && p.league.toUpperCase().includes('FREE'));
 
       return {
-        id: p.id,
+        id: String(p.id || ''),
         homeTeam,
         awayTeam,
-        league: p.league,
-        sport: p.sport || 'football',
+        league: String(p.league || 'League'),
+        sport: String(p.sport || 'football'),
         date: dateLabel,
         time: timeLabel,
-        prediction: p.prediction,
-        confidence: p.confidence,
-        analysis: p.analysis || '',
-        status: p.status || 'PENDING',
+        prediction: p.prediction ? String(p.prediction) : undefined,
+        confidence: p.confidence !== undefined && p.confidence !== null ? Number(p.confidence) : undefined,
+        analysis: p.analysis ? String(p.analysis) : '',
+        status: p.status ? String(p.status) : 'PENDING',
         tags: tagsList,
         bookingCode,
         bookmaker,
         isProPick: !isFreePick, // If tagged as FREE TEASER/COMMUNITY, unlocked for all users!
         isFreePick: isFreePick,
-        createdAt: p.createdAt || p.created_at,
+        createdAt: p.createdAt ? String(p.createdAt) : (p.created_at ? String(p.created_at) : undefined),
       };
     });
 
     // Fetch live matches from The Odds API so the dashboard always has active fixtures
-    let liveMatches: any[] = [];
+    let liveMatches: MatchItem[] = [];
     try {
       const apiKey = process.env.THE_ODDS_API_KEY;
       if (apiKey) {
@@ -167,16 +191,16 @@ export async function GET(req: Request) {
             const threeDaysOut = new Date();
             threeDaysOut.setDate(now.getDate() + 4); // Ensure full 3+ days ahead horizon
 
-            const allowed = rawOdds.filter((m: any) => {
+            const allowed = rawOdds.filter((m: OddsApiFixture) => {
               if (!m || !m.id || !m.home_team || !m.away_team || !m.commence_time) return false; // Validate fixture integrity
               const matchDate = new Date(m.commence_time);
               if (matchDate > threeDaysOut) return false; // Keep within 3-day upcoming horizon
 
               const k = m.sport_key || '';
               return ALLOWED_SPORT_KEYS.has(k) || k.includes('fifa') || k.includes('world_cup') || k.includes('uefa') || k.includes('copa') || k.includes('nations');
-            }).sort((a: any, b: any) => new Date(a.commence_time).getTime() - new Date(b.commence_time).getTime()).slice(0, 50);
+            }).sort((a: OddsApiFixture, b: OddsApiFixture) => new Date(a.commence_time || 0).getTime() - new Date(b.commence_time || 0).getTime()).slice(0, 50);
 
-            liveMatches = allowed.map((m: any) => {
+            liveMatches = allowed.map((m: OddsApiFixture) => {
               let timeLabel = 'Upcoming';
               let dateLabel = 'Today';
               if (m.commence_time) {
@@ -201,7 +225,7 @@ export async function GET(req: Request) {
                 const outcomes = m.bookmakers[0].markets[0].outcomes || [];
                 if (outcomes.length >= 2) {
                   // Find lowest price (favorite)
-                  const fav = outcomes.reduce((prev: any, curr: any) => (curr.price < prev.price ? curr : prev), outcomes[0]);
+                  const fav = outcomes.reduce((prev: MatchOutcome, curr: MatchOutcome) => (curr.price < prev.price ? curr : prev), outcomes[0]);
                   if (fav && fav.name) {
                     pick = fav.name === 'Draw' ? 'Draw' : `${fav.name} Win`;
                     if (fav.price) {
@@ -212,20 +236,20 @@ export async function GET(req: Request) {
               }
 
               return {
-                id: m.id,
-                homeTeam: m.home_team,
-                awayTeam: m.away_team,
-                league: m.sport_title || 'Global League',
+                id: String(m.id || ''),
+                homeTeam: String(m.home_team || 'Home Team'),
+                awayTeam: String(m.away_team || 'Away Team'),
+                league: String(m.sport_title || 'Global League'),
                 sport: (m.sport_key || '').includes('basketball') ? 'basketball' : 'football',
                 date: dateLabel,
                 time: timeLabel,
-                prediction: pick,
-                confidence: conf,
+                prediction: pick ? String(pick) : undefined,
+                confidence: conf !== undefined && conf !== null ? Number(conf) : undefined,
                 analysis: `Strike-IQ quantitative odds engine detects market value and favorable implied probability for ${pick}.`,
                 status: 'PENDING',
                 tags: ['LIVE ODDS', 'AI QUANT VALUE'],
                 isProPick: false, // Free pick from Odds API
-                createdAt: m.commence_time || new Date().toISOString(),
+                createdAt: m.commence_time ? String(m.commence_time) : new Date().toISOString(),
               };
             });
           }
@@ -244,7 +268,7 @@ export async function GET(req: Request) {
         matches: liveMatches,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[FEED] Unexpected error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

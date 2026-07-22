@@ -24,7 +24,7 @@ export async function GET() {
 
     if (error) {
       console.error('[ANALYTICS API] Supabase error:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to retrieve analytics data from database.' }, { status: 500 });
     }
 
     const picks = rawPicks || [];
@@ -145,8 +145,8 @@ export async function GET() {
         recentPredictions,
       }
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[ANALYTICS API] Unexpected error:', err);
-    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
+    return NextResponse.json({ error: 'An unexpected error occurred while generating analytics.' }, { status: 500 });
   }
 }

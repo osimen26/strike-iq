@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     logAdminAudit("CREATE_PRO_PREDICTION", { match: `${body.homeTeam} vs ${body.awayTeam}`, league: body.league });
 
     // Ensure proper tier tags are attached so the feed knows whether it is Free vs Pro
-    const tagsArray = Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).slice(0, 50)) : [];
+    const tagsArray = Array.isArray(body.tags) ? body.tags.map((t: unknown) => String(t).slice(0, 50)) : [];
     const isFreeTier = body.tier === 'FREE' || tagsArray.some((t: string) => t.toUpperCase().includes('FREE'));
     if (isFreeTier && !tagsArray.some((t: string) => t.toUpperCase().includes('FREE'))) {
       tagsArray.unshift('FREE TEASER');
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     }
 
     // 1. Insert the Pro Prediction with sanitized fields
-    let insertedData: any = null;
+    let insertedData: unknown = null;
     const { data: sbData, error: sbError } = await supabase
       .from('pro_predictions')
       .insert([
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
         supabase.from('subscriptions').select('userId').in('status', ['ACTIVE', 'TRIAL'])
       ]);
 
-      const proUserIds = new Set((activeSubs || []).map((s: any) => s.userId));
+      const proUserIds = new Set((activeSubs || []).map((s: { userId: string }) => s.userId));
 
       if (allUsers && allUsers.length > 0) {
         const notifications = allUsers.map((u: { id: string }) => {
@@ -153,7 +153,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, data: insertedData });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Pro Prediction API Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
@@ -177,10 +177,11 @@ export async function GET(request: Request) {
       .limit(25);
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('[GET /api/admin/predictions] Supabase error:', error);
+      return NextResponse.json({ error: 'Failed to fetch predictions from database.' }, { status: 500 });
     }
     return NextResponse.json({ data: data || [] });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[GET /api/admin/predictions]', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

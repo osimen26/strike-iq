@@ -45,8 +45,8 @@ export async function POST(request: Request) {
       success: true,
       message: 'Your recurring subscription has been successfully stopped. You will not be billed again.',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error cancelling subscription:', error);
-    return NextResponse.json({ error: error.message || 'Failed to cancel subscription' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to cancel subscription. Please try again or contact support.' }, { status: 500 });
   }
 }

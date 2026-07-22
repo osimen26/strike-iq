@@ -60,7 +60,9 @@ export async function GET(req: Request) {
   try {
     const cookieStore = await cookies();
     cookieCountry = cookieStore.get('strikeiq_region')?.value || 'US';
-  } catch (_) {}
+  } catch {
+    // Optional catch binding — ignore cookie store access failures
+  }
   const targetCountry = queryCountry || cookieCountry || 'US';
 
   try {
@@ -95,7 +97,7 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json({ success: true, data: localizedPlans, countryCode: targetCountry.toUpperCase() });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching/seeding plans:', error);
     // Return localized fallback plans gracefully if DB connection fails during static checks or offline dev
     const localizedFallback = DEFAULT_PLANS.map((p, idx) => {

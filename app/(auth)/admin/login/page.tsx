@@ -97,7 +97,7 @@ export default function AdminLogin() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-background-glass border border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-[#138561] focus:ring-1 focus:ring-[#138561] transition-colors"
-            placeholder="osimenvictor04@gmail.com"
+            placeholder="admin@strikeiq.ai"
           />
         </div>
 

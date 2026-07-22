@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { sanitizeString, isValidId } from '@/lib/security/validator';
-import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from '@/lib/security/adminGuard';
+import { MASTER_ADMIN_EMAILS } from '@/lib/security/adminGuard';
 import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/lib/security/rateLimit';
 import { getLocalizedPlanPrice } from '@/lib/pricing/regional';
 
@@ -112,8 +112,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true, message: `Successfully simulated activation for ${planName}.` });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in simulation activation:', error);
-    return NextResponse.json({ error: error.message || 'Simulation failed' }, { status: 500 });
+    return NextResponse.json({ error: 'Simulation failed. Check server logs for details.' }, { status: 500 });
   }
 }

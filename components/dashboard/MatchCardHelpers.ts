@@ -3,11 +3,15 @@
  * Separated from components/dashboard/MatchCard.tsx to adhere to ContentSplit code organisation and <600 lines limits.
  */
 
+import { MatchItem } from "@/types";
+
+type MatchHelperInput = Partial<MatchItem> | null | undefined;
+
 /**
  * Determine whether a match/prediction object represents an Accumulator Slip or Booking Code,
  * rather than a standard head-to-head (VS) match.
  */
-export function isBookingSlipItem(match: any): boolean {
+export function isBookingSlipItem(match: MatchHelperInput): boolean {
   if (!match) return false;
   return (
     Boolean(match.bookingCode) ||
@@ -19,7 +23,7 @@ export function isBookingSlipItem(match: any): boolean {
     Boolean(match.prediction?.toUpperCase().includes("CODE")) ||
     Boolean(
       match.tags?.some(
-        (t: any) =>
+        (t: string) =>
           typeof t === "string" &&
           (t.toUpperCase().includes("BOOKING") ||
             t.toUpperCase().includes("TEASER") ||
@@ -33,7 +37,7 @@ export function isBookingSlipItem(match: any): boolean {
 /**
  * Extract platform name (e.g. SportyBet, 1xBet, Bet9ja, etc.) from bookmaker field or match strings.
  */
-export function getBettingPlatformName(match: any): string {
+export function getBettingPlatformName(match: MatchHelperInput): string {
   if (!match) return "SportyBet / Betting Platform";
   if (match.bookmaker && typeof match.bookmaker === "string" && match.bookmaker.trim() !== "") {
     return match.bookmaker;
@@ -54,7 +58,7 @@ export function getBettingPlatformName(match: any): string {
 /**
  * Extract clean alphanumeric booking code string from match properties.
  */
-export function getCleanBookingCodeString(match: any): string {
+export function getCleanBookingCodeString(match: MatchHelperInput): string {
   if (!match) return "CHECK ANALYSIS FOR CODE";
   if (match.bookingCode && typeof match.bookingCode === "string" && match.bookingCode.trim() !== "") {
     return match.bookingCode;
