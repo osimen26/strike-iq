@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800;900&family=Tilt+Warp&display=swap');
+
+:root {
+  --primary-900: #14532D;
+  --primary-800: #166534;
+  --primary-700: #15803D;
+  --primary-600: #16A34A;
+  --primary-500: #22C55E;
+  --primary-400: #4ADE80;
+  --primary-300: #86EFAC;
+  --primary-200: #BBF7D0;
+  --primary-100: #DCFCE7;
+  --primary-50:  #F0FDF4;
+  
+  --background: #09090B;
+  --surface: #18181B;
+  --surface-hover: #27272A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --border: #27272A;
+
+  --color-mint: var(--primary-100);
+  --color-emerald: var(--primary-600);
+  --color-dark-bg: var(--background);
+  --color-dark-border: var(--border);
+
+  --font-main: 'Inter', sans-serif;
+  --font-geist: 'Geist Mono', monospace;
+  --font-heading: 'Tilt Warp', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: #111;
+  color: var(--primary-100);
+  min-height: 100vh;
+}

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "unicon": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@webrenew/unicon-mcp-server"
+      ]
+    }
+  }
+}
