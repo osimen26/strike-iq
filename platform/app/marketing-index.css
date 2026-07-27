@@ -2,6 +2,8 @@
 /* Removed design.tokens.css import to avoid resolving issues */
 
 :root {
+  --primary-100: #DCFCE7;
+  --primary-600: #16A34A;
   --color-mint: var(--primary-100);
   --color-emerald: var(--primary-600); /* Match the exact button color from Figma */
   --color-dark-bg: rgba(255, 255, 255, 0.15);
