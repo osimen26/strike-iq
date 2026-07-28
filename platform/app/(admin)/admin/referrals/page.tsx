@@ -96,7 +96,7 @@ export default function AdminReferralsPage() {
           <select
             value={referralFilter}
             onChange={(e) => setReferralFilter(e.target.value)}
-            className="w-full sm:w-auto px-4 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[var(--color-brand-emerald)] cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-primary-600 cursor-pointer"
           >
             <option value="ALL">Select an Affiliate Code ({uniqueReferrals.length})</option>
             {uniqueReferrals.map((code) => (
@@ -110,7 +110,7 @@ export default function AdminReferralsPage() {
               setCopiedLink(false);
               setShowReferralModal(true);
             }}
-            className="w-full sm:w-auto px-4 py-2 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-xs transition-colors shadow-[0_0_15px_rgba(19,133,97,0.3)] cursor-pointer text-center flex items-center justify-center gap-1.5"
+            className="w-full sm:w-auto px-4 py-2 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-xs transition-colors shadow-[0_0_15px_rgba(19,133,97,0.3)] cursor-pointer text-center flex items-center justify-center gap-1.5"
           >
             <span>🔗</span>
             <span>Create Referral Link</span>
@@ -130,7 +130,7 @@ export default function AdminReferralsPage() {
 
       {loading ? (
         <div className="flex justify-center items-center py-24">
-          <div className="w-10 h-10 border-4 border-[var(--color-brand-emerald)] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : referralFilter === "ALL" ? (
         <div className="text-center py-16 bg-[#121215] border border-zinc-800 rounded-2xl space-y-4">
@@ -228,7 +228,7 @@ export default function AdminReferralsPage() {
                   placeholder="e.g. TWITTER-KING or VIP2026"
                   value={customRefCode}
                   onChange={(e) => setCustomRefCode(e.target.value.toUpperCase())}
-                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white text-sm font-mono uppercase focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white text-sm font-mono uppercase focus:outline-none focus:border-primary-600"
                 />
               </div>
 
@@ -258,7 +258,7 @@ export default function AdminReferralsPage() {
                     setReferralFilter(customRefCode);
                     setShowReferralModal(false);
                   }}
-                  className="flex-1 py-3 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-sm transition-colors shadow-lg disabled:opacity-50"
+                  className="flex-1 py-3 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-sm transition-colors shadow-lg disabled:opacity-50"
                 >
                   Copy & Filter Table
                 </button>

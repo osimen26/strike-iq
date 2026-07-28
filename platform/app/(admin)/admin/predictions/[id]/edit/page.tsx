@@ -176,7 +176,7 @@ export default function EditPredictionPage() {
   return (
     <div className="max-w-4xl mx-auto pb-12">
       <div className="mb-8">
-        <Link href="/admin" className="text-[var(--color-brand-emerald)] hover:underline text-sm font-bold mb-4 inline-block">
+        <Link href="/admin" className="text-primary-600 hover:underline text-sm font-bold mb-4 inline-block">
           ← Back to Overview
         </Link>
         <h1 className="text-3xl font-bold font-heading text-white">Edit Pro Prediction</h1>
@@ -186,7 +186,7 @@ export default function EditPredictionPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         
         {success && (
-          <div className="p-4 bg-[var(--color-brand-emerald)]/20 border border-[var(--color-brand-emerald)] text-[var(--color-brand-emerald)] rounded-lg font-medium">
+          <div className="p-4 bg-primary-600/20 border border-primary-600 text-primary-600 rounded-lg font-medium">
             ✅ Prediction successfully updated! Redirecting...
           </div>
         )}
@@ -206,19 +206,19 @@ export default function EditPredictionPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Home Team</label>
-              <input required name="homeTeam" value={formData.homeTeam} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+              <input required name="homeTeam" value={formData.homeTeam} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors" />
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Away Team</label>
-              <input required name="awayTeam" value={formData.awayTeam} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+              <input required name="awayTeam" value={formData.awayTeam} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors" />
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">League / Tournament</label>
-              <input required name="league" value={formData.league} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+              <input required name="league" value={formData.league} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors" />
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Sport Discipline</label>
-              <select name="sport" value={formData.sport} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors">
+              <select name="sport" value={formData.sport} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors">
                 <option value="football">Football</option>
                 <option value="basketball">Basketball</option>
               </select>
@@ -238,7 +238,7 @@ export default function EditPredictionPage() {
                 style={{ colorScheme: "dark" }}
                 value={formData.matchDate}
                 onChange={handleChange}
-                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white [color-scheme:dark] focus:outline-none focus:border-[var(--color-brand-emerald)] focus:ring-1 focus:ring-[var(--color-brand-emerald)]/30 transition-colors cursor-pointer"
+                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white [color-scheme:dark] focus:outline-none focus:border-primary-600 focus:ring-1 focus:ring-primary-600/30 transition-colors cursor-pointer"
               />
             </div>
             <div>
@@ -253,7 +253,7 @@ export default function EditPredictionPage() {
                 style={{ colorScheme: "dark" }}
                 value={formData.matchTime}
                 onChange={handleChange}
-                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white [color-scheme:dark] focus:outline-none focus:border-[var(--color-brand-emerald)] focus:ring-1 focus:ring-[var(--color-brand-emerald)]/30 transition-colors cursor-pointer"
+                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white [color-scheme:dark] focus:outline-none focus:border-primary-600 focus:ring-1 focus:ring-primary-600/30 transition-colors cursor-pointer"
               />
             </div>
           </div>
@@ -262,14 +262,14 @@ export default function EditPredictionPage() {
         {/* Section 2: AI Verdict & Confidence */}
         <div className="bg-[#121215] border border-zinc-800 rounded-xl p-6 space-y-6">
           <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-4">
-            <TargetIcon size={18} className="text-[var(--color-brand-emerald)]" />
+            <TargetIcon size={18} className="text-primary-600" />
             <span className="text-base font-bold text-white tracking-wide">AI Verdict & Confidence Rating</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">AI Verdict / Prediction Pick</label>
-              <input required name="prediction" value={formData.prediction} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+              <input required name="prediction" value={formData.prediction} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors" />
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -282,28 +282,28 @@ export default function EditPredictionPage() {
                   {formData.confidence}% {Number(formData.confidence) >= 80 ? "HIGH EV" : Number(formData.confidence) >= 65 ? "VALUE" : "STANDARD"}
                 </span>
               </div>
-              <input required name="confidence" type="number" min="1" max="100" value={formData.confidence} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors font-mono" />
+              <input required name="confidence" type="number" min="1" max="100" value={formData.confidence} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors font-mono" />
             </div>
           </div>
         </div>
 
         {/* Section 3: Pro VIP Booking Code & Platform */}
-        <div className="bg-[#121215] border border-[var(--color-brand-emerald)]/40 rounded-xl p-6 space-y-6">
+        <div className="bg-[#121215] border border-primary-600/40 rounded-xl p-6 space-y-6">
           <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
             <div className="flex items-center gap-2">
-              <TicketIcon size={16} className="text-[var(--color-brand-emerald)]" />
-              <span className="text-sm font-mono font-bold text-[var(--color-brand-emerald)] uppercase tracking-wider">Pro VIP Betting Code (Visible ONLY to Pro Members)</span>
+              <TicketIcon size={16} className="text-primary-600" />
+              <span className="text-sm font-mono font-bold text-primary-600 uppercase tracking-wider">Pro VIP Betting Code (Visible ONLY to Pro Members)</span>
             </div>
-            <span className="text-[11px] uppercase tracking-wider bg-[var(--color-brand-emerald)]/10 text-[var(--color-brand-emerald)] px-2 py-0.5 rounded font-bold">Pro Feed Exclusive</span>
+            <span className="text-[11px] uppercase tracking-wider bg-primary-600/10 text-primary-600 px-2 py-0.5 rounded font-bold">Pro Feed Exclusive</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Booking Code / Slip Code</label>
-              <input name="bookingCode" value={formData.bookingCode} onChange={handleChange} placeholder="e.g. BC98J2X or 7K9F2W" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white font-mono uppercase focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+              <input name="bookingCode" value={formData.bookingCode} onChange={handleChange} placeholder="e.g. BC98J2X or 7K9F2W" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white font-mono uppercase focus:outline-none focus:border-primary-600 transition-colors" />
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Betting Platform / Bookmaker</label>
-              <select name="bookmaker" value={formData.bookmaker} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors">
+              <select name="bookmaker" value={formData.bookmaker} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors">
                 <option value="SportyBet">SportyBet</option>
                 <option value="Bet9ja">Bet9ja</option>
                 <option value="1xBet">1xBet</option>
@@ -328,7 +328,7 @@ export default function EditPredictionPage() {
               type="button"
               onClick={handlePublishBookingCode}
               disabled={publishingCode}
-              className="px-4 py-2.5 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all shadow-[0_0_15px_rgba(19,133,97,0.3)] disabled:opacity-50 shrink-0 cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2.5 bg-primary-600 hover:bg-[#0f6b4d] text-white text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all shadow-[0_0_15px_rgba(19,133,97,0.3)] disabled:opacity-50 shrink-0 cursor-pointer flex items-center gap-1.5"
             >
               <ZapIcon size={14} />
               <span>{publishingCode ? "Publishing Code..." : "Publish VIP Code Only"}</span>
@@ -345,7 +345,7 @@ export default function EditPredictionPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Match Outcome Status (For AI Analytics)</label>
-              <select name="status" value={formData.status} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors">
+              <select name="status" value={formData.status} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors">
                 <option value="PENDING">PENDING (Awaiting Match)</option>
                 <option value="WON">WON (+0.85u ROI)</option>
                 <option value="LOST">LOST (-1.0u ROI)</option>
@@ -354,7 +354,7 @@ export default function EditPredictionPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Tags (Comma Separated)</label>
-              <input name="tags" value={formData.tags} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors mb-3" />
+              <input name="tags" value={formData.tags} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors mb-3" />
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs text-zinc-400 font-medium">Quick Add:</span>
                 {["High EV", "Pro Pick", "Value Bet", "Bankroll Builder", "Top 5 Leagues Lock", "UCL Lock"].map((tag) => (
@@ -373,7 +373,7 @@ export default function EditPredictionPage() {
 
           <div>
             <label className="block text-sm font-medium text-zinc-300 mb-2">Detailed Rationale / Analysis</label>
-            <textarea required name="analysis" value={formData.analysis} onChange={handleChange} rows={5} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors"></textarea>
+            <textarea required name="analysis" value={formData.analysis} onChange={handleChange} rows={5} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors"></textarea>
           </div>
         </div>
 
@@ -381,7 +381,7 @@ export default function EditPredictionPage() {
           <button 
             type="submit" 
             disabled={loading || deleting}
-            className="flex-1 w-full py-4 bg-[var(--color-brand-emerald)] hover:bg-[var(--color-brand-actionGreen)] text-white font-bold rounded-xl transition-colors disabled:opacity-50 text-lg shadow-[0_0_20px_rgba(33,205,141,0.2)]"
+            className="flex-1 w-full py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-colors disabled:opacity-50 text-lg shadow-[0_0_20px_rgba(33,205,141,0.2)]"
           >
             {loading ? "Saving Changes..." : "Save Changes"}
           </button>

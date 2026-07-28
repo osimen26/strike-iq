@@ -152,7 +152,7 @@ export default function AdminUsersPage() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold font-heading text-white">User Management</h1>
-            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] border border-[var(--color-brand-emerald)]/40">
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-primary-600/20 text-primary-600 border border-primary-600/40">
               {users.length} Total Users ({standardUsersCount} Standard)
             </span>
           </div>
@@ -168,14 +168,14 @@ export default function AdminUsersPage() {
               placeholder="Search email or name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-brand-emerald)] placeholder-gray-500 shadow-inner"
+              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-primary-600 placeholder-gray-500 shadow-inner"
             />
           </div>
 
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="w-full sm:w-auto px-4 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[var(--color-brand-emerald)] cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-primary-600 cursor-pointer"
           >
             <option value="ALL">All Roles & Tiers</option>
             <option value="ADMIN">VIP Admins Only</option>
@@ -189,7 +189,7 @@ export default function AdminUsersPage() {
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex-1 sm:flex-initial px-3.5 py-2 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-xs transition-colors shadow-[0_0_15px_rgba(19,133,97,0.3)] cursor-pointer text-center"
+              className="flex-1 sm:flex-initial px-3.5 py-2 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-xs transition-colors shadow-[0_0_15px_rgba(19,133,97,0.3)] cursor-pointer text-center"
             >
               + Add User
             </button>
@@ -238,7 +238,7 @@ export default function AdminUsersPage() {
                   placeholder="e.g. member@strikeiq.com"
                   value={newUserData.email}
                   onChange={(e) => setNewUserData({ ...newUserData, email: e.target.value })}
-                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-primary-600"
                 />
               </div>
 
@@ -248,7 +248,7 @@ export default function AdminUsersPage() {
                   placeholder="e.g. Alex Johnson"
                   value={newUserData.name}
                   onChange={(e) => setNewUserData({ ...newUserData, name: e.target.value })}
-                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-primary-600"
                 />
               </div>
 
@@ -258,7 +258,7 @@ export default function AdminUsersPage() {
                   <select
                     value={newUserData.role}
                     onChange={(e) => setNewUserData({ ...newUserData, role: e.target.value })}
-                    className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                    className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-primary-600"
                   >
                     <option value="user">Standard User</option>
                     <option value="admin">VIP Admin</option>
@@ -270,7 +270,7 @@ export default function AdminUsersPage() {
                   <select
                     value={newUserData.subscriptionStatus}
                     onChange={(e) => setNewUserData({ ...newUserData, subscriptionStatus: e.target.value })}
-                    className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                    className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-primary-600"
                   >
                     <option value="FREE">Free Tier</option>
                     <option value="ACTIVE">Active Pro Tier</option>
@@ -289,7 +289,7 @@ export default function AdminUsersPage() {
                 <button
                   type="submit"
                   disabled={creatingUser}
-                  className="flex-1 py-3 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-sm transition-colors shadow-lg disabled:opacity-50"
+                  className="flex-1 py-3 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl text-sm transition-colors shadow-lg disabled:opacity-50"
                 >
                   {creatingUser ? "Creating..." : "Create Account"}
                 </button>
@@ -313,7 +313,7 @@ export default function AdminUsersPage() {
 
       {loading ? (
         <div className="flex justify-center items-center py-24">
-          <div className="w-10 h-10 border-4 border-[var(--color-brand-emerald)] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : filteredUsers.length === 0 ? (
         <div className="text-center py-16 bg-[#121215] border border-zinc-800 rounded-2xl space-y-4">
@@ -329,13 +329,13 @@ export default function AdminUsersPage() {
                 setSearchQuery("");
                 setRoleFilter("ALL");
               }}
-              className="text-xs text-[var(--color-brand-electricGreen)] underline font-bold cursor-pointer"
+              className="text-xs text-primary-400 underline font-bold cursor-pointer"
             >
               Reset Search Filters
             </button>
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-4 py-2 bg-[var(--color-brand-emerald)] text-white font-bold rounded-lg text-xs hover:bg-[#0f6b4d] transition-colors cursor-pointer"
+              className="px-4 py-2 bg-primary-600 text-white font-bold rounded-lg text-xs hover:bg-[#0f6b4d] transition-colors cursor-pointer"
             >
               + Add Standard User Account
             </button>
@@ -366,7 +366,7 @@ export default function AdminUsersPage() {
                           <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0 shadow ${
                             isAdmin
                               ? "bg-gradient-to-br from-amber-500 to-amber-700 text-black border border-amber-300"
-                              : "bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] border border-[var(--color-brand-emerald)]/30"
+                              : "bg-primary-600/20 text-primary-600 border border-primary-600/30"
                           }`}>
                             {user.name ? user.name[0].toUpperCase() : "U"}
                           </div>
@@ -398,10 +398,10 @@ export default function AdminUsersPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider border flex items-center gap-1 w-fit ${
                           isPro
-                            ? "bg-emerald-950/60 text-[var(--color-brand-electricGreen)] border-[var(--color-brand-emerald)]/40 shadow-[0_0_10px_rgba(33,205,141,0.15)]"
+                            ? "bg-emerald-950/60 text-primary-400 border-primary-600/40 shadow-[0_0_10px_rgba(33,205,141,0.15)]"
                             : "bg-gray-900/60 text-gray-400 border-white/10"
                         }`}>
-                          <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full ${isPro ? "bg-[var(--color-brand-electricGreen)] animate-pulse" : "bg-gray-500"}`}></span>
+                          <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full ${isPro ? "bg-primary-400 animate-pulse" : "bg-gray-500"}`}></span>
                           <span className="sr-only">{isPro ? 'Status: Active' : 'Status: Free'}</span>
                           {isPro ? "PRO VIP TIER" : "FREE TIER"}
                         </span>
@@ -447,7 +447,7 @@ export default function AdminUsersPage() {
                 {Math.min(startIndex + pageSize, filteredUsers.length)}
               </span>
               <span>of</span>
-              <span className="font-bold text-[var(--color-brand-emerald)]">
+              <span className="font-bold text-primary-600">
                 {filteredUsers.length}
               </span>
               <span>users</span>
@@ -455,7 +455,7 @@ export default function AdminUsersPage() {
               <select
                 value={pageSize}
                 onChange={(e) => setPageSize(Number(e.target.value))}
-                className="ml-3 px-2.5 py-1 rounded bg-zinc-900 border border-zinc-700 text-white text-xs font-mono focus:outline-none focus:border-[var(--color-brand-emerald)] cursor-pointer"
+                className="ml-3 px-2.5 py-1 rounded bg-zinc-900 border border-zinc-700 text-white text-xs font-mono focus:outline-none focus:border-primary-600 cursor-pointer"
               >
                 <option value={5}>5 per page</option>
                 <option value={10}>10 per page</option>
@@ -481,7 +481,7 @@ export default function AdminUsersPage() {
                 ‹ Prev
               </button>
 
-              <span className="px-3 py-1.5 rounded bg-[var(--color-brand-emerald)]/10 border border-[var(--color-brand-emerald)]/30 text-[var(--color-brand-emerald)] font-bold">
+              <span className="px-3 py-1.5 rounded bg-primary-600/10 border border-primary-600/30 text-primary-600 font-bold">
                 Page {currentPage} of {totalPages}
               </span>
 

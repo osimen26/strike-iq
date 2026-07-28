@@ -47,12 +47,12 @@ export default function AdminSidebar() {
     <>
       {/* MOBILE TOP HEADER (md:hidden) */}
       <header className="md:hidden h-16 bg-[#0c0c0e] border-b border-zinc-800/80 px-4 flex items-center justify-between sticky top-0 z-40 shrink-0 shadow-md">
-        <div className="flex items-center space-x-2 text-[var(--color-brand-emerald)] font-heading text-lg">
-          <span className="text-xl text-[var(--color-brand-emerald)]">
+        <div className="flex items-center space-x-2 text-primary-600 font-heading text-lg">
+          <span className="text-xl text-primary-600">
             <SettingsIcon size={20} />
           </span>
           <span className="font-bold tracking-tight text-white">
-            Strike <span className="text-[var(--color-brand-emerald)]">Admin</span>
+            Strike <span className="text-primary-600">Admin</span>
           </span>
         </div>
         <button
@@ -83,10 +83,10 @@ export default function AdminSidebar() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800">
-              <div className="flex items-center space-x-2 text-[var(--color-brand-emerald)] font-heading text-xl">
+              <div className="flex items-center space-x-2 text-primary-600 font-heading text-xl">
                 <SettingsIcon size={22} />
                 <span className="font-bold tracking-tight text-white">
-                  Strike <span className="text-[var(--color-brand-emerald)]">Admin</span>
+                  Strike <span className="text-primary-600">Admin</span>
                 </span>
               </div>
               <button
@@ -105,7 +105,7 @@ export default function AdminSidebar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${
                     item.isActive
-                      ? "bg-[var(--color-brand-emerald)]/15 text-[var(--color-brand-emerald)] font-bold border border-[var(--color-brand-emerald)]/30 shadow-[0_0_15px_rgba(19,133,97,0.15)]"
+                      ? "bg-primary-600/15 text-primary-600 font-bold border border-primary-600/30 shadow-[0_0_15px_rgba(19,133,97,0.15)]"
                       : "text-zinc-400 hover:bg-white/5 hover:text-white border border-transparent"
                   }`}
                 >
@@ -131,12 +131,12 @@ export default function AdminSidebar() {
 
       {/* DESKTOP SIDEBAR (hidden md:flex) */}
       <div className="hidden md:flex w-64 border-r border-white/10 bg-[#0c0c0e] p-6 flex-col shrink-0 min-h-screen">
-        <div className="flex items-center space-x-2.5 mb-10 text-[var(--color-brand-emerald)] font-heading text-xl">
-          <span className="text-2xl text-[var(--color-brand-emerald)]">
+        <div className="flex items-center space-x-2.5 mb-10 text-primary-600 font-heading text-xl">
+          <span className="text-2xl text-primary-600">
             <SettingsIcon size={22} />
           </span>
           <span className="font-bold tracking-tight text-white">
-            Strike <span className="text-[var(--color-brand-emerald)]">Admin</span>
+            Strike <span className="text-primary-600">Admin</span>
           </span>
         </div>
 
@@ -147,7 +147,7 @@ export default function AdminSidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${
                 item.isActive
-                  ? "bg-[var(--color-brand-emerald)]/15 text-[var(--color-brand-emerald)] font-bold border border-[var(--color-brand-emerald)]/30 shadow-[0_0_15px_rgba(19,133,97,0.15)]"
+                  ? "bg-primary-600/15 text-primary-600 font-bold border border-primary-600/30 shadow-[0_0_15px_rgba(19,133,97,0.15)]"
                   : "text-zinc-400 hover:bg-white/5 hover:text-white border border-transparent"
               }`}
             >

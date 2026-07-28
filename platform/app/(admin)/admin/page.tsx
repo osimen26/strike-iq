@@ -49,14 +49,14 @@ export default async function AdminOverviewPage() {
         </div>
         <div className="p-6 rounded-xl bg-white/5 border border-white/10">
           <p className="text-sm font-medium text-gray-400">Active Pro Picks</p>
-          <p className="text-3xl font-bold text-[var(--color-brand-emerald)] mt-2">{proPredictionsCount ?? 0}</p>
+          <p className="text-3xl font-bold text-primary-600 mt-2">{proPredictionsCount ?? 0}</p>
         </div>
       </div>
 
       <div className="mt-8">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
           <h2 className="text-xl font-semibold text-white">Manage Pro Predictions</h2>
-          <a href="/admin/predictions" className="px-6 py-2.5 bg-[var(--color-brand-emerald)] hover:bg-[var(--color-brand-actionGreen)] text-white font-bold rounded-lg transition-colors text-sm shadow-[0_0_15px_rgba(33,205,141,0.2)] text-center">
+          <a href="/admin/predictions" className="px-6 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-lg transition-colors text-sm shadow-[0_0_15px_rgba(33,205,141,0.2)] text-center">
             + Add Prediction
           </a>
         </div>

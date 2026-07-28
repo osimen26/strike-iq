@@ -38,7 +38,7 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
     return (
       <div className="p-12 text-center bg-white/5 border border-white/10 rounded-xl">
         <p className="text-gray-400">You haven't added any Pro Predictions yet.</p>
-        <Link href="/admin/predictions" className="mt-4 inline-block px-6 py-2 bg-[var(--color-brand-emerald)] hover:bg-[var(--color-brand-actionGreen)] text-white font-bold rounded-lg transition-colors">
+        <Link href="/admin/predictions" className="mt-4 inline-block px-6 py-2 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-lg transition-colors">
           + Add First Prediction
         </Link>
       </div>
@@ -101,7 +101,7 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
-                      <span className="text-[var(--color-brand-mint)] font-bold text-sm">{p.prediction}</span>
+                      <span className="text-primary-300 font-bold text-sm">{p.prediction}</span>
                       <span className="text-xs text-gray-400">{p.confidence}% Confidence</span>
                     </div>
                   </td>

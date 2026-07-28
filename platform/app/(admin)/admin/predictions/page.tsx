@@ -453,7 +453,7 @@ export default function AddPredictionPage() {
   return (
     <div className="max-w-4xl mx-auto pb-16">
       <div className="mb-8">
-        <Link href="/admin" className="text-[var(--color-brand-emerald)] hover:underline text-sm font-bold mb-4 inline-block">
+        <Link href="/admin" className="text-primary-600 hover:underline text-sm font-bold mb-4 inline-block">
           ← Back to Overview
         </Link>
         <h1 className="text-3xl font-bold font-heading text-white">Add Pro Prediction</h1>
@@ -471,7 +471,7 @@ export default function AddPredictionPage() {
           }}
           className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             publishMode === "game"
-              ? "bg-[var(--color-brand-emerald)] text-white shadow-[0_0_15px_rgba(19,133,97,0.3)]"
+              ? "bg-primary-600 text-white shadow-[0_0_15px_rgba(19,133,97,0.3)]"
               : "text-zinc-400 hover:text-white hover:bg-white/5"
           }`}
         >
@@ -487,7 +487,7 @@ export default function AddPredictionPage() {
           }}
           className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             publishMode === "booking_code"
-              ? "bg-[var(--color-brand-emerald)] text-white shadow-[0_0_15px_rgba(19,133,97,0.3)]"
+              ? "bg-primary-600 text-white shadow-[0_0_15px_rgba(19,133,97,0.3)]"
               : "text-zinc-400 hover:text-white hover:bg-white/5"
           }`}
         >
@@ -502,7 +502,7 @@ export default function AddPredictionPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800/80 pb-4 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-brand-emerald)] animate-pulse"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-primary-600 animate-pulse"></span>
               <div className="flex items-center gap-1.5 text-sm font-bold font-mono uppercase tracking-wider text-white">
                 <ZapIcon size={16} className="text-amber-400" />
                 <span>STEP 1: SELECT AUDIENCE & MONETIZATION STRATEGY</span>
@@ -519,7 +519,7 @@ export default function AddPredictionPage() {
               type="checkbox"
               checked={formData.notifyUsers}
               onChange={(e) => setFormData(prev => ({ ...prev, notifyUsers: e.target.checked }))}
-              className="rounded accent-[var(--color-brand-emerald)] w-4 h-4 cursor-pointer"
+              className="rounded accent-primary-600 w-4 h-4 cursor-pointer"
             />
             <span className="text-xs font-mono font-bold text-zinc-300 select-none">🔔 Send Push Notification Alert</span>
           </label>
@@ -580,20 +580,20 @@ export default function AddPredictionPage() {
             onClick={() => setFormData(prev => ({ ...prev, tier: "PRO" }))}
             className={`group relative p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer flex flex-col justify-between gap-4 ${
               formData.tier === "PRO"
-                ? "bg-emerald-950/25 border-[var(--color-brand-emerald)] shadow-[0_0_25px_rgba(19,133,97,0.25)]"
+                ? "bg-emerald-950/25 border-primary-600 shadow-[0_0_25px_rgba(19,133,97,0.25)]"
                 : "bg-black/40 border-zinc-800 hover:border-zinc-700 hover:bg-black/60"
             }`}
           >
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <div className="flex items-center gap-2.5">
-                  <CrownIcon size={22} className="text-[var(--color-brand-emerald)]" />
+                  <CrownIcon size={22} className="text-primary-600" />
                   <span className="text-base font-bold text-white font-heading tracking-wide">
                     VIP Pro Exclusive (Regional Lock)
                   </span>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-widest shrink-0 ${
-                  formData.tier === "PRO" ? "bg-[var(--color-brand-emerald)] text-white font-extrabold shadow-[0_0_10px_rgba(19,133,97,0.5)]" : "bg-zinc-800 text-zinc-400"
+                  formData.tier === "PRO" ? "bg-primary-600 text-white font-extrabold shadow-[0_0_10px_rgba(19,133,97,0.5)]" : "bg-zinc-800 text-zinc-400"
                 }`}>
                   MONETIZATION ENGINE
                 </span>
@@ -616,7 +616,7 @@ export default function AddPredictionPage() {
 
             <div className={`mt-2 py-2 text-center rounded-lg font-mono text-xs font-bold uppercase transition-all ${
               formData.tier === "PRO"
-                ? "bg-[var(--color-brand-emerald)] text-white shadow-md shadow-emerald-900/30"
+                ? "bg-primary-600 text-white shadow-md shadow-emerald-900/30"
                 : "bg-white/5 text-zinc-400 group-hover:bg-white/10 group-hover:text-white"
             }`}>
               {formData.tier === "PRO" ? "● SELECTED (VIP PRO EXCLUSIVE)" : "Click to Select VIP Strategy"}
@@ -626,13 +626,13 @@ export default function AddPredictionPage() {
       </div>
 
       {success && (
-        <div className="p-4 mb-6 bg-[var(--color-brand-emerald)]/20 border border-[var(--color-brand-emerald)] text-[var(--color-brand-emerald)] rounded-lg font-medium">
+        <div className="p-4 mb-6 bg-primary-600/20 border border-primary-600 text-primary-600 rounded-lg font-medium">
           ✅ Successfully published to the Pro Feed!
         </div>
       )}
 
       {codePublishedMessage && (
-        <div className="p-4 mb-6 bg-[var(--color-brand-emerald)]/20 border border-[var(--color-brand-emerald)] text-[var(--color-brand-emerald)] rounded-lg font-medium">
+        <div className="p-4 mb-6 bg-primary-600/20 border border-primary-600 text-primary-600 rounded-lg font-medium">
           {codePublishedMessage}
         </div>
       )}
@@ -645,7 +645,7 @@ export default function AddPredictionPage() {
 
       {/* DRAFT MATCH SLATE QUEUE CARD (Displays when matches are queued in Mode 1) */}
       {draftSlate.length > 0 && publishMode === "game" && (
-        <div className="bg-[#121215] border-2 border-[var(--color-brand-emerald)]/60 rounded-xl p-6 mb-8 shadow-[0_0_25px_rgba(19,133,97,0.15)] space-y-6">
+        <div className="bg-[#121215] border-2 border-primary-600/60 rounded-xl p-6 mb-8 shadow-[0_0_25px_rgba(19,133,97,0.15)] space-y-6">
           <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold text-white tracking-wide">📋 DRAFT MATCH SLATE ({draftSlate.length} GAMES STAGED)</span>
@@ -657,13 +657,13 @@ export default function AddPredictionPage() {
             {draftSlate.map((game, idx) => (
               <div key={game.id} className="flex items-center justify-between bg-[#0a0a0c] border border-zinc-800 rounded-lg p-4">
                 <div className="flex items-center gap-4 min-w-0">
-                  <span className="text-sm font-mono font-bold text-[var(--color-brand-emerald)]">#{idx + 1}</span>
+                  <span className="text-sm font-mono font-bold text-primary-600">#{idx + 1}</span>
                   <div className="min-w-0">
                     <div className="font-bold text-white truncate">
                       {game.homeTeam} <span className="text-zinc-500">vs</span> {game.awayTeam}
                     </div>
                     <div className="text-xs text-zinc-400 flex items-center gap-2 mt-0.5">
-                      <span className="text-[var(--color-brand-emerald)] font-semibold">{game.prediction}</span>
+                      <span className="text-primary-600 font-semibold">{game.prediction}</span>
                       <span>•</span>
                       <span>{game.confidence}% EV</span>
                       <span>•</span>
@@ -690,7 +690,7 @@ export default function AddPredictionPage() {
                 value={batchBookingCode}
                 onChange={(e) => setBatchBookingCode(e.target.value)}
                 placeholder="e.g. BC98J2X (Applies to all games in slate)"
-                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white font-mono uppercase text-sm focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white font-mono uppercase text-sm focus:outline-none focus:border-primary-600"
               />
             </div>
             <div>
@@ -698,7 +698,7 @@ export default function AddPredictionPage() {
               <select
                 value={batchBookmaker}
                 onChange={(e) => setBatchBookmaker(e.target.value)}
-                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-primary-600"
               >
                 <option value="SportyBet">SportyBet</option>
                 <option value="Bet9ja">Bet9ja</option>
@@ -715,7 +715,7 @@ export default function AddPredictionPage() {
             type="button"
             onClick={handlePublishBatchSlate}
             disabled={publishingBatch}
-            className="w-full py-4 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_25px_rgba(19,133,97,0.4)] disabled:opacity-50 text-base uppercase font-mono tracking-wider cursor-pointer"
+            className="w-full py-4 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_25px_rgba(19,133,97,0.4)] disabled:opacity-50 text-base uppercase font-mono tracking-wider cursor-pointer"
           >
             {publishingBatch ? `Publishing All ${draftSlate.length} Games...` : `🚀 Publish All ${draftSlate.length} Queued Games to Pro Feed (1-Click Batch)`}
           </button>
@@ -724,7 +724,7 @@ export default function AddPredictionPage() {
 
       {/* DRAFT CODES QUEUE CARD (Displays when codes are queued in Mode 2) */}
       {draftCodes.length > 0 && publishMode === "booking_code" && (
-        <div className="bg-[#121215] border-2 border-[var(--color-brand-emerald)]/60 rounded-xl p-6 mb-8 shadow-[0_0_25px_rgba(19,133,97,0.15)] space-y-6">
+        <div className="bg-[#121215] border-2 border-primary-600/60 rounded-xl p-6 mb-8 shadow-[0_0_25px_rgba(19,133,97,0.15)] space-y-6">
           <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold text-white tracking-wide">📋 QUEUED VIP CODES ({draftCodes.length} CODES STAGED)</span>
@@ -736,11 +736,11 @@ export default function AddPredictionPage() {
             {draftCodes.map((codeItem, idx) => (
               <div key={codeItem.id} className="flex items-center justify-between bg-[#0a0a0c] border border-zinc-800 rounded-lg p-4">
                 <div className="flex items-center gap-4 min-w-0">
-                  <span className="text-sm font-mono font-bold text-[var(--color-brand-emerald)]">#{idx + 1}</span>
+                  <span className="text-sm font-mono font-bold text-primary-600">#{idx + 1}</span>
                   <div className="min-w-0">
                     <div className="font-bold font-mono text-white tracking-wide flex items-center gap-2 flex-wrap">
                       <span>{codeItem.bookingCode}</span>
-                      <span className="text-[var(--color-brand-emerald)] font-sans text-xs">({codeItem.bookmaker})</span>
+                      <span className="text-primary-600 font-sans text-xs">({codeItem.bookmaker})</span>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase flex items-center gap-1 ${
                         codeItem.tier === "FREE" 
                           ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" 
@@ -773,7 +773,7 @@ export default function AddPredictionPage() {
             type="button"
             onClick={handlePublishBatchCodes}
             disabled={publishingBatchCodes}
-            className="w-full py-4 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_25px_rgba(19,133,97,0.4)] disabled:opacity-50 text-base uppercase font-mono tracking-wider cursor-pointer"
+            className="w-full py-4 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_25px_rgba(19,133,97,0.4)] disabled:opacity-50 text-base uppercase font-mono tracking-wider cursor-pointer"
           >
             {publishingBatchCodes ? `Publishing All ${draftCodes.length} Queued Booking Codes...` : `🚀 Publish All ${draftCodes.length} Queued Booking Codes at Once (Free & Pro Batch)`}
           </button>
@@ -782,7 +782,7 @@ export default function AddPredictionPage() {
 
       {publishMode === "booking_code" ? (
         /* MODE 2: INDEPENDENT BOOKING CODE SLIP WITH BATCH STAGING */
-        <div className="bg-[#121215] border border-[var(--color-brand-emerald)]/40 rounded-xl p-6 space-y-6">
+        <div className="bg-[#121215] border border-primary-600/40 rounded-xl p-6 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800/80 pb-4 gap-2">
             <div className="flex items-center gap-2">
               <span className="text-base font-bold text-white tracking-wide">🎟️ Publish Independent Booking Code Slip (Free & Pro Tiers)</span>
@@ -807,7 +807,7 @@ export default function AddPredictionPage() {
                 value={formData.bookingCode}
                 onChange={handleChange}
                 placeholder="e.g. BC98J2X or 7K9F2W"
-                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white font-mono uppercase placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors"
+                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white font-mono uppercase placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors"
               />
             </div>
             <div>
@@ -817,7 +817,7 @@ export default function AddPredictionPage() {
                 name="bookmaker"
                 value={formData.bookmaker}
                 onChange={handleChange}
-                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors"
+                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors"
               >
                 <option value="SportyBet">SportyBet</option>
                 <option value="Bet9ja">Bet9ja</option>
@@ -840,7 +840,7 @@ export default function AddPredictionPage() {
                 value={formData.homeTeam}
                 onChange={handleChange}
                 placeholder="e.g. Weekend 25-Odds VIP Acca Slip"
-                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors"
+                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors"
               />
             </div>
             <div>
@@ -851,7 +851,7 @@ export default function AddPredictionPage() {
                 value={formData.tags}
                 onChange={handleChange}
                 placeholder="e.g. VIP Code, High EV, Pro Slip"
-                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors"
+                className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors"
               />
             </div>
           </div>
@@ -865,7 +865,7 @@ export default function AddPredictionPage() {
               onChange={handleChange}
               rows={3}
               placeholder="e.g. Selected accumulator across top 5 European leagues. Load code directly on SportyBet."
-              className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors"
+              className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors"
             ></textarea>
           </div>
 
@@ -876,14 +876,14 @@ export default function AddPredictionPage() {
               className="py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition-all text-base border border-zinc-600 shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>+ Add Code to Batch Queue</span>
-              <span className="text-xs bg-zinc-900 px-2 py-0.5 rounded text-[var(--color-brand-emerald)] font-mono">Multi-Code</span>
+              <span className="text-xs bg-zinc-900 px-2 py-0.5 rounded text-primary-600 font-mono">Multi-Code</span>
             </button>
 
             <button
               type="button"
               onClick={handlePublishBookingCode}
               disabled={publishingCode}
-              className="py-4 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(19,133,97,0.3)] disabled:opacity-50 text-base font-mono uppercase tracking-wider cursor-pointer flex items-center justify-center gap-2"
+              className="py-4 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(19,133,97,0.3)] disabled:opacity-50 text-base font-mono uppercase tracking-wider cursor-pointer flex items-center justify-center gap-2"
             >
               <ZapIcon size={18} />
               <span>{publishingCode ? "Publishing VIP Code..." : "Publish Single Code Instantly"}</span>
@@ -896,26 +896,26 @@ export default function AddPredictionPage() {
           {/* STEP 1: Fixture & Competition */}
           <div className="bg-[#121215] border border-zinc-800 rounded-xl p-6 space-y-6">
             <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-4">
-              <span className="w-6 h-6 rounded-full bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] flex items-center justify-center font-mono text-xs font-bold">1</span>
+              <span className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-600 flex items-center justify-center font-mono text-xs font-bold">1</span>
               <span className="text-base font-bold text-white tracking-wide">⚽ Fixture & Competition</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="homeTeamInput" className="block text-sm font-medium text-zinc-300 mb-2">Home Team</label>
-                <input id="homeTeamInput" required name="homeTeam" value={formData.homeTeam} onChange={handleChange} placeholder="e.g. Real Madrid" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+                <input id="homeTeamInput" required name="homeTeam" value={formData.homeTeam} onChange={handleChange} placeholder="e.g. Real Madrid" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors" />
               </div>
               <div>
                 <label htmlFor="awayTeamInput" className="block text-sm font-medium text-zinc-300 mb-2">Away Team</label>
-                <input id="awayTeamInput" required name="awayTeam" value={formData.awayTeam} onChange={handleChange} placeholder="e.g. Barcelona" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+                <input id="awayTeamInput" required name="awayTeam" value={formData.awayTeam} onChange={handleChange} placeholder="e.g. Barcelona" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors" />
               </div>
               <div>
                 <label htmlFor="leagueInput" className="block text-sm font-medium text-zinc-300 mb-2">League / Tournament</label>
-                <input id="leagueInput" required name="league" value={formData.league} onChange={handleChange} placeholder="e.g. Premier League" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+                <input id="leagueInput" required name="league" value={formData.league} onChange={handleChange} placeholder="e.g. Premier League" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors" />
               </div>
               <div>
                 <label htmlFor="sportInput" className="block text-sm font-medium text-zinc-300 mb-2">Sport Discipline</label>
-                <select id="sportInput" name="sport" value={formData.sport} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors">
+                <select id="sportInput" name="sport" value={formData.sport} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors">
                   <option value="football">Football</option>
                   <option value="basketball">Basketball</option>
                 </select>
@@ -935,7 +935,7 @@ export default function AddPredictionPage() {
                   style={{ colorScheme: "dark" }}
                   value={formData.matchDate}
                   onChange={handleChange}
-                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white [color-scheme:dark] focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors cursor-pointer"
+                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white [color-scheme:dark] focus:outline-none focus:border-primary-600 transition-colors cursor-pointer"
                 />
               </div>
               <div>
@@ -950,7 +950,7 @@ export default function AddPredictionPage() {
                   style={{ colorScheme: "dark" }}
                   value={formData.matchTime}
                   onChange={handleChange}
-                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white [color-scheme:dark] focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors cursor-pointer"
+                  className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white [color-scheme:dark] focus:outline-none focus:border-primary-600 transition-colors cursor-pointer"
                 />
               </div>
             </div>
@@ -959,13 +959,13 @@ export default function AddPredictionPage() {
           {/* STEP 2: Per-Game Analysis & Tags */}
           <div className="bg-[#121215] border border-zinc-800 rounded-xl p-6 space-y-6">
             <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-4">
-              <span className="w-6 h-6 rounded-full bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] flex items-center justify-center font-mono text-xs font-bold">2</span>
+              <span className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-600 flex items-center justify-center font-mono text-xs font-bold">2</span>
               <span className="text-base font-bold text-white tracking-wide">📝 Per-Game Analysis & Tags</span>
             </div>
 
             <div>
               <label htmlFor="tagsInput" className="block text-sm font-medium text-zinc-300 mb-2">Tags (Comma Separated)</label>
-              <input id="tagsInput" name="tags" value={formData.tags} onChange={handleChange} placeholder="e.g. High EV, Pro Pick, Value Bet" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors mb-3" />
+              <input id="tagsInput" name="tags" value={formData.tags} onChange={handleChange} placeholder="e.g. High EV, Pro Pick, Value Bet" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors mb-3" />
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs text-zinc-400 font-medium">Quick Add:</span>
                 {["High EV", "Pro Pick", "Value Bet", "Bankroll Builder", "Top 5 Leagues Lock", "UCL Lock"].map((tag) => (
@@ -983,7 +983,7 @@ export default function AddPredictionPage() {
 
             <div>
               <label htmlFor="analysisInput" className="block text-sm font-medium text-zinc-300 mb-2">Detailed Match Rationale / Analysis</label>
-              <textarea id="analysisInput" name="analysis" value={formData.analysis} onChange={handleChange} rows={4} placeholder="Provide the quant analysis or key reasoning for this game..." className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors"></textarea>
+              <textarea id="analysisInput" name="analysis" value={formData.analysis} onChange={handleChange} rows={4} placeholder="Provide the quant analysis or key reasoning for this game..." className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors"></textarea>
             </div>
           </div>
 
@@ -991,15 +991,15 @@ export default function AddPredictionPage() {
           <div className="bg-[#121215] border border-zinc-800 rounded-xl p-6 space-y-6">
             <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
               <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-emerald)] flex items-center justify-center font-mono text-xs font-bold">3</span>
-                <TargetIcon size={18} className="text-[var(--color-brand-emerald)]" />
+                <span className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-600 flex items-center justify-center font-mono text-xs font-bold">3</span>
+                <TargetIcon size={18} className="text-primary-600" />
                 <span className="text-base font-bold text-white tracking-wide">AI Verdict & Confidence Rating</span>
               </div>
               <button
                 type="button"
                 onClick={handleGenerateAI}
                 disabled={generatingAI}
-                className="px-3.5 py-1.5 bg-[var(--color-brand-emerald)]/20 hover:bg-[var(--color-brand-emerald)] text-[var(--color-brand-emerald)] hover:text-white text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all border border-[var(--color-brand-emerald)]/40 cursor-pointer flex items-center gap-1.5"
+                className="px-3.5 py-1.5 bg-primary-600/20 hover:bg-primary-600 text-primary-600 hover:text-white text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all border border-primary-600/40 cursor-pointer flex items-center gap-1.5"
               >
                 <SparklesIcon size={14} />
                 <span>{generatingAI ? "AI Analyzing..." : "Auto-Generate AI Verdict & Confidence"}</span>
@@ -1009,7 +1009,7 @@ export default function AddPredictionPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="predictionInput" className="block text-sm font-medium text-zinc-300 mb-2">AI Verdict / Prediction Pick</label>
-                <input id="predictionInput" required name="prediction" value={formData.prediction} onChange={handleChange} placeholder="e.g. Real Madrid to Win & Over 1.5 Goals" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors" />
+                <input id="predictionInput" required name="prediction" value={formData.prediction} onChange={handleChange} placeholder="e.g. Real Madrid to Win & Over 1.5 Goals" className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary-600 transition-colors" />
               </div>
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -1022,7 +1022,7 @@ export default function AddPredictionPage() {
                     {formData.confidence}% {Number(formData.confidence) >= 80 ? "HIGH EV" : Number(formData.confidence) >= 65 ? "VALUE" : "STANDARD"}
                   </span>
                 </div>
-                <input id="confidenceInput" required name="confidence" type="number" min="1" max="100" value={formData.confidence} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-brand-emerald)] transition-colors font-mono" />
+                <input id="confidenceInput" required name="confidence" type="number" min="1" max="100" value={formData.confidence} onChange={handleChange} className="w-full bg-[#0a0a0c] border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-600 transition-colors font-mono" />
               </div>
             </div>
           </div>
@@ -1035,13 +1035,13 @@ export default function AddPredictionPage() {
               className="py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition-all text-base border border-zinc-600 shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>+ Add Game to Pro Slate Queue</span>
-              <span className="text-xs bg-zinc-900 px-2 py-0.5 rounded text-[var(--color-brand-emerald)] font-mono">Multi-Game Mode</span>
+              <span className="text-xs bg-zinc-900 px-2 py-0.5 rounded text-primary-600 font-mono">Multi-Game Mode</span>
             </button>
 
             <button
               type="submit"
               disabled={loading}
-              className="py-4 bg-[var(--color-brand-emerald)] hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all disabled:opacity-50 text-base shadow-[0_0_20px_rgba(19,133,97,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+              className="py-4 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all disabled:opacity-50 text-base shadow-[0_0_20px_rgba(19,133,97,0.3)] flex items-center justify-center gap-2 cursor-pointer"
             >
               <ZapIcon size={18} />
               <span>Publish Single Game Instantly</span>
@@ -1091,7 +1091,7 @@ export default function AddPredictionPage() {
                     <tr key={p.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-5 py-3.5">
                         <div className="font-bold text-white text-sm">{p.home_team} <span className="text-zinc-500">vs</span> {p.away_team}</div>
-                        <div className="text-xs text-[var(--color-brand-emerald)] font-semibold mt-0.5">{p.prediction} ({p.confidence}%)</div>
+                        <div className="text-xs text-primary-600 font-semibold mt-0.5">{p.prediction} ({p.confidence}%)</div>
                       </td>
                       <td className="px-5 py-3.5 text-xs text-zinc-300">
                         {p.league}

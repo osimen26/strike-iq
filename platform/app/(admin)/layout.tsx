@@ -37,7 +37,7 @@ export default async function AdminLayout({
           <p className="text-gray-400 mb-6 text-sm">
             You do not have the required security clearance to view this page. If you believe this is an error, please contact the system administrator.
           </p>
-          <Link href="/dashboard" className="px-6 py-2.5 bg-[var(--color-brand-emerald)] hover:bg-[var(--color-brand-actionGreen)] text-white font-bold rounded-lg transition-colors inline-block">
+          <Link href="/dashboard" className="px-6 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-lg transition-colors inline-block">
             Return to Dashboard
           </Link>
         </div>
