@@ -46,10 +46,28 @@ function Footer() {
           {['ABOUT US', 'HOW IT WORKS', 'ACCURACY', 'PRICING'].map((item) => (
             <a 
               key={item} 
-              href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+              href={`/#${item.toLowerCase().replace(/ /g, '-')}`}
               className="footer-pill"
             >
               {item}
+            </a>
+          ))}
+        </nav>
+        
+        {/* Legal Links */}
+        <nav className="footer-nav" style={{ marginTop: '1rem', opacity: 0.7 }}>
+          {[
+            { name: 'TERMS & CONDITIONS', path: '/legal/terms' },
+            { name: 'PRIVACY POLICY', path: '/legal/privacy' },
+            { name: 'COOKIE POLICY', path: '/legal/cookies' }
+          ].map((item) => (
+            <a 
+              key={item.name} 
+              href={item.path}
+              className="footer-pill"
+              style={{ fontSize: '10px' }}
+            >
+              {item.name}
             </a>
           ))}
         </nav>

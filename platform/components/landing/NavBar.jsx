@@ -25,16 +25,16 @@ function NavBar() {
         <div className={`navbar-right ${isMobileMenuOpen ? 'active' : ''}`}>
           <div className="navbar-links">
             <div className="nav-link-wrapper">
-              <a href="#about-us" className="nav-link" onClick={toggleMenu}>ABOUT US</a>
+              <a href="/#about-us" className="nav-link" onClick={toggleMenu}>ABOUT US</a>
             </div>
             <div className="nav-link-wrapper">
-              <a href="#how-it-works" className="nav-link" onClick={toggleMenu}>HOW IT WORKS</a>
+              <a href="/#how-it-works" className="nav-link" onClick={toggleMenu}>HOW IT WORKS</a>
             </div>
             <div className="nav-link-wrapper">
-              <a href="#accuracy" className="nav-link" onClick={toggleMenu}>ACCURACY</a>
+              <a href="/#accuracy" className="nav-link" onClick={toggleMenu}>ACCURACY</a>
             </div>
             <div className="nav-link-wrapper">
-              <a href="#pricing" className="nav-link" onClick={toggleMenu}>PRICING</a>
+              <a href="/#pricing" className="nav-link" onClick={toggleMenu}>PRICING</a>
             </div>
           </div>
           
