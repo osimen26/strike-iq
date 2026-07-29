@@ -63,13 +63,16 @@ function HeroSection() {
   return (
     <section ref={heroRef} id="hero" aria-label="Hero Section" className="hero-section">
       {/* Background Image Container */}
-      <div className="hero-bg absolute inset-0 z-0">
-        <img 
+      <div className="hero-bg absolute inset-0 z-0 bg-black">
+        <video 
           ref={imgRef}
-          src="/banner-section.png"
-          alt="Strike IQ AI Football and Basketball Betting Intelligence Dashboard"
-          className="hero-bg-img"
-          onLoad={() => setIsHeroReady(true)} 
+          src="/assets/hero-video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="hero-bg-img object-cover w-full h-full opacity-60"
+          onLoadedData={() => setIsHeroReady(true)} 
         />
         <div className="hero-texture"></div>
         <div className="hero-overlay"></div>
