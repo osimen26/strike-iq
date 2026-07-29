@@ -48,14 +48,14 @@ export const REGIONAL_PRICING_CONFIG: Record<string, RegionalConfig> = {
         formattedPrice: '₦5,000',
         interval: 'MONTHLY',
         periodLabel: '/ MONTH',
-        subpriceLabel: 'Billed annually (₦60,000/yr)'
+        subpriceLabel: 'Billed annually (₦54,000/yr)'
       },
       pro_yearly: {
-        price: 60000,
-        formattedPrice: '₦60,000',
+        price: 54000,
+        formattedPrice: '₦54,000',
         interval: 'YEARLY',
         periodLabel: '/ YEAR',
-        subpriceLabel: '₦5,000 / month effective rate'
+        subpriceLabel: '₦4,500 / month effective rate'
       }
     }
   },
