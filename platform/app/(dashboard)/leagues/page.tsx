@@ -82,36 +82,36 @@ export default function LeaguesPage() {
             </svg>
           </div>
 
-          <div className="flex bg-black/40 p-1 rounded-xl border border-white/10 w-full sm:w-auto">
+          <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800 w-full sm:w-auto font-mono shrink-0 overflow-x-auto max-w-full">
             <button
               onClick={() => setSelectedSport('all')}
-              className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`flex-1 sm:flex-initial px-5 py-2.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
                 selectedSport === 'all'
-                  ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/20'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-primary-600 text-white'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
               }`}
             >
-              All
+              ALL MARKETS
             </button>
             <button
               onClick={() => setSelectedSport('football')}
-              className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`flex-1 sm:flex-initial px-5 py-2.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
                 selectedSport === 'football'
-                  ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/20'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-primary-600 text-white'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
               }`}
             >
-              ⚽ Football
+              FOOTBALL
             </button>
             <button
               onClick={() => setSelectedSport('basketball')}
-              className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`flex-1 sm:flex-initial px-5 py-2.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
                 selectedSport === 'basketball'
-                  ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/20'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-primary-600 text-white'
+                  : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
               }`}
             >
-              🏀 Basketball
+              BASKETBALL
             </button>
           </div>
         </div>
