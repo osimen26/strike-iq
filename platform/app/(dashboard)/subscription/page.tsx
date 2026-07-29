@@ -326,27 +326,30 @@ function SubscriptionContent() {
               >
                 {/* Pro Badge */}
                 {isPro && (
-                  <div className="absolute -top-3.5 right-6 bg-gradient-to-r from-[var(--color-brand-emerald)] to-emerald-400 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
-                    <CrownIcon size={13} className="text-amber-300 shrink-0" />
-                    <span>RECOMMENDATION</span>
+                  <div className="absolute -top-3 right-6 bg-emerald-400 text-black text-[10px] font-extrabold px-3 py-1 rounded uppercase tracking-widest shadow-md flex items-center gap-1.5 font-mono">
+                    <ZapIcon size={13} className="text-emerald-900 shrink-0" />
+                    <span>RECOMMENDED</span>
                   </div>
                 )}
 
                 <div>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-white">{plan.name}</h3>
+                    <h3 className="text-2xl font-extrabold text-white tracking-tight">{plan.name.replace(/ Plan Monthly| Plan Yearly/i, '')}</h3>
                   </div>
-                  <p className="text-xs text-gray-400 mt-2 min-h-[32px] leading-relaxed">
+                  <p className="text-xs text-zinc-400 mt-2 min-h-[32px] leading-relaxed">
                     {plan.description}
                   </p>
 
                   {/* Price */}
                   <div className="mt-6 flex items-baseline gap-1">
-                    <span className="text-4xl font-extrabold text-white">
-                      {plan.formattedPrice || `$${plan.price}`}
+                    <span className="text-2xl font-bold text-emerald-400">
+                      {plan.formattedPrice?.replace(/[0-9.,]/g, '').trim() || '$'}
                     </span>
-                    <span className="text-xs text-gray-400 font-medium">
-                      /{plan.interval === 'YEARLY' ? 'year' : 'month'}
+                    <span className="text-5xl font-extrabold tracking-tighter text-white">
+                      {plan.formattedPrice?.replace(/[^0-9.,]/g, '') || plan.price}
+                    </span>
+                    <span className="text-xs text-zinc-500 font-mono uppercase tracking-widest ml-1">
+                      /{plan.interval === 'YEARLY' ? 'year' : 'mo'}
                     </span>
                   </div>
                   {plan.interval === 'YEARLY' && plan.price > 0 && (
@@ -358,13 +361,13 @@ function SubscriptionContent() {
                   <div className="h-px bg-white/10 my-6"></div>
 
                   {/* Feature Checklist */}
-                  <div className="space-y-3">
-                    <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                  <div className="space-y-4">
+                    <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-mono">
                       What&apos;s Included:
                     </div>
-                    <ul className="space-y-2.5">
+                    <ul className="space-y-3">
                       {plan.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5 text-xs text-gray-200">
+                        <li key={idx} className="flex items-start gap-3 text-sm text-zinc-300 font-medium">
                           <CheckCircleIcon size={16} className="text-[var(--color-brand-emerald)] shrink-0 mt-0.5" />
                           <span className="leading-relaxed">{feature}</span>
                         </li>
