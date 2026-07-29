@@ -148,7 +148,7 @@ export default function LeaguesPage() {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-black/60 border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-white border border-white/10 flex items-center justify-center p-1.5 shrink-0">
                       {league.logo ? (
                         <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
                       ) : (
@@ -187,7 +187,7 @@ export default function LeaguesPage() {
                 {/* Competition Banner */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-black/80 border border-[var(--color-brand-emerald)]/40 flex items-center justify-center p-2 shadow-md shadow-[var(--color-brand-emerald)]/10">
+                    <div className="w-14 h-14 rounded-2xl bg-white border border-[var(--color-brand-emerald)]/40 flex items-center justify-center p-2 shadow-md shadow-[var(--color-brand-emerald)]/10">
                       {selectedLeague.logo ? (
                         <img src={selectedLeague.logo} alt={selectedLeague.name} className="w-full h-full object-contain" />
                       ) : (

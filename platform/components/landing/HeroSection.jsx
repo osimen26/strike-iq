@@ -66,7 +66,7 @@ function HeroSection() {
       <div className="hero-bg absolute inset-0 z-0 bg-black">
         <video 
           ref={imgRef}
-          src="/assets/hero-video.mp4"
+          src="/assets/newvideo.mp4"
           autoPlay
           loop
           muted
