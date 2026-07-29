@@ -98,11 +98,10 @@ export default function Sidebar() {
             <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed font-sans">Unlock real-time AI rationales and high-confidence predictions.</p>
             <Link 
               href="/dashboard/subscription" 
-              className="group relative block w-full text-center text-xs font-mono font-bold bg-gradient-to-r from-[var(--primary-600)] via-[#10b981] to-[var(--primary-600)] bg-[length:200%_auto] text-white py-2.5 rounded-lg border border-emerald-400/60 uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.5),0_0_40px_rgba(19,133,97,0.3)] hover:shadow-[0_0_28px_rgba(16,185,129,0.85),0_0_55px_rgba(19,133,97,0.5)] hover:border-emerald-300 transition-all duration-300 overflow-hidden"
+              className="block w-full text-center py-2.5 bg-[#10b981] hover:bg-[#0ea5e9] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm"
             >
-              <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/25 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-in-out" />
-              <span className="relative z-10 flex items-center justify-center gap-1.5">
-                UPGRADE PRO
+              <span className="flex items-center justify-center gap-1.5">
+                UPGRADE PRO &rarr;
               </span>
             </Link>
           </div>
