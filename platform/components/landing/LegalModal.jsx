@@ -149,10 +149,10 @@ export default function LegalModal({ isOpen, onClose, type }) {
       />
       
       {/* Modal Container */}
-      <div className="relative w-full max-w-2xl bg-[#09090b] border border-zinc-800/80 shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)] rounded-2xl overflow-hidden max-h-[85vh] flex flex-col z-10 ring-1 ring-white/5">
+      <div className="relative w-full max-w-3xl mx-auto bg-[#09090b] border border-zinc-800/80 shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)] rounded-2xl overflow-hidden max-h-[85vh] flex flex-col z-10 ring-1 ring-white/5">
         
         {/* Fixed Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800 bg-[#09090b] z-20">
+        <div className="flex items-center justify-between px-8 sm:px-12 py-6 border-b border-zinc-800 bg-[#09090b] z-20">
           <div>
             <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-white">{titles[type]}</h1>
             <p className="text-xs text-zinc-500 mt-1 font-sans">Last Updated: July 2026</p>
@@ -166,7 +166,7 @@ export default function LegalModal({ isOpen, onClose, type }) {
         </div>
 
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-8 sm:px-10 sm:py-10 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-zinc-700">
+        <div className="flex-1 overflow-y-auto px-8 py-8 sm:px-12 sm:py-12 space-y-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-zinc-700">
           {content[type]}
         </div>
 
