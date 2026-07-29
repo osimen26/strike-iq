@@ -57,9 +57,9 @@ function Footer() {
         {/* Legal Links */}
         <nav className="footer-nav" style={{ marginTop: '1rem', opacity: 0.7 }}>
           {[
-            { name: 'TERMS & CONDITIONS', path: '/legal/terms' },
-            { name: 'PRIVACY POLICY', path: '/legal/privacy' },
-            { name: 'COOKIE POLICY', path: '/legal/cookies' }
+            { name: 'TERMS & CONDITIONS', path: '/terms' },
+            { name: 'PRIVACY POLICY', path: '/privacy' },
+            { name: 'COOKIE POLICY', path: '/cookies' }
           ].map((item) => (
             <a 
               key={item.name} 
