@@ -1,15 +1,15 @@
 @theme {
-  /* Core Monochromatic Green Palette */
-  --color-primary-900: #14532D;
-  --color-primary-800: #166534;
-  --color-primary-700: #15803D;
-  --color-primary-600: #16A34A;
-  --color-primary-500: #22C55E;
-  --color-primary-400: #4ADE80;
-  --color-primary-300: #86EFAC;
-  --color-primary-200: #BBF7D0;
-  --color-primary-100: #DCFCE7;
-  --color-primary-50:  #F0FDF4;
+  /* Core Emerald Palette (shifted so 600 is the vibrant #10B981) */
+  --color-primary-900: #064e3b;
+  --color-primary-800: #065f46;
+  --color-primary-700: #047857;
+  --color-primary-600: #10b981;
+  --color-primary-500: #34d399;
+  --color-primary-400: #6ee7b7;
+  --color-primary-300: #a7f3d0;
+  --color-primary-200: #d1fae5;
+  --color-primary-100: #ecfdf5;
+  --color-primary-50:  #f8fafc;
 
   /* Backgrounds & Surfaces */
   --color-background: #09090B;
