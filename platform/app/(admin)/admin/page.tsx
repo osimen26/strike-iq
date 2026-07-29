@@ -16,11 +16,11 @@ export default async function AdminOverviewPage() {
     rawAuthCount,
     { data: proPredictions, count: proPredictionsCount },
   ] = await Promise.all([
-    supabase.from('user').select('*', { count: 'exact', head: true }).then(r => r.count ?? 0),
-    supabase.from('subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'ACTIVE').then(r => r.count ?? 0),
+    supabase.from('user').select('*', { count: 'exact', head: true }).then((r: any) => r.count ?? 0),
+    supabase.from('subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'ACTIVE').then((r: any) => r.count ?? 0),
     prisma.user.count().catch(() => 0),
     prisma.subscription.count({ where: { status: 'ACTIVE' } }).catch(() => 0),
-    prisma.$queryRawUnsafe<{ count: bigint }[]>(`SELECT count(*) as count FROM auth.users`).then(r => Number(r[0]?.count || 0)).catch(() => 0),
+    prisma.$queryRawUnsafe<{ count: bigint }[]>(`SELECT count(*) as count FROM auth.users`).then((r: any) => Number(r[0]?.count || 0)).catch(() => 0),
     supabase
       .from('pro_predictions')
       .select('*', { count: 'exact' })

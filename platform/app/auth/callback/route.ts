@@ -3,6 +3,8 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { MASTER_ADMIN_EMAILS } from '@/lib/security/constants'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
