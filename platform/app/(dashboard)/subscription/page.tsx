@@ -305,7 +305,7 @@ function SubscriptionContent() {
                 ? 'bg-white/20 text-white' 
                 : 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
             }`}>
-              SAVE 16%
+              SAVE 10%
             </span>
           </button>
         </div>
