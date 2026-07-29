@@ -1,5 +1,6 @@
 "use client";
 import { useState } from 'react';
+import Link from 'next/link';
 import './NavBar.css';
 
 function NavBar() {
@@ -25,21 +26,21 @@ function NavBar() {
         <div className={`navbar-right ${isMobileMenuOpen ? 'active' : ''}`}>
           <div className="navbar-links">
             <div className="nav-link-wrapper">
-              <a href="/#about-us" className="nav-link" onClick={toggleMenu}>ABOUT US</a>
+              <Link href="/#about-us" className="nav-link" onClick={toggleMenu}>ABOUT US</Link>
             </div>
             <div className="nav-link-wrapper">
-              <a href="/#how-it-works" className="nav-link" onClick={toggleMenu}>HOW IT WORKS</a>
+              <Link href="/#how-it-works" className="nav-link" onClick={toggleMenu}>HOW IT WORKS</Link>
             </div>
             <div className="nav-link-wrapper">
-              <a href="/#accuracy" className="nav-link" onClick={toggleMenu}>ACCURACY</a>
+              <Link href="/#accuracy" className="nav-link" onClick={toggleMenu}>ACCURACY</Link>
             </div>
             <div className="nav-link-wrapper">
-              <a href="/#pricing" className="nav-link" onClick={toggleMenu}>PRICING</a>
+              <Link href="/#pricing" className="nav-link" onClick={toggleMenu}>PRICING</Link>
             </div>
           </div>
           
           <div className="navbar-login-wrapper">
-            <a href="/login" className="navbar-login text-center block">LOGIN</a>
+            <Link href="/login" className="navbar-login text-center block">LOGIN</Link>
           </div>
         </div>
       </div>
