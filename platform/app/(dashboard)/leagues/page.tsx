@@ -131,7 +131,7 @@ export default function LeaguesPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* League Directory List (Left Column) */}
-          <div className="lg:col-span-1 space-y-3 max-h-[700px] overflow-y-auto px-1.5 py-1.5 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-zinc-700">
+          <div className="lg:col-span-1 space-y-3 max-h-[700px] overflow-y-auto px-1.5 py-1.5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-1">
               Available Competitions ({filteredLeagues.length})
             </div>
