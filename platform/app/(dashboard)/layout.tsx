@@ -2,6 +2,9 @@ import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 import type { Metadata } from "next";
 
+// Prevent static prerendering — dashboard pages require Supabase client at runtime
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Dashboard",
   robots: {

@@ -6,6 +6,9 @@ import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from "@/lib/security/adminGua
 import type { Metadata } from "next";
 import AdminSidebar from "./AdminSidebar";
 
+// Prevent static prerendering — admin pages require Supabase client at runtime
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Admin Control Panel",
   robots: {

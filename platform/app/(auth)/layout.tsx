@@ -2,6 +2,9 @@ import '../globals.css';
 import Image from "next/image";
 import type { Metadata } from "next";
 
+// Prevent static prerendering — auth pages require Supabase client at runtime
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Account Login & Register",
   description:
