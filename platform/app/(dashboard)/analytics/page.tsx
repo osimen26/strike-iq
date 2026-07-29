@@ -187,10 +187,9 @@ export default function AnalyticsPage() {
         </div>
         <a 
           href="/dashboard/subscription" 
-          className="group relative shrink-0 px-6 py-2.5 bg-gradient-to-r from-[var(--primary-600)] via-[#10b981] to-[var(--primary-600)] bg-[length:200%_auto] text-white text-xs font-mono font-bold rounded-xl border border-emerald-400/60 uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.5),0_0_40px_rgba(19,133,97,0.3)] hover:shadow-[0_0_28px_rgba(16,185,129,0.85),0_0_55px_rgba(19,133,97,0.5)] hover:border-emerald-300 transition-all duration-300 overflow-hidden"
+          className="shrink-0 px-6 py-2.5 bg-primary-600 hover:bg-primary-500 text-white text-xs font-mono font-bold rounded-xl uppercase tracking-widest transition-colors shadow-sm"
         >
-          <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/25 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-in-out" />
-          <span className="relative z-10">UPGRADE PRO →</span>
+          <span>UPGRADE PRO →</span>
         </a>
       </div>
 
