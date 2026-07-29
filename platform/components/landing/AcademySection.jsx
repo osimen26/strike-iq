@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useRouter } from 'next/navigation';
 import './AcademySection.css';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -10,6 +11,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 function AcademySection() {
   const sectionRef = useRef(null);
   const bgRef = useRef(null);
+  const router = useRouter();
 
   useGSAP(() => {
     // 1. The Parallax Background (Tied to scroll position)
@@ -66,7 +68,7 @@ function AcademySection() {
             The picks the <br /> models trust most.
           </h2>
           
-          <button className="academy-btn academy-anim">
+          <button onClick={() => router.push('/register')} className="academy-btn academy-anim">
             UPGRADE TO PRO
           </button>
         </div>

@@ -98,7 +98,7 @@ export default function Sidebar() {
             <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed font-sans">Unlock real-time AI rationales and high-confidence predictions.</p>
             <Link 
               href="/dashboard/subscription" 
-              className="block w-full text-center py-2.5 bg-[#10b981] hover:bg-[#0ea5e9] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm"
+              className="block w-full text-center py-2.5 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm"
             >
               <span className="flex items-center justify-center gap-1.5">
                 UPGRADE PRO &rarr;

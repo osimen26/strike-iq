@@ -155,7 +155,7 @@ function PricingSection() {
                 </p>
 
                 <button 
-                  onClick={() => router.push(plan.id === 1 ? '/register' : '/subscription')}
+                  onClick={() => router.push('/register')}
                   className="pricing-btn"
                 >
                   <span>CHOOSE THIS PLAN</span>
