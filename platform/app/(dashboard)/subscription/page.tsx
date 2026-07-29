@@ -279,27 +279,34 @@ function SubscriptionContent() {
       )}
 
       {/* Billing Cycle Toggle */}
-      <div className="flex flex-col items-center justify-center pt-2">
-        <div className="inline-flex items-center bg-black/60 p-1.5 rounded-full border border-white/10 shadow-inner">
+      <div className="flex flex-col items-center justify-center pt-2 mb-2">
+        <div className="inline-flex items-center bg-[#09090b] p-1 rounded-full border border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
           <button
             onClick={() => setBillingCycle('MONTHLY')}
-            className={`px-6 py-2 rounded-full text-xs font-bold uppercase transition-all ${
+            className={`relative px-8 py-2.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest transition-all duration-300 ${
               billingCycle === 'MONTHLY'
-                ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/30'
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-[#10b981] text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]'
+                : 'text-zinc-500 hover:text-white bg-transparent'
             }`}
           >
             Monthly Billing
           </button>
           <button
             onClick={() => setBillingCycle('YEARLY')}
-            className={`px-6 py-2 rounded-full text-xs font-bold uppercase transition-all flex items-center gap-2 ${
+            className={`relative px-8 py-2.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest transition-all duration-300 flex items-center gap-2 ${
               billingCycle === 'YEARLY'
-                ? 'bg-[var(--color-brand-emerald)] text-white shadow-md shadow-[var(--color-brand-emerald)]/30'
-                : 'text-gray-400 hover:text-white'
+                ? 'bg-[#10b981] text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]'
+                : 'text-zinc-500 hover:text-white bg-transparent'
             }`}
           >
             <span>Yearly Billing</span>
+            <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold transition-colors ${
+              billingCycle === 'YEARLY' 
+                ? 'bg-white/20 text-white' 
+                : 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
+            }`}>
+              SAVE 16%
+            </span>
           </button>
         </div>
       </div>
