@@ -67,7 +67,7 @@ function ProfileContent() {
   return (
     <div className="space-y-8 pb-16">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-white/10 pb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-zinc-800 pb-6">
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading">
@@ -83,7 +83,7 @@ function ProfileContent() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex bg-black/50 p-1.5 rounded-xl border border-white/10 w-full md:w-auto">
+        <div className="flex bg-[#121215] p-1.5 rounded-xl border border-zinc-800 w-full md:w-auto">
           <button
             onClick={() => setActiveTab('profile')}
             className={`flex-1 md:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
@@ -128,7 +128,7 @@ function ProfileContent() {
       {activeTab === 'profile' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Profile Summary Card */}
-          <div className="bg-[var(--color-background-surface)] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6">
+          <div className="bg-[#09090b] border border-zinc-800 rounded-2xl p-6 md:p-8 space-y-6">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[var(--color-brand-emerald)] to-emerald-400 p-0.5 shadow-lg shadow-[var(--color-brand-emerald)]/20">
                 <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-xl font-bold text-[var(--color-brand-electricGreen)]">
@@ -147,11 +147,11 @@ function ProfileContent() {
             <div className="h-px bg-white/10"></div>
 
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between py-1 border-b border-white/5">
+              <div className="flex justify-between py-1 border-b border-zinc-800/60">
                 <span className="text-gray-400">Account Status:</span>
                 <span className="text-[var(--color-brand-electricGreen)] font-bold">Verified Active</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-white/5">
+              <div className="flex justify-between py-1 border-b border-zinc-800/60">
                 <span className="text-gray-400">Member Since:</span>
                 <span className="text-white font-medium">{joinDate}</span>
               </div>
@@ -163,14 +163,14 @@ function ProfileContent() {
 
             <Link
               href="/subscription"
-              className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-white/10 hover:bg-white/15 text-white transition-all flex items-center justify-center gap-2 border border-white/10"
+              className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-[#121215] hover:bg-zinc-800 text-white transition-all flex items-center justify-center gap-2 border border-zinc-800"
             >
               <span>Manage Subscription & Billing</span>
             </Link>
           </div>
 
           {/* Security & Active Device Sessions */}
-          <div className="lg:col-span-2 bg-[var(--color-background-surface)] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6">
+          <div className="lg:col-span-2 bg-[#09090b] border border-zinc-800 rounded-2xl p-6 md:p-8 space-y-6">
             <div>
               <h3 className="text-lg font-bold text-white">Security & Active Device Sessions</h3>
               <p className="text-xs text-[var(--color-accent-mutedSage)] mt-1">
@@ -179,7 +179,7 @@ function ProfileContent() {
             </div>
 
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-black/40 border border-emerald-500/30 flex items-center justify-between">
+              <div className="p-4 rounded-xl bg-[#121215] border border-emerald-500/30 flex items-center justify-between">
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg">
                     💻
@@ -199,9 +199,9 @@ function ProfileContent() {
                 <span className="text-xs text-[var(--color-brand-electricGreen)] font-bold">Active</span>
               </div>
 
-              <div className="p-4 rounded-xl bg-black/20 border border-white/5 flex items-center justify-between opacity-75">
+              <div className="p-4 rounded-xl bg-[#121215] border border-zinc-800/60 flex items-center justify-between opacity-75">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 text-lg">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-zinc-800 flex items-center justify-center text-gray-400 text-lg">
                     📱
                   </div>
                   <div>
@@ -241,7 +241,7 @@ function ProfileContent() {
 
       {/* Tab 2: Alert Settings & Preferences */}
       {activeTab === 'settings' && (
-        <div className="bg-[var(--color-background-surface)] border border-white/10 rounded-2xl p-6 md:p-8 max-w-4xl space-y-8">
+        <div className="bg-[#09090b] border border-zinc-800 rounded-2xl p-6 md:p-8 max-w-4xl space-y-8">
           <div>
             <h3 className="text-xl font-bold text-white font-heading">AI Betting Intelligence Preferences</h3>
             <p className="text-xs text-[var(--color-accent-mutedSage)] mt-1">
@@ -251,12 +251,12 @@ function ProfileContent() {
 
           <div className="space-y-6">
             {/* Odds Display Format */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-white/10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-zinc-800">
               <div>
                 <div className="text-sm font-bold text-white">Odds Display Format</div>
                 <div className="text-xs text-gray-400 mt-0.5">Select how match odds and betting lines are calculated across feeds.</div>
               </div>
-              <div className="flex bg-black/60 p-1 rounded-xl border border-white/10 shrink-0">
+              <div className="flex bg-black/60 p-1 rounded-xl border border-zinc-800 shrink-0">
                 <button
                   onClick={() => setOddsFormat('DECIMAL')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
@@ -285,7 +285,7 @@ function ProfileContent() {
             </div>
 
             {/* Default League Focus */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-white/10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-zinc-800">
               <div>
                 <div className="text-sm font-bold text-white">Default League Focus</div>
                 <div className="text-xs text-gray-400 mt-0.5">Which competition should prioritize your main predictions feed on login?</div>
@@ -293,7 +293,7 @@ function ProfileContent() {
               <select
                 value={defaultLeague}
                 onChange={(e) => setDefaultLeague(e.target.value)}
-                className="bg-black/60 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                className="bg-black/60 border border-zinc-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-brand-emerald)]"
               >
                 <option value="Premier League">⚽ Premier League (England)</option>
                 <option value="UEFA Champions League">⚽ UEFA Champions League</option>
@@ -304,7 +304,7 @@ function ProfileContent() {
             </div>
 
             {/* Toggle 1: High Confidence Alerts */}
-            <div className="flex items-center justify-between py-4 border-b border-white/10">
+            <div className="flex items-center justify-between py-4 border-b border-zinc-800">
               <div>
                 <div className="text-sm font-bold text-white flex items-center gap-2">
                   <span>⚡ High-Confidence Pro Pick Alerts</span>
@@ -329,7 +329,7 @@ function ProfileContent() {
             </div>
 
             {/* Toggle 2: Lineup & Injury Reports */}
-            <div className="flex items-center justify-between py-4 border-b border-white/10">
+            <div className="flex items-center justify-between py-4 border-b border-zinc-800">
               <div>
                 <div className="text-sm font-bold text-white">📊 Pre-Match Lineup & Injury Intelligence</div>
                 <div className="text-xs text-gray-400 mt-0.5">Notify me 1 hour before kickoff when official lineups impact AI win probabilities.</div>
@@ -382,8 +382,8 @@ function ProfileContent() {
 
       {/* Tab 3: Saved Picks / Bookmarks */}
       {activeTab === 'bookmarks' && (
-        <div className="bg-[var(--color-background-surface)] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="bg-[#09090b] border border-zinc-800 rounded-2xl p-6 md:p-8 space-y-6">
+          <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <div>
               <h3 className="text-lg font-bold text-white">Saved Prediction Slip Candidates</h3>
               <p className="text-xs text-[var(--color-accent-mutedSage)] mt-1">
@@ -394,7 +394,7 @@ function ProfileContent() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-5 rounded-xl bg-black/40 border border-[var(--color-brand-emerald)]/40 hover:border-[var(--color-brand-emerald)] transition-all flex flex-col justify-between">
+            <div className="p-5 rounded-xl bg-[#121215] border border-[var(--color-brand-emerald)]/40 hover:border-[var(--color-brand-emerald)] transition-all flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between text-xs text-gray-400">
                   <span className="font-bold text-white">⚽ Premier League</span>
@@ -414,7 +414,7 @@ function ProfileContent() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
+              <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs">
                 <span className="text-gray-400">AI Win Prob: <strong className="text-white">88%</strong></span>
                 <button
                   onClick={() => alert('Removed from saved slip.')}
@@ -425,7 +425,7 @@ function ProfileContent() {
               </div>
             </div>
 
-            <div className="p-5 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between">
+            <div className="p-5 rounded-xl bg-[#121215] border border-zinc-800 hover:border-white/20 transition-all flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between text-xs text-gray-400">
                   <span className="font-bold text-white">🏀 NBA</span>
@@ -434,7 +434,7 @@ function ProfileContent() {
                 <div className="text-base font-extrabold text-white mt-2">
                   Boston Celtics vs. Miami Heat
                 </div>
-                <div className="mt-3 p-3 rounded-lg bg-black/40 border border-white/10 flex items-center justify-between">
+                <div className="mt-3 p-3 rounded-lg bg-[#121215] border border-zinc-800 flex items-center justify-between">
                   <div>
                     <div className="text-[10px] text-gray-400 uppercase font-bold">⚡ AI Signal</div>
                     <div className="text-sm font-extrabold text-white mt-0.5">OVER 224.5 TOTAL POINTS</div>
@@ -445,7 +445,7 @@ function ProfileContent() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
+              <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs">
                 <span className="text-gray-400">AI Win Prob: <strong className="text-white">82%</strong></span>
                 <button
                   onClick={() => alert('Removed from saved slip.')}
