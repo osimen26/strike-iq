@@ -28,7 +28,7 @@ export async function GET(request: Request) {
 
     const supabasePublic = createSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     );
 
     // 1. Fetch real users from Supabase Auth engine (auth.users)

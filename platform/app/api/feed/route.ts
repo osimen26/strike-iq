@@ -29,7 +29,7 @@ export async function GET(req: Request) {
       // Fallback: fetch via Supabase anon client
       const supabase = createSupabaseClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
       );
       const { data: rawPicks, error } = await supabase
         .from('pro_predictions')
