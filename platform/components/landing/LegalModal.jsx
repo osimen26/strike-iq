@@ -144,7 +144,7 @@ export default function LegalModal({ isOpen, onClose, type }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" style={{ fontFamily: 'var(--font-main)' }}>
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" 
+        className="absolute inset-0 bg-black/90 transition-opacity" 
         onClick={onClose}
       />
       
@@ -152,7 +152,7 @@ export default function LegalModal({ isOpen, onClose, type }) {
       <div className="relative w-full max-w-2xl bg-[#09090b] border border-zinc-800/80 shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)] rounded-2xl overflow-hidden max-h-[85vh] flex flex-col z-10 ring-1 ring-white/5">
         
         {/* Fixed Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800/50 bg-[#09090b]/80 backdrop-blur-md z-20">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800 bg-[#09090b] z-20">
           <div>
             <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-white">{titles[type]}</h1>
             <p className="text-xs text-zinc-500 mt-1 font-sans">Last Updated: July 2026</p>
