@@ -20,6 +20,11 @@ function ProfileContent() {
   const [alertLineups, setAlertLineups] = useState<boolean>(true);
   const [alertBankroll, setAlertBankroll] = useState<boolean>(false);
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
+  
+  // Mock data state for bookmarks
+  const [showPick1, setShowPick1] = useState(true);
+  const [showPick2, setShowPick2] = useState(true);
+  const activeBookmarksCount = (showPick1 ? 1 : 0) + (showPick2 ? 1 : 0);
 
   useEffect(() => {
     // Fetch real auth user
@@ -83,36 +88,36 @@ function ProfileContent() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex bg-[#121215] p-1.5 rounded-xl border border-zinc-800 w-full md:w-auto">
+        <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800 w-full md:w-auto font-mono shrink-0 overflow-x-auto max-w-full">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`flex-1 md:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 md:flex-initial px-4 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-widest ${
               activeTab === 'profile'
                 ? 'bg-primary-600 text-black shadow-md shadow-primary-600/20'
-                : 'text-gray-400 hover:text-white'
+                : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
             }`}
           >
-            <span>👤 Account Security</span>
+            Account Security
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`flex-1 md:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 md:flex-initial px-4 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-widest ${
               activeTab === 'settings'
                 ? 'bg-primary-600 text-black shadow-md shadow-primary-600/20'
-                : 'text-gray-400 hover:text-white'
+                : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
             }`}
           >
-            <span>⚙️ Alert Settings</span>
+            Alert Settings
           </button>
           <button
             onClick={() => setActiveTab('bookmarks')}
-            className={`flex-1 md:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 md:flex-initial px-4 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-widest ${
               activeTab === 'bookmarks'
                 ? 'bg-primary-600 text-black shadow-md shadow-primary-600/20'
-                : 'text-gray-400 hover:text-white'
+                : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
             }`}
           >
-            <span>📌 Saved Picks</span>
+            Saved Picks
           </button>
         </div>
       </div>
@@ -181,8 +186,8 @@ function ProfileContent() {
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-[#121215] border border-emerald-500/30 flex items-center justify-between">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg">
-                    💻
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                   </div>
                   <div>
                     <div className="text-xs font-bold text-white flex items-center gap-2">
@@ -201,8 +206,8 @@ function ProfileContent() {
 
               <div className="p-4 rounded-xl bg-[#121215] border border-white/10 flex items-center justify-between opacity-75">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-zinc-800 flex items-center justify-center text-gray-400 text-lg">
-                    📱
+                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-zinc-800 flex items-center justify-center text-gray-400">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                   </div>
                   <div>
                     <div className="text-xs font-bold text-white">iPhone 15 Pro / Safari Mobile</div>
@@ -390,10 +395,11 @@ function ProfileContent() {
                 AI picks you bookmarked for tracking and betting slip assembly.
               </p>
             </div>
-            <span className="text-xs text-gray-400">2 Active Bookmarks</span>
+            <span className="text-xs text-gray-400">{activeBookmarksCount} Active Bookmark{activeBookmarksCount !== 1 ? 's' : ''}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {showPick1 && (
             <div className="p-5 rounded-xl bg-[#121215] border border-primary-600/40 hover:border-primary-600 transition-all flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between text-xs text-gray-400">
@@ -417,14 +423,16 @@ function ProfileContent() {
               <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs">
                 <span className="text-gray-400">AI Win Prob: <strong className="text-white">88%</strong></span>
                 <button
-                  onClick={() => alert('Removed from saved slip.')}
-                  className="text-red-400/80 hover:text-red-400 font-medium"
+                  onClick={() => setShowPick1(false)}
+                  className="text-red-400/80 hover:text-red-400 font-medium cursor-pointer"
                 >
                   Remove
                 </button>
               </div>
             </div>
+            )}
 
+            {showPick2 && (
             <div className="p-5 rounded-xl bg-[#121215] border border-zinc-800 hover:border-white/20 transition-all flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between text-xs text-gray-400">
@@ -448,13 +456,20 @@ function ProfileContent() {
               <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs">
                 <span className="text-gray-400">AI Win Prob: <strong className="text-white">82%</strong></span>
                 <button
-                  onClick={() => alert('Removed from saved slip.')}
-                  className="text-red-400/80 hover:text-red-400 font-medium"
+                  onClick={() => setShowPick2(false)}
+                  className="text-red-400/80 hover:text-red-400 font-medium cursor-pointer"
                 >
                   Remove
                 </button>
               </div>
             </div>
+            )}
+            
+            {(!showPick1 && !showPick2) && (
+              <div className="col-span-1 md:col-span-2 py-16 text-center text-zinc-500 font-mono text-sm border border-dashed border-zinc-800 rounded-xl">
+                No saved picks remaining.
+              </div>
+            )}
           </div>
         </div>
       )}
