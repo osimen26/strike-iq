@@ -73,11 +73,11 @@ function ProfileContent() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading">
               My Profile & Preferences
             </h1>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-[var(--color-brand-emerald)]/20 to-emerald-400/20 text-[var(--color-brand-electricGreen)] border border-[var(--color-brand-emerald)]/30">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-primary-600/20 to-emerald-400/20 text-primary-400 border border-primary-600/30">
               SECURE SESSION
             </span>
           </div>
-          <p className="text-[var(--color-accent-mutedSage)] mt-2 text-sm md:text-base">
+          <p className="text-zinc-400 mt-2 text-sm md:text-base">
             Manage your account security, AI signal notifications, and odds display formats.
           </p>
         </div>
@@ -88,7 +88,7 @@ function ProfileContent() {
             onClick={() => setActiveTab('profile')}
             className={`flex-1 md:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
               activeTab === 'profile'
-                ? 'bg-[var(--color-brand-emerald)] text-black shadow-md shadow-[var(--color-brand-emerald)]/20'
+                ? 'bg-primary-600 text-black shadow-md shadow-primary-600/20'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -98,7 +98,7 @@ function ProfileContent() {
             onClick={() => setActiveTab('settings')}
             className={`flex-1 md:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
               activeTab === 'settings'
-                ? 'bg-[var(--color-brand-emerald)] text-black shadow-md shadow-[var(--color-brand-emerald)]/20'
+                ? 'bg-primary-600 text-black shadow-md shadow-primary-600/20'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -108,7 +108,7 @@ function ProfileContent() {
             onClick={() => setActiveTab('bookmarks')}
             className={`flex-1 md:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
               activeTab === 'bookmarks'
-                ? 'bg-[var(--color-brand-emerald)] text-black shadow-md shadow-[var(--color-brand-emerald)]/20'
+                ? 'bg-primary-600 text-black shadow-md shadow-primary-600/20'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -130,15 +130,15 @@ function ProfileContent() {
           {/* Profile Summary Card */}
           <div className="bg-[#09090b] border border-zinc-800 rounded-2xl p-6 md:p-8 space-y-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[var(--color-brand-emerald)] to-emerald-400 p-0.5 shadow-lg shadow-[var(--color-brand-emerald)]/20">
-                <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-xl font-bold text-[var(--color-brand-electricGreen)]">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary-600 to-emerald-400 p-0.5 shadow-lg shadow-primary-600/20">
+                <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-xl font-bold text-primary-400">
                   SI
                 </div>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white">{displayName}</h3>
                 <p className="text-xs text-gray-400">{user?.email || '—'}</p>
-                <div className="mt-2 inline-block px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-electricGreen)] border border-[var(--color-brand-emerald)]/30">
+                <div className="mt-2 inline-block px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-primary-600/20 text-primary-400 border border-primary-600/30">
                   {tierLabel}
                 </div>
               </div>
@@ -149,7 +149,7 @@ function ProfileContent() {
             <div className="space-y-3 text-xs">
               <div className="flex justify-between py-1 border-b border-zinc-800/60">
                 <span className="text-gray-400">Account Status:</span>
-                <span className="text-[var(--color-brand-electricGreen)] font-bold">Verified Active</span>
+                <span className="text-primary-400 font-bold">Verified Active</span>
               </div>
               <div className="flex justify-between py-1 border-b border-zinc-800/60">
                 <span className="text-gray-400">Member Since:</span>
@@ -163,7 +163,7 @@ function ProfileContent() {
 
             <Link
               href="/subscription"
-              className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-[#121215] hover:bg-zinc-800 text-white transition-all flex items-center justify-center gap-2 border border-zinc-800"
+              className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-white/5 hover:bg-white/10 text-white transition-all flex items-center justify-center gap-2 border border-white/10"
             >
               <span>Manage Subscription & Billing</span>
             </Link>
@@ -173,7 +173,7 @@ function ProfileContent() {
           <div className="lg:col-span-2 bg-[#09090b] border border-zinc-800 rounded-2xl p-6 md:p-8 space-y-6">
             <div>
               <h3 className="text-lg font-bold text-white">Security & Active Device Sessions</h3>
-              <p className="text-xs text-[var(--color-accent-mutedSage)] mt-1">
+              <p className="text-xs text-zinc-400 mt-1">
                 Monitor logged-in devices to ensure your Pro AI intelligence access is never compromised or shared.
               </p>
             </div>
@@ -196,10 +196,10 @@ function ProfileContent() {
                     </div>
                   </div>
                 </div>
-                <span className="text-xs text-[var(--color-brand-electricGreen)] font-bold">Active</span>
+                <span className="text-xs text-primary-400 font-bold">Active</span>
               </div>
 
-              <div className="p-4 rounded-xl bg-[#121215] border border-zinc-800/60 flex items-center justify-between opacity-75">
+              <div className="p-4 rounded-xl bg-[#121215] border border-white/10 flex items-center justify-between opacity-75">
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-lg bg-white/5 border border-zinc-800 flex items-center justify-center text-gray-400 text-lg">
                     📱
@@ -230,7 +230,7 @@ function ProfileContent() {
               <button
                 onClick={handleResetPassword}
                 disabled={resetSent}
-                className="px-5 py-2.5 rounded-xl font-bold text-xs uppercase bg-[var(--color-brand-emerald)] text-black hover:bg-emerald-400 transition-all shadow-md shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-5 py-2.5 rounded-xl font-bold text-xs uppercase bg-primary-600 text-black hover:bg-emerald-400 transition-all shadow-md shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {resetSent ? 'Link Sent ✓' : 'Reset Password'}
               </button>
@@ -244,7 +244,7 @@ function ProfileContent() {
         <div className="bg-[#09090b] border border-zinc-800 rounded-2xl p-6 md:p-8 max-w-4xl space-y-8">
           <div>
             <h3 className="text-xl font-bold text-white font-heading">AI Betting Intelligence Preferences</h3>
-            <p className="text-xs text-[var(--color-accent-mutedSage)] mt-1">
+            <p className="text-xs text-zinc-400 mt-1">
               Customize how odds, confidence metrics, and instant notifications behave across your Strike IQ dashboard.
             </p>
           </div>
@@ -260,7 +260,7 @@ function ProfileContent() {
                 <button
                   onClick={() => setOddsFormat('DECIMAL')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    oddsFormat === 'DECIMAL' ? 'bg-[var(--color-brand-emerald)] text-black' : 'text-gray-400 hover:text-white'
+                    oddsFormat === 'DECIMAL' ? 'bg-primary-600 text-black' : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   Decimal (1.85)
@@ -268,7 +268,7 @@ function ProfileContent() {
                 <button
                   onClick={() => setOddsFormat('FRACTIONAL')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    oddsFormat === 'FRACTIONAL' ? 'bg-[var(--color-brand-emerald)] text-black' : 'text-gray-400 hover:text-white'
+                    oddsFormat === 'FRACTIONAL' ? 'bg-primary-600 text-black' : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   Fractional (17/20)
@@ -276,7 +276,7 @@ function ProfileContent() {
                 <button
                   onClick={() => setOddsFormat('AMERICAN')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    oddsFormat === 'AMERICAN' ? 'bg-[var(--color-brand-emerald)] text-black' : 'text-gray-400 hover:text-white'
+                    oddsFormat === 'AMERICAN' ? 'bg-primary-600 text-black' : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   American (-118)
@@ -293,7 +293,7 @@ function ProfileContent() {
               <select
                 value={defaultLeague}
                 onChange={(e) => setDefaultLeague(e.target.value)}
-                className="bg-black/60 border border-zinc-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-brand-emerald)]"
+                className="bg-black/60 border border-zinc-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-primary-600"
               >
                 <option value="Premier League">⚽ Premier League (England)</option>
                 <option value="UEFA Champions League">⚽ UEFA Champions League</option>
@@ -308,7 +308,7 @@ function ProfileContent() {
               <div>
                 <div className="text-sm font-bold text-white flex items-center gap-2">
                   <span>⚡ High-Confidence Pro Pick Alerts</span>
-                  <span className="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase bg-[var(--color-brand-emerald)]/20 text-[var(--color-brand-electricGreen)]">
+                  <span className="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase bg-primary-600/20 text-primary-400">
                     RECOMMENDED
                   </span>
                 </div>
@@ -317,7 +317,7 @@ function ProfileContent() {
               <button
                 onClick={() => setAlertHighConf(!alertHighConf)}
                 className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                  alertHighConf ? 'bg-[var(--color-brand-emerald)]' : 'bg-white/20'
+                  alertHighConf ? 'bg-primary-600' : 'bg-white/20'
                 }`}
               >
                 <div
@@ -337,7 +337,7 @@ function ProfileContent() {
               <button
                 onClick={() => setAlertLineups(!alertLineups)}
                 className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                  alertLineups ? 'bg-[var(--color-brand-emerald)]' : 'bg-white/20'
+                  alertLineups ? 'bg-primary-600' : 'bg-white/20'
                 }`}
               >
                 <div
@@ -357,7 +357,7 @@ function ProfileContent() {
               <button
                 onClick={() => setAlertBankroll(!alertBankroll)}
                 className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                  alertBankroll ? 'bg-[var(--color-brand-emerald)]' : 'bg-white/20'
+                  alertBankroll ? 'bg-primary-600' : 'bg-white/20'
                 }`}
               >
                 <div
@@ -372,7 +372,7 @@ function ProfileContent() {
           <div className="pt-4 flex justify-end">
             <button
               onClick={handleSaveSettings}
-              className="px-8 py-3 rounded-xl font-extrabold text-xs uppercase bg-gradient-to-r from-[var(--color-brand-emerald)] to-emerald-400 text-black hover:from-emerald-400 hover:to-[var(--color-brand-electricGreen)] transition-all shadow-lg shadow-[var(--color-brand-emerald)]/20"
+              className="px-8 py-3 rounded-xl font-extrabold text-xs uppercase bg-gradient-to-r from-primary-600 to-emerald-400 text-black hover:from-emerald-400 hover:to-primary-400 transition-all shadow-lg shadow-primary-600/20"
             >
               Save Alert Preferences
             </button>
@@ -386,7 +386,7 @@ function ProfileContent() {
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <div>
               <h3 className="text-lg font-bold text-white">Saved Prediction Slip Candidates</h3>
-              <p className="text-xs text-[var(--color-accent-mutedSage)] mt-1">
+              <p className="text-xs text-zinc-400 mt-1">
                 AI picks you bookmarked for tracking and betting slip assembly.
               </p>
             </div>
@@ -394,7 +394,7 @@ function ProfileContent() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-5 rounded-xl bg-[#121215] border border-[var(--color-brand-emerald)]/40 hover:border-[var(--color-brand-emerald)] transition-all flex flex-col justify-between">
+            <div className="p-5 rounded-xl bg-[#121215] border border-primary-600/40 hover:border-primary-600 transition-all flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between text-xs text-gray-400">
                   <span className="font-bold text-white">⚽ Premier League</span>
@@ -410,7 +410,7 @@ function ProfileContent() {
                   </div>
                   <div className="text-right">
                     <div className="text-[10px] text-gray-400">Odds</div>
-                    <div className="text-sm font-bold text-[var(--color-brand-electricGreen)]">1.88</div>
+                    <div className="text-sm font-bold text-primary-400">1.88</div>
                   </div>
                 </div>
               </div>
@@ -441,7 +441,7 @@ function ProfileContent() {
                   </div>
                   <div className="text-right">
                     <div className="text-[10px] text-gray-400">Odds</div>
-                    <div className="text-sm font-bold text-[var(--color-brand-electricGreen)]">1.91</div>
+                    <div className="text-sm font-bold text-primary-400">1.91</div>
                   </div>
                 </div>
               </div>
