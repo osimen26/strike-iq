@@ -54,7 +54,7 @@ export default function LeaguesPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-white/10 pb-6">
         <div>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading whitespace-nowrap">
               Sports Competitions & Leagues
             </h1>
             <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-primary-600/20 text-primary-600 border border-primary-600/40 whitespace-nowrap shrink-0 shadow-[0_0_15px_rgba(19,133,97,0.15)] flex items-center gap-1.5">
