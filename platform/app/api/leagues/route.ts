@@ -15,6 +15,7 @@ const DEFAULT_LEAGUES = [
   { name: 'La Liga', country: 'Spain', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/140.png' },
   { name: 'Serie A', country: 'Italy', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/135.png' },
   { name: 'Bundesliga', country: 'Germany', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/78.png' },
+  { name: 'Ligue 1', country: 'France', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/61.png' },
   { name: 'NBA', country: 'USA', sportSlug: 'basketball', logo: 'https://media.api-sports.io/basketball/leagues/12.png' },
   { name: 'EuroLeague', country: 'Europe', sportSlug: 'basketball', logo: 'https://media.api-sports.io/basketball/leagues/120.png' },
 ];
@@ -57,8 +58,11 @@ export async function GET(req: Request) {
       orderBy: { name: 'asc' },
     });
 
-    // Auto-seed sports and leagues if table is empty
-    if (!leagues || leagues.length === 0) {
+    // Auto-seed missing sports and leagues
+    const existingLeagueNames = new Set(leagues.map(l => l.name));
+    const missingLeagues = DEFAULT_LEAGUES.filter(l => !existingLeagueNames.has(l.name));
+
+    if (missingLeagues.length > 0) {
       const sportMap: Record<string, string> = {};
       for (const s of DEFAULT_SPORTS) {
         const sport = await prisma.sport.upsert({
@@ -69,7 +73,7 @@ export async function GET(req: Request) {
         sportMap[s.slug] = sport.id;
       }
 
-      for (const l of DEFAULT_LEAGUES) {
+      for (const l of missingLeagues) {
         const sportId = sportMap[l.sportSlug];
         if (sportId) {
           const existing = await prisma.league.findFirst({ where: { name: l.name } });
