@@ -279,7 +279,7 @@ function SubscriptionContent() {
       )}
 
       {/* Billing Cycle Toggle */}
-      <div className="flex flex-col items-center justify-center pt-2 mb-2">
+      <div className="flex flex-col items-center justify-center pt-2 mb-10">
         <div className="inline-flex items-center bg-[#09090b] p-1 rounded-full border border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
           <button
             onClick={() => setBillingCycle('MONTHLY')}
