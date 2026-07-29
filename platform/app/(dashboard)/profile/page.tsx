@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { getActiveSessions, SessionInfo } from './actions';
 
 function ProfileContent() {
   const searchParams = useSearchParams();
@@ -20,6 +21,10 @@ function ProfileContent() {
   const [alertLineups, setAlertLineups] = useState<boolean>(true);
   const [alertBankroll, setAlertBankroll] = useState<boolean>(false);
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
+
+  // Sessions state
+  const [activeSessions, setActiveSessions] = useState<SessionInfo[]>([]);
+  const [loadingSessions, setLoadingSessions] = useState(true);
   
   // Mock data state for bookmarks
   const [showPick1, setShowPick1] = useState(true);
@@ -33,6 +38,14 @@ function ProfileContent() {
       supabase.auth.getUser().then(({ data }) => {
         if (data.user) setUser(data.user);
       });
+    });
+
+    // Fetch active device sessions securely from the backend
+    getActiveSessions().then((res) => {
+      if (res.success && res.sessions) {
+        setActiveSessions(res.sessions);
+      }
+      setLoadingSessions(false);
     });
 
     // Fetch real subscription status
@@ -184,45 +197,63 @@ function ProfileContent() {
             </div>
 
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-[#121215] border border-emerald-500/30 flex items-center justify-between">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-white flex items-center gap-2">
-                      <span>Windows 11 / Chrome Browser</span>
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300">
-                        Current Device
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-gray-400 mt-0.5">
-                      IP: 192.168.1.104 • Last Active: Just now
-                    </div>
-                  </div>
+              {loadingSessions ? (
+                <div className="p-8 text-center text-zinc-500 font-mono text-sm border border-dashed border-zinc-800 rounded-xl">
+                  Loading active secure sessions...
                 </div>
-                <span className="text-xs text-primary-400 font-bold">Active</span>
-              </div>
-
-              <div className="p-4 rounded-xl bg-[#121215] border border-white/10 flex items-center justify-between opacity-75">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-lg bg-white/5 border border-zinc-800 flex items-center justify-center text-gray-400">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-white">iPhone 15 Pro / Safari Mobile</div>
-                    <div className="text-[11px] text-gray-400 mt-0.5">
-                      IP: 172.56.21.8 • Last Active: 3 hours ago
-                    </div>
-                  </div>
+              ) : activeSessions.length === 0 ? (
+                <div className="p-8 text-center text-zinc-500 font-mono text-sm border border-dashed border-zinc-800 rounded-xl">
+                  No active sessions found.
                 </div>
-                <button
-                  onClick={() => alert('Device session revoked.')}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all"
-                >
-                  Revoke Access
-                </button>
-              </div>
+              ) : (
+                activeSessions.map((session) => (
+                  <div 
+                    key={session.id}
+                    className={`p-4 rounded-xl border flex items-center justify-between ${
+                      session.isCurrent 
+                        ? 'bg-[#121215] border-emerald-500/30' 
+                        : 'bg-[#121215] border-white/10 opacity-75'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        session.isCurrent
+                          ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400'
+                          : 'bg-white/5 border border-zinc-800 text-gray-400'
+                      }`}>
+                        {session.deviceType === 'mobile' || session.deviceType === 'tablet' ? (
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                        ) : (
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        )}
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-white flex items-center gap-2">
+                          <span>{session.os} / {session.browser}</span>
+                          {session.isCurrent && (
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300">
+                              Current Device
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-gray-400 mt-0.5">
+                          IP: {session.ip} • Last Active: {session.lastActive}
+                        </div>
+                      </div>
+                    </div>
+                    {session.isCurrent ? (
+                      <span className="text-xs text-primary-400 font-bold">Active</span>
+                    ) : (
+                      <button
+                        onClick={() => alert('Device session revoked.')}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all"
+                      >
+                        Revoke Access
+                      </button>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
 
             <div className="h-px bg-white/10 my-6"></div>
