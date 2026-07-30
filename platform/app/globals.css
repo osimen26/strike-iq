@@ -5,6 +5,14 @@
 :root {
   --background: #111111;
   --foreground: #ffffff;
+  
+  /* Legacy tokens from marketing css to preserve landing page colors */
+  --primary-100: #DCFCE7;
+  --primary-600: #16A34A;
+  --color-mint: var(--primary-100);
+  --color-emerald: var(--primary-600);
+  --color-dark-bg: rgba(255, 255, 255, 0.15);
+  --color-dark-border: rgba(255, 255, 255, 0.1);
 }
 
 body {

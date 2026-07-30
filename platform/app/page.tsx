@@ -8,8 +8,6 @@ import RecordsSection from '@/components/landing/RecordsSection';
 import PricingSection from '@/components/landing/PricingSection';
 import CTASection from '@/components/landing/CTASection';
 import Footer from '@/components/landing/Footer';
-import './marketing-index.css';
-import './marketing-app.css';
 
 export default function LandingPage() {
   return (
