@@ -187,7 +187,7 @@ export default function AnalyticsPage() {
         </div>
         <a 
           href="/dashboard/subscription" 
-          className="shrink-0 px-6 py-2.5 bg-[#10b981] hover:bg-[#0ea5e9] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm"
+          className="shrink-0 px-6 py-2.5 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm"
         >
           <span>UPGRADE PRO &rarr;</span>
         </a>

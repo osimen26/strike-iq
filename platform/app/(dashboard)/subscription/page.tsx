@@ -416,7 +416,7 @@ function SubscriptionContent() {
                     <button
                       onClick={() => handleUpgrade(plan)}
                       disabled={upgradingId === plan.id}
-                      className="w-full py-3.5 px-4 bg-[#10b981] hover:bg-[#0ea5e9] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-70"
+                      className="w-full py-3.5 px-4 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-70"
                     >
                       <span>
                         {upgradingId === plan.id ? 'SECURING CHECKOUT...' : 'UPGRADE PRO \u2192'}
