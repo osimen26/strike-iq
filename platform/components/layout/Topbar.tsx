@@ -16,8 +16,8 @@ export default function Topbar() {
     const { count } = await supabase
       .from("notifications")
       .select("*", { count: "exact", head: true })
-      .eq("userId", userId)
-      .eq("isRead", false);
+      .eq("user_id", userId)
+      .eq("is_read", false);
     setUnreadCount(count || 0);
   }, [supabase]);
 

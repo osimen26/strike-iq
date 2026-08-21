@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 /**
  * Strike IQ — In-Memory Sliding Window Rate Limiter
  *
@@ -127,7 +129,6 @@ export function getClientIp(req: Request): string {
 /**
  * Returns a 429 Too Many Requests response with Retry-After header.
  */
-import { NextResponse } from "next/server";
 export function rateLimitResponse(result: RateLimitResult): NextResponse {
   return NextResponse.json(
     {

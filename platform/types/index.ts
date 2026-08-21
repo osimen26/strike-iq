@@ -64,3 +64,28 @@ export interface UserSummaryRow {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
+
+// ─── Subscription & Payment Domain ───────────────────────────────────────────
+
+export interface Plan {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  currency: string;
+  formattedPrice?: string;
+  savingsBadge?: string;
+  interval: string;
+  features: string[];
+}
+
+export interface PaymentRecord {
+  id: string;
+  amount: number;
+  currency: string;
+  status: string;
+  reference: string;
+  paymentMethod?: string;
+  createdAt: string;
+  plan?: Plan;
+}

@@ -225,11 +225,15 @@ const AFRICAN_COUNTRY_CODES = new Set([
 
 /**
  * Get the regional pricing configuration for a specific ISO country code.
- * For the Nigeria-Only launch phase, this defaults strictly to Nigeria ('NG' / ₦5,000 NGN).
+ * Routes to the correct pricing tier based on ISO 3166-1 alpha-2 country code.
+ * Falls back to Pan-Africa pricing for unlisted African countries, and USD for all others.
  */
 export function getRegionalConfig(countryCode?: string | null): RegionalConfig {
-  // Nigeria-Only focus: Lock pricing to NGN (`₦5,000/mo`, `₦60,000/yr`) across all regions
-  return REGIONAL_PRICING_CONFIG.NG;
+  if (!countryCode) return REGIONAL_PRICING_CONFIG.NG; // Default to Nigeria if no country detected
+  const upper = countryCode.toUpperCase();
+  if (REGIONAL_PRICING_CONFIG[upper]) return REGIONAL_PRICING_CONFIG[upper]; // Exact match (NG, KE, GH, ZA)
+  if (AFRICAN_COUNTRY_CODES.has(upper)) return REGIONAL_PRICING_CONFIG.AF;  // Rest of Africa → Pan-Africa USD
+  return REGIONAL_PRICING_CONFIG.US; // All other countries → International USD
 }
 
 /**

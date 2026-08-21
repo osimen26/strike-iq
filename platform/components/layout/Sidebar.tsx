@@ -24,6 +24,7 @@ const navigation = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isPro, setIsPro] = useState<boolean | null>(null); // null = loading
 
   // Close sidebar on route change
   useEffect(() => {
@@ -31,10 +32,18 @@ export default function Sidebar() {
     return () => clearTimeout(timer);
   }, [pathname]);
 
+  // Fetch subscription status — hide upgrade CTA for paying users
+  useEffect(() => {
+    fetch("/api/subscriptions/current")
+      .then((r) => r.json())
+      .then((res) => setIsPro(res.isPro === true))
+      .catch(() => setIsPro(false)); // Fail open — show CTA if unknown
+  }, []);
+
   return (
     <>
       {/* Mobile Hamburger Button */}
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
         className="lg:hidden fixed top-3 left-4 z-50 p-2 bg-[#09090b] rounded-md border border-zinc-800 text-white hover:bg-zinc-800 transition-colors"
         aria-label="Open menu"
@@ -46,8 +55,8 @@ export default function Sidebar() {
 
       {/* Mobile Overlay */}
       {isOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/80 z-40 transition-opacity" 
+        <div
+          className="lg:hidden fixed inset-0 bg-black/80 z-40 transition-opacity"
           onClick={() => setIsOpen(false)}
         />
       )}
@@ -89,22 +98,37 @@ export default function Sidebar() {
           })}
         </nav>
 
+        {/* Bottom CTA — only shown to free users */}
         <div className="p-4 border-t border-zinc-900">
-          <div className="p-4 rounded-xl bg-[#09090b] border border-zinc-800/80 shadow-md">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-primary-600">Pro Tier</span>
-              <span className="text-primary-600"><CrownIcon size={16} /></span>
+          {isPro === true ? (
+            // Pro user — show status badge instead of upgrade prompt
+            <div className="p-4 rounded-xl bg-[#09090b] border border-primary-600/40 shadow-md">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-primary-600">Pro Active</span>
+                <span className="text-primary-600"><CrownIcon size={16} /></span>
+              </div>
+              <p className="text-[11px] text-zinc-400 leading-relaxed font-sans">
+                You have full access to all AI rationales and premium picks.
+              </p>
             </div>
-            <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed font-sans">Unlock real-time AI rationales and high-confidence predictions.</p>
-            <Link 
-              href="/dashboard/subscription" 
-              className="block w-full text-center py-2.5 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm"
-            >
-              <span className="flex items-center justify-center gap-1.5">
-                UPGRADE PRO &rarr;
-              </span>
-            </Link>
-          </div>
+          ) : (
+            // Free user or loading — show upgrade CTA
+            <div className="p-4 rounded-xl bg-[#09090b] border border-zinc-800/80 shadow-md">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-primary-600">Pro Tier</span>
+                <span className="text-primary-600"><CrownIcon size={16} /></span>
+              </div>
+              <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed font-sans">Unlock real-time AI rationales and high-confidence predictions.</p>
+              <Link
+                href="/dashboard/subscription"
+                className="block w-full text-center py-2.5 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm"
+              >
+                <span className="flex items-center justify-center gap-1.5">
+                  UPGRADE PRO &rarr;
+                </span>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </>

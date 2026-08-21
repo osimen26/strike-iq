@@ -7,29 +7,7 @@ import { ZapIcon, CrownIcon, CheckCircleIcon, XCircleIcon } from '@/components/i
 import { useRegionalPricing } from '@/lib/pricing/useRegionalPricing';
 import { PaymentHistorySection } from '@/components/subscription/PaymentHistorySection';
 import { SubscriptionModals } from '@/components/subscription/SubscriptionModals';
-
-interface Plan {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  currency: string;
-  formattedPrice?: string;
-  savingsBadge?: string;
-  interval: string;
-  features: string[];
-}
-
-interface PaymentRecord {
-  id: string;
-  amount: number;
-  currency: string;
-  status: string;
-  reference: string;
-  paymentMethod?: string;
-  createdAt: string;
-  plan?: Plan;
-}
+import type { Plan, PaymentRecord } from '@/types';
 
 function SubscriptionContent() {
   const searchParams = useSearchParams();

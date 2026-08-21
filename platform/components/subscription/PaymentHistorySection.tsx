@@ -2,29 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-
-interface Plan {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  currency: string;
-  formattedPrice?: string;
-  savingsBadge?: string;
-  interval: string;
-  features: string[];
-}
-
-interface PaymentRecord {
-  id: string;
-  amount: number;
-  currency: string;
-  status: string;
-  reference: string;
-  paymentMethod?: string;
-  createdAt: string;
-  plan?: Plan;
-}
+import type { Plan, PaymentRecord } from "@/types";
 
 interface PaymentHistorySectionProps {
   payments: PaymentRecord[];

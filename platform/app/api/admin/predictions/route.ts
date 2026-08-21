@@ -29,15 +29,6 @@ export async function POST(request: Request) {
       tagsArray.unshift('FREE TEASER');
     }
 
-    // Auto-migrate schema & refresh PostgREST schema cache to guarantee booking_code column exists
-    try {
-      await prisma.$executeRawUnsafe(`ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS booking_code TEXT`);
-      await prisma.$executeRawUnsafe(`ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS bookmaker TEXT`);
-      await prisma.$executeRawUnsafe(`ALTER TABLE pro_predictions ADD COLUMN IF NOT EXISTS created_by TEXT`);
-      await prisma.$executeRawUnsafe(`NOTIFY pgrst, 'reload schema'`);
-    } catch (migErr) {
-      console.warn("Schema check/reload notice:", migErr);
-    }
 
     // 1. Insert the Pro Prediction with sanitized fields
     let insertedData: unknown = null;
@@ -88,8 +79,10 @@ export async function POST(request: Request) {
 
     // 2. Fetch all user IDs and subscriptions to send targeted notifications (if enabled)
     if (body.notifyUsers !== false) {
+    // Fetch users and subscriptions for targeted notifications
+      // NOTE: Capped at 500 users per request. For larger user bases, move to a background queue (pg_cron / Supabase Edge Functions).
       const [{ data: allUsers }, { data: activeSubs }] = await Promise.all([
-        supabase.from('user').select('id'),
+        supabase.from('user').select('id').limit(500),
         supabase.from('subscriptions').select('userId').in('status', ['ACTIVE', 'TRIAL'])
       ]);
 

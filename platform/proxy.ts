@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   let supabaseResponse = NextResponse.next({ request });
@@ -40,7 +40,7 @@ export async function proxy(request: NextRequest) {
     if (pathname === "/admin/login") {
       return supabaseResponse;
     }
-    // Allow guest access to /dashboard feeds so unauthenticated users can experience the 300ms teaser blur
+    // Allow guest access to /dashboard feeds so unauthenticated users can experience the teaser blur
     if (
       pathname === "/dashboard" ||
       pathname.startsWith("/dashboard/predictions") ||
