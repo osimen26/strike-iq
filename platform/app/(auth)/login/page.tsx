@@ -48,8 +48,10 @@ export default function Login() {
       } catch (err) {
         console.warn("Could not sync user on login:", err);
       }
-      router.push("/dashboard");
-      router.refresh();
+      // Hard redirect so the browser sends a fresh request to /dashboard
+      // with the Supabase session cookie already committed — prevents the
+      // "need to refresh" flash caused by client-side navigation racing the cookie.
+      window.location.href = "/dashboard";
     }
   };
 
