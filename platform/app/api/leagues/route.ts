@@ -11,11 +11,13 @@ const DEFAULT_SPORTS = [
 
 const DEFAULT_LEAGUES = [
   { name: 'Premier League', country: 'England', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/39.png' },
+  { name: 'Championship', country: 'England', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/40.png' },
   { name: 'UEFA Champions League', country: 'Europe', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/2.png' },
   { name: 'La Liga', country: 'Spain', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/140.png' },
   { name: 'Serie A', country: 'Italy', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/135.png' },
   { name: 'Bundesliga', country: 'Germany', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/78.png' },
   { name: 'Ligue 1', country: 'France', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/61.png' },
+  { name: 'Süper Lig', country: 'Turkey', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/203.png' },
   { name: 'NBA', country: 'USA', sportSlug: 'basketball', logo: 'https://media.api-sports.io/basketball/leagues/12.png' },
   { name: 'EuroLeague', country: 'Europe', sportSlug: 'basketball', logo: 'https://media.api-sports.io/basketball/leagues/120.png' },
 ];

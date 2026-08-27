@@ -39,10 +39,12 @@ export async function GET(request: Request) {
     // Allowed leagues: PRD top-5 + UEFA club comps + International & World Football + Basketball
     const ALLOWED_SPORT_KEYS = new Set([
       'soccer_epl',
+      'soccer_england_league1',         // English Championship (EFL)
       'soccer_spain_la_liga',
       'soccer_italy_serie_a',
       'soccer_germany_bundesliga',
       'soccer_france_ligue_one',
+      'soccer_turkey_super_league',      // Turkish Süper Lig
       'soccer_uefa_champs_league',
       'soccer_uefa_europa_league',
       'soccer_uefa_europa_conference_league',

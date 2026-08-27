@@ -28,7 +28,7 @@ const DEFAULT_PLANS = [
     interval: 'MONTHLY',
     isActive: true,
     features: [
-      'ALL 6 LEAGUES & BASKETBALL',
+      'ALL 8 LEAGUES & BASKETBALL',
       'PREMIUM HIGH-CONFIDENCE PICKS',
       'DEEP DATA & MATCH INSIGHTS',
       'PRIORITY ALERTS & LIVE UPDATES',
@@ -43,7 +43,7 @@ const DEFAULT_PLANS = [
     interval: 'YEARLY',
     isActive: true,
     features: [
-      'ALL 6 LEAGUES & BASKETBALL',
+      'ALL 8 LEAGUES & BASKETBALL',
       'PREMIUM HIGH-CONFIDENCE PICKS',
       'DEEP DATA & MATCH INSIGHTS',
       'PRIORITY ALERTS & LIVE UPDATES',

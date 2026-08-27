@@ -147,133 +147,70 @@ export async function GET(req: Request) {
       };
     });
 
-    // Fetch live matches from The Odds API so the dashboard always has active fixtures
+    // Fetch live matches from local database (synced by cron job)
     let liveMatches: MatchItem[] = [];
     try {
-      const apiKey = process.env.THE_ODDS_API_KEY;
-      if (apiKey) {
-        const url = `https://api.the-odds-api.com/v4/sports/upcoming/odds/?apiKey=${apiKey}&regions=us,eu&markets=h2h&oddsFormat=decimal`;
-        const res = await fetch(url, { next: { revalidate: 1800 } });
-        if (res.ok) {
-          const rawOdds = await res.json();
-          if (Array.isArray(rawOdds)) {
-            // Allowed leagues: PRD top-5 football + UEFA club comps + International & World Tournaments + Basketball
-            const ALLOWED_SPORT_KEYS = new Set([
-              // Top-5 European Football Leagues
-              'soccer_epl',                         // Premier League
-              'soccer_spain_la_liga',               // La Liga
-              'soccer_italy_serie_a',               // Serie A
-              'soccer_germany_bundesliga',          // Bundesliga
-              'soccer_france_ligue_one',            // Ligue 1
-              // UEFA Club Competitions
-              'soccer_uefa_champs_league',          // Champions League
-              'soccer_uefa_europa_league',          // Europa League
-              'soccer_uefa_europa_conference_league', // Conference League
-              // International & World Football
-              'soccer_fifa_world_cup',              // FIFA World Cup
-              'soccer_fifa_world_cup_winner',
-              'soccer_fifa_world_cup_qualification',
-              'soccer_fifa_club_world_cup',
-              'soccer_uefa_nations_league',
-              'soccer_uefa_european_championship',
-              'soccer_uefa_euro_qualification',
-              'soccer_conmebol_copa_america',
-              'soccer_conmebol_copa_libertadores',
-              'soccer_africa_cup_of_nations',
-              // Basketball
-              'basketball_nba',
-              'basketball_wnba',
-              'basketball_ncaab',
-              'basketball_euroleague',
-            ]);
+      const dbMatches = await prisma.match.findMany({
+        where: {
+          isDeleted: false,
+          matchDate: {
+            gte: new Date(new Date().setHours(0,0,0,0)), // Today onwards
+            lte: new Date(new Date().setDate(new Date().getDate() + 3)) // Next 3 days
+          }
+        },
+        include: {
+          homeTeam: true,
+          awayTeam: true,
+          league: { include: { sport: true } },
+          predictions: {
+            where: { isDeleted: false, status: 'PUBLISHED' },
+            include: { explanation: true }
+          }
+        },
+        orderBy: { matchDate: 'asc' },
+        take: 30
+      });
 
-            const now = new Date();
-            const threeDaysOut = new Date();
-            threeDaysOut.setDate(now.getDate() + 4); // Ensure full 3+ days ahead horizon
-
-            const allowed = rawOdds.filter((m: OddsApiFixture) => {
-              if (!m || !m.id || !m.home_team || !m.away_team || !m.commence_time) return false; // Validate fixture integrity
-              const matchDate = new Date(m.commence_time);
-              if (matchDate > threeDaysOut) return false; // Keep within 3-day upcoming horizon
-
-              const k = m.sport_key || '';
-              return ALLOWED_SPORT_KEYS.has(k) || k.includes('fifa') || k.includes('world_cup') || k.includes('uefa') || k.includes('copa') || k.includes('nations');
-            }).sort((a: OddsApiFixture, b: OddsApiFixture) => new Date(a.commence_time || 0).getTime() - new Date(b.commence_time || 0).getTime()).slice(0, 50);
-
-            liveMatches = allowed.map((m: OddsApiFixture) => {
-              let timeLabel = 'Upcoming';
-              let dateLabel = 'Today';
-              if (m.commence_time) {
-                const dt = new Date(m.commence_time);
-                timeLabel = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' GMT';
-                const today = new Date();
-                const tomorrow = new Date();
-                tomorrow.setDate(today.getDate() + 1);
-                if (dt.toDateString() === today.toDateString()) {
-                  dateLabel = 'Today';
-                } else if (dt.toDateString() === tomorrow.toDateString()) {
-                  dateLabel = 'Tomorrow';
-                } else {
-                  dateLabel = dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-                }
-              }
-
-              // Extract best pick from h2h bookmakers
-              let pick = m.home_team + ' Win';
-              let conf = 74;
-              let detailedAnalysis = `Strike-IQ quantitative odds engine detects market value and favorable implied probability for ${pick}.`;
-
-              if (m.bookmakers && m.bookmakers[0] && m.bookmakers[0].markets && m.bookmakers[0].markets[0]) {
-                const outcomes = m.bookmakers[0].markets[0].outcomes || [];
-                if (outcomes.length >= 2) {
-                  // Generate breakdown of all outcomes
-                  const consensusLines = outcomes.map((o: MatchOutcome) => {
-                    const imp = Math.round((1 / o.price) * 100);
-                    return `• ${o.name}: ${o.price.toFixed(2)} (${imp}% implied)`;
-                  }).join('\n');
-
-                  // Find lowest price (favorite)
-                  const fav = outcomes.reduce((prev: MatchOutcome, curr: MatchOutcome) => (curr.price < prev.price ? curr : prev), outcomes[0]);
-                  if (fav && fav.name) {
-                    pick = fav.name === 'Draw' ? 'Draw' : `${fav.name} Win`;
-                    if (fav.price) {
-                      conf = Math.min(92, Math.max(65, Math.round((1 / fav.price) * 100 * 0.95)));
-                      
-                      detailedAnalysis = `📊 ALGORITHMIC ANALYSIS
-The Strike-IQ quantitative model has detected a high-value signal for this fixture based on aggregated sharp odds.
-
-💰 MARKET CONSENSUS
-${consensusLines}
-
-🎯 RATIONALE
-Based on real-time bookmaker data, the algorithm has identified a structural edge favoring [ ${pick} ]. The quantitative model factors in line movement and sharp money consensus, generating a positive Expected Value (+EV) signal. The confidence rating of ${conf}% indicates a strong market backing against the closing line.`;
-                    }
-                  }
-                }
-              }
-
-              return {
-                id: String(m.id || ''),
-                homeTeam: String(m.home_team || 'Home Team'),
-                awayTeam: String(m.away_team || 'Away Team'),
-                league: String(m.sport_title || 'Global League'),
-                sport: (m.sport_key || '').includes('basketball') ? 'basketball' : 'football',
-                date: dateLabel,
-                time: timeLabel,
-                prediction: pick ? String(pick) : undefined,
-                confidence: conf !== undefined && conf !== null ? Number(conf) : undefined,
-                analysis: detailedAnalysis,
-                status: 'PENDING',
-                tags: ['LIVE ODDS', 'AI QUANT VALUE'],
-                isProPick: false, // Free pick from Odds API
-                createdAt: m.commence_time ? String(m.commence_time) : new Date().toISOString(),
-              };
-            });
+      liveMatches = dbMatches.map((m) => {
+        let timeLabel = 'Upcoming';
+        let dateLabel = 'Today';
+        if (m.matchDate) {
+          const dt = new Date(m.matchDate);
+          timeLabel = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' GMT';
+          const today = new Date();
+          const tomorrow = new Date();
+          tomorrow.setDate(today.getDate() + 1);
+          if (dt.toDateString() === today.toDateString()) {
+            dateLabel = 'Today';
+          } else if (dt.toDateString() === tomorrow.toDateString()) {
+            dateLabel = 'Tomorrow';
+          } else {
+            dateLabel = dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
           }
         }
-      }
-    } catch (oddsErr) {
-      console.error('[FEED] Failed to fetch live odds:', oddsErr);
+
+        const topPrediction = m.predictions[0];
+
+        return {
+          id: m.id,
+          homeTeam: m.homeTeam.name,
+          awayTeam: m.awayTeam.name,
+          league: m.league.name,
+          sport: m.league.sport.slug,
+          date: dateLabel,
+          time: timeLabel,
+          prediction: topPrediction?.selection || 'Pending AI Analysis',
+          confidence: topPrediction?.confidence || undefined,
+          analysis: topPrediction?.explanation?.content || 'AI analysis is currently processing for this fixture.',
+          status: m.status,
+          tags: topPrediction?.isPremium ? ['VIP PRO', 'AI SIGNAL'] : ['FREE PICKS', 'LIVE ODDS'],
+          isProPick: topPrediction?.isPremium || false,
+          isFreePick: !topPrediction?.isPremium,
+          createdAt: m.createdAt.toISOString(),
+        };
+      });
+    } catch (dbErr) {
+      console.error('[FEED] Failed to fetch live matches from DB:', dbErr);
     }
 
     // Separate into proPicks (all admin picks) and matches (live Odds API fixtures).

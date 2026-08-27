@@ -32,18 +32,22 @@ export const metadata: Metadata = {
     template: "%s | Strike IQ",
   },
   description:
-    "Institutional-grade AI football and basketball betting intelligence. Strike IQ analyzes thousands of quantitative data points across Europe's Top 5 Football Leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), UEFA Champions League (UCL), and NBA to deliver high-EV predictions, confidence ratings, and bankroll discipline. Data over gut—every stake reasoned.",
+    "Institutional-grade AI football and basketball betting intelligence. Strike IQ analyzes thousands of quantitative data points across Europe's Top Football Leagues (Premier League, Championship, La Liga, Serie A, Bundesliga, Ligue 1, Süper Lig), UEFA Champions League (UCL), and NBA to deliver high-EV predictions, confidence ratings, and bankroll discipline. Data over gut—every stake reasoned.",
   keywords: [
     "AI football predictions",
     "football betting intelligence",
     "Premier League AI betting",
+    "Championship betting predictions",
+    "EFL Championship AI tips",
     "La Liga football predictions",
     "Serie A betting model",
     "Bundesliga AI predictions",
     "Ligue 1 betting tips",
+    "Süper Lig Turkey football predictions",
+    "Turkish football betting AI",
     "UCL Champions League predictions",
     "NBA basketball betting model",
-    "top 5 football leagues AI",
+    "top football leagues AI",
     "sports betting quantitative analysis",
     "value betting football",
     "Strike IQ",
@@ -66,7 +70,7 @@ export const metadata: Metadata = {
     siteName: "Strike IQ",
     title: "Strike IQ | AI-Powered Football & Basketball Betting Intelligence",
     description:
-      "Institutional-grade AI football and basketball betting intelligence. Quantitative predictive modeling and confidence scores across Europe's Top 5 Leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), UCL, and NBA.",
+      "Institutional-grade AI football and basketball betting intelligence. Quantitative predictive modeling and confidence scores across Europe's Top Leagues (Premier League, Championship, La Liga, Serie A, Bundesliga, Ligue 1, Süper Lig), UCL, and NBA.",
     images: [
       {
         url: "/banner-section.png",
@@ -80,7 +84,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Strike IQ | AI-Powered Football & Basketball Betting Intelligence",
     description:
-      "Institutional-grade AI football and basketball betting intelligence. Quantitative predictive modeling and confidence scores across Europe's Top 5 Leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), UCL, and NBA.",
+      "Institutional-grade AI football and basketball betting intelligence. Quantitative predictive modeling and confidence scores across Europe's Top Leagues (Premier League, Championship, La Liga, Serie A, Bundesliga, Ligue 1, Süper Lig), UCL, and NBA.",
     images: ["/banner-section.png"],
   },
   robots: {
@@ -109,7 +113,7 @@ const jsonLd = {
         url: `${siteUrl}/favicon.ico`,
       },
       description:
-        "Institutional-grade AI football and basketball betting intelligence platform covering Europe's Top 5 Leagues, UCL, and NBA.",
+        "Institutional-grade AI football and basketball betting intelligence platform covering Europe's Top Leagues (Premier League, Championship, La Liga, Serie A, Bundesliga, Ligue 1, Süper Lig), UCL, and NBA.",
     },
     {
       "@type": "WebSite",
@@ -126,7 +130,7 @@ const jsonLd = {
       applicationCategory: "SportsApplication",
       operatingSystem: "Web",
       description:
-        "AI-powered predictive modeling and quantitative betting analytics terminal covering Europe's Top 5 Football Leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), UEFA Champions League (UCL), and Basketball (NBA).",
+        "AI-powered predictive modeling and quantitative betting analytics terminal covering Europe's Top Football Leagues (Premier League, Championship, La Liga, Serie A, Bundesliga, Ligue 1, Süper Lig), UEFA Champions League (UCL), and Basketball (NBA).",
       offers: {
         "@type": "Offer",
         price: "0",
