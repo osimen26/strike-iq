@@ -44,18 +44,18 @@ export const REGIONAL_PRICING_CONFIG: Record<string, RegionalConfig> = {
         periodLabel: '/ TIER'
       },
       pro_monthly: {
-        price: 5000,
-        formattedPrice: '₦5,000',
+        price: 3000,
+        formattedPrice: '₦3,000',
         interval: 'MONTHLY',
         periodLabel: '/ MONTH',
-        subpriceLabel: 'Billed annually (₦54,000/yr)'
+        subpriceLabel: 'Billed annually (₦30,000/yr)'
       },
       pro_yearly: {
-        price: 54000,
-        formattedPrice: '₦54,000',
+        price: 30000,
+        formattedPrice: '₦30,000',
         interval: 'YEARLY',
         periodLabel: '/ YEAR',
-        subpriceLabel: '₦4,500 / month effective rate'
+        subpriceLabel: '₦2,500 / month effective rate'
       }
     }
   },
