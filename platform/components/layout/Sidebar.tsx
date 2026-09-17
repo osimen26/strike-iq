@@ -63,7 +63,7 @@ export default function Sidebar() {
 
       {/* Sidebar Container */}
       <div className={`
-        fixed top-0 left-0 h-screen w-64 bg-[#000000] border-r border-zinc-800/80 flex flex-col z-50 transition-transform duration-300 ease-in-out
+        fixed top-0 left-0 h-screen w-64 bg-black border-r border-zinc-800/80 flex flex-col z-50 transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="p-6 flex items-center justify-between border-b border-zinc-900">
