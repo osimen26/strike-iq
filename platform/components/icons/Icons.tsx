@@ -35,7 +35,7 @@ export function CrownIcon(props: IconProps) { return <SolarCrownIcon {...props a
 export function SettingsIcon(props: IconProps) { return <SolarSettingsIcon {...props as any} />; }
 export function UsersIcon(props: IconProps) { return <UsersGroupTwoRoundedIcon {...props as any} />; }
 export function LockIcon(props: IconProps) { return <LockPasswordIcon {...props as any} />; }
-export function SparklesIcon(props: IconProps) { return <MagicStickIcon {...props as any} />; }
+export function SparklesIcon(props: IconProps) { return <MagicWandIcon {...props as any} />; }
 export function ShieldCheckIcon(props: IconProps) { return <SolarShieldCheckIcon {...props as any} />; }
 export function CheckCircleIcon(props: IconProps) { return <SolarCheckCircleIcon {...props as any} />; }
 export function XCircleIcon(props: IconProps) { return <CloseCircleIcon {...props as any} />; }
