@@ -66,10 +66,8 @@ export default function AdminLogin() {
       setLoading(false);
     } else {
       document.cookie = "strike_admin_auth=true; path=/; max-age=86400; SameSite=Lax";
-      router.push("/admin");
-      router.refresh();
+      window.location.href = "/admin";
     }
-  };
 
   return (
     <div className="w-full flex flex-col gap-8 font-main text-white">
