@@ -4,23 +4,22 @@ import { checkRateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from '@/l
 
 export const dynamic = 'force-dynamic';
 
+import { COMPETITIONS } from '@/lib/competitions';
+
 const DEFAULT_SPORTS = [
   { name: 'Football', slug: 'football' },
   { name: 'Basketball', slug: 'basketball' },
 ];
 
-const DEFAULT_LEAGUES = [
-  { name: 'Premier League', country: 'England', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/39.png' },
-  { name: 'Championship', country: 'England', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/40.png' },
-  { name: 'UEFA Champions League', country: 'Europe', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/2.png' },
-  { name: 'La Liga', country: 'Spain', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/140.png' },
-  { name: 'Serie A', country: 'Italy', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/135.png' },
-  { name: 'Bundesliga', country: 'Germany', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/78.png' },
-  { name: 'Ligue 1', country: 'France', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/61.png' },
-  { name: 'Süper Lig', country: 'Turkey', sportSlug: 'football', logo: 'https://media.api-sports.io/football/leagues/203.png' },
-  { name: 'NBA', country: 'USA', sportSlug: 'basketball', logo: 'https://media.api-sports.io/basketball/leagues/12.png' },
-  { name: 'EuroLeague', country: 'Europe', sportSlug: 'basketball', logo: 'https://media.api-sports.io/basketball/leagues/120.png' },
-];
+const DEFAULT_LEAGUES = COMPETITIONS.map(c => ({
+  name: c.name,
+  country: c.country,
+  sportSlug: c.sport,
+  logo: c.logo || '',
+  tier: c.tier,
+  providerKey: c.providerKey,
+  priority: c.priority,
+}));
 
 export async function GET(req: Request) {
   const ip = getClientIp(req);
@@ -61,7 +60,7 @@ export async function GET(req: Request) {
     });
 
     // Auto-seed missing sports and leagues
-    const existingLeagueNames = new Set(leagues.map(l => l.name));
+    const existingLeagueNames = new Set(leagues.map((l: any) => l.name));
     const missingLeagues = DEFAULT_LEAGUES.filter(l => !existingLeagueNames.has(l.name));
 
     if (missingLeagues.length > 0) {
@@ -87,7 +86,10 @@ export async function GET(req: Request) {
                 logo: l.logo,
                 sportId: sportId,
                 isActive: true,
-              },
+                tier: l.tier,
+                providerKey: l.providerKey,
+                priority: l.priority,
+              } as any,
             });
           }
         }

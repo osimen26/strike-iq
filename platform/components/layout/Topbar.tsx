@@ -39,7 +39,7 @@ export default function Topbar() {
   const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Strategist";
 
   return (
-    <header className="h-16 border-b border-zinc-800/80 bg-[#000000] flex items-center justify-between pl-14 pr-4 sm:pr-8 lg:px-8 sticky top-0 z-10">
+    <header className="h-16 border-b border-zinc-800/80 bg-[#000000] flex items-center justify-between pl-14 pr-4 sm:pr-8 lg:px-8 sticky top-0 z-50">
       <div className="flex-1">
         {/* Search placeholder */}
         <div className="relative w-64 hidden sm:block">

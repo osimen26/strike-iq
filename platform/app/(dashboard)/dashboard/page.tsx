@@ -11,6 +11,7 @@ import {
   CopyIcon,
   CrownIcon,
   SparklesIcon,
+  ChartBarIcon,
 } from "@/components/icons/Icons";
 import { MatchCard } from "@/components/dashboard/MatchCard";
 import SignInModal from "@/components/auth/SignInModal";
@@ -107,6 +108,34 @@ export default function PredictionsFeed() {
               {filter === "All" ? "ALL MARKETS" : filter.toUpperCase()}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* AI Market Intelligence Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="bg-[#09090b] border border-zinc-800 rounded-xl p-5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10"><ZapIcon size={40} /></div>
+          <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Active AI Signals</h3>
+          <div className="text-3xl font-extrabold text-white">{filteredMatches.length} <span className="text-sm font-normal text-zinc-500">picks</span></div>
+          <div className="text-[10px] text-primary-500 font-mono mt-2 flex items-center gap-1">
+             <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></span> LIVE SCANNERS ACTIVE
+          </div>
+        </div>
+        <div className="bg-[#09090b] border border-zinc-800 rounded-xl p-5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10"><CrownIcon size={40} /></div>
+          <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Pro Competitions</h3>
+          <div className="text-3xl font-extrabold text-white">20+ <span className="text-sm font-normal text-zinc-500">leagues</span></div>
+          <div className="text-[10px] text-amber-500 font-mono mt-2 flex items-center gap-1">
+             {isProUser ? 'VIP ACCESS UNLOCKED' : 'PRO SUBSCRIPTION REQUIRED'}
+          </div>
+        </div>
+        <div className="bg-[#09090b] border border-zinc-800 rounded-xl p-5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10"><ChartBarIcon size={40} /></div>
+          <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Model Accuracy (7D)</h3>
+          <div className="text-3xl font-extrabold text-white">82.4% <span className="text-sm font-normal text-zinc-500">win rate</span></div>
+          <div className="text-[10px] text-primary-500 font-mono mt-2 flex items-center gap-1">
+             STRIKE-IQ QUANT V4
+          </div>
         </div>
       </div>
 

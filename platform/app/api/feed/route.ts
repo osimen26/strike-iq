@@ -171,7 +171,7 @@ export async function GET(req: Request) {
         take: 30
       });
 
-      liveMatches = dbMatches.map((m) => {
+      liveMatches = dbMatches.map((m: any) => {
         let timeLabel = 'Upcoming';
         let dateLabel = 'Today';
         if (m.matchDate) {
@@ -191,23 +191,32 @@ export async function GET(req: Request) {
 
         const topPrediction = m.predictions[0];
 
-        return {
-          id: m.id,
-          homeTeam: m.homeTeam.name,
-          awayTeam: m.awayTeam.name,
-          league: m.league.name,
-          sport: m.league.sport.slug,
-          date: dateLabel,
-          time: timeLabel,
-          prediction: topPrediction?.selection || 'Pending AI Analysis',
-          confidence: topPrediction?.confidence || undefined,
-          analysis: topPrediction?.explanation?.content || 'AI analysis is currently processing for this fixture.',
-          status: m.status,
-          tags: topPrediction?.isPremium ? ['VIP PRO', 'AI SIGNAL'] : ['FREE PICKS', 'LIVE ODDS'],
-          isProPick: topPrediction?.isPremium || false,
-          isFreePick: !topPrediction?.isPremium,
-          createdAt: m.createdAt.toISOString(),
-        };
+          const isProLeague = m.league.tier === 'pro';
+          const isPremiumPrediction = topPrediction?.isPremium || false;
+          const isProPick = isProLeague || isPremiumPrediction;
+          
+          let tags = ['LIVE ODDS'];
+          if (isProLeague) tags.push('PRO LEAGUE');
+          if (isPremiumPrediction) tags.push('VIP PRO', 'AI SIGNAL');
+          if (!isProPick) tags.push('FREE PICKS');
+
+          return {
+            id: m.id,
+            homeTeam: m.homeTeam.name,
+            awayTeam: m.awayTeam.name,
+            league: m.league.name,
+            sport: m.league.sport.slug,
+            date: dateLabel,
+            time: timeLabel,
+            prediction: topPrediction?.selection || 'Pending AI Analysis',
+            confidence: topPrediction?.confidence || undefined,
+            analysis: topPrediction?.explanation?.content || 'AI analysis is currently processing for this fixture.',
+            status: m.status,
+            tags,
+            isProPick,
+            isFreePick: !isProPick,
+            createdAt: m.createdAt.toISOString(),
+          };
       });
     } catch (dbErr) {
       console.error('[FEED] Failed to fetch live matches from DB:', dbErr);

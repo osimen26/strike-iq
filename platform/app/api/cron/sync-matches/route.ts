@@ -4,17 +4,7 @@ import { OddsApiFixture } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-const SPORT_KEY_TO_LEAGUE: Record<string, { leagueName: string; sportSlug: string }> = {
-  'soccer_epl': { leagueName: 'Premier League', sportSlug: 'football' },
-  'soccer_spain_la_liga': { leagueName: 'La Liga', sportSlug: 'football' },
-  'soccer_italy_serie_a': { leagueName: 'Serie A', sportSlug: 'football' },
-  'soccer_germany_bundesliga': { leagueName: 'Bundesliga', sportSlug: 'football' },
-  'soccer_france_ligue_one': { leagueName: 'Ligue 1', sportSlug: 'football' },
-  'soccer_uefa_champs_league': { leagueName: 'UEFA Champions League', sportSlug: 'football' },
-  'soccer_uefa_europa_league': { leagueName: 'UEFA Europa League', sportSlug: 'football' },
-  'basketball_nba': { leagueName: 'NBA', sportSlug: 'basketball' },
-  'basketball_euroleague': { leagueName: 'EuroLeague', sportSlug: 'basketball' },
-};
+import { getSyncEnabledCompetitions } from "@/lib/competitions";
 
 /**
  * GET /api/cron/sync-matches
@@ -38,8 +28,11 @@ export async function GET(request: Request) {
 
     let syncedCount = 0;
 
+    const syncComps = getSyncEnabledCompetitions();
+
     // Loop through each allowed sport key and fetch specifically, to avoid pagination/truncation issues
-    for (const [sportKey, mapping] of Object.entries(SPORT_KEY_TO_LEAGUE)) {
+    for (const comp of syncComps) {
+      const sportKey = comp.providerKey;
       console.log(`[SYNC_MATCHES] Fetching odds for ${sportKey}...`);
       const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${apiKey}&regions=us,eu&markets=h2h&oddsFormat=decimal`;
       
@@ -52,8 +45,8 @@ export async function GET(request: Request) {
       const rawOdds: OddsApiFixture[] = await res.json();
       
       // Ensure Sport and League exist in DB before adding matches
-      const sport = await prisma.sport.findUnique({ where: { slug: mapping.sportSlug } });
-      let league = await prisma.league.findFirst({ where: { name: mapping.leagueName } });
+      const sport = await prisma.sport.findUnique({ where: { slug: comp.sport } });
+      let league = await prisma.league.findFirst({ where: { name: comp.name } });
       
       if (!sport || !league) {
         console.warn(`[SYNC_MATCHES] Skipping ${sportKey}, sport or league missing in DB.`);

@@ -54,7 +54,7 @@ export async function getActiveSessions(): Promise<{ success: boolean; sessions?
       user.id
     );
 
-    const parsedSessions: SessionInfo[] = dbSessions.map((s) => {
+    const parsedSessions: SessionInfo[] = dbSessions.map((s: any) => {
       const parser = new UAParser(s.user_agent || "");
       const os = parser.getOS();
       const browser = parser.getBrowser();

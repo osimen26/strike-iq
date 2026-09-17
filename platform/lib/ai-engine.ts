@@ -36,6 +36,7 @@ export async function generatePrediction(matchId: string, contextData: Record<st
 
   const prompt = `
     You are an expert sports analyst AI. Analyze the following match data and provide a quantitative prediction.
+    Always reference the specific competition name and country context in your analysis. Never fabricate statistics, historical context, or team information. If certain data points are unavailable, base your analysis strictly on the provided variables.
     Match Data: ${JSON.stringify(safeContext)}
     
     Output format MUST be strictly JSON with these exact keys:

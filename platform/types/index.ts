@@ -51,6 +51,7 @@ export interface MatchItem {
   title?: string;
   dateLabel?: string;
   competition?: string;
+  tier?: 'free' | 'pro';
 }
 
 export interface UserSummaryRow {

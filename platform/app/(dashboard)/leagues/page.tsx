@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { createClient } from "@/lib/supabase/client";
+import { ProUpsellBanner } from "@/components/dashboard/ProUpsellBanner";
+import { LockIcon } from "@/components/icons/Icons";
 
 interface League {
   id: string;
@@ -9,6 +12,7 @@ interface League {
   country?: string;
   logo?: string;
   sport: { name: string; slug: string };
+  tier: 'free' | 'pro';
   matches?: any[];
   _count?: { matches: number; predictions: number };
 }
@@ -19,6 +23,20 @@ export default function LeaguesPage() {
   const [selectedSport, setSelectedSport] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
+  const [isProUser, setIsProUser] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    // Fetch subscription status
+    fetch('/api/subscriptions/current')
+      .then((r) => r.json())
+      .then((sub) => {
+        if (sub.success && sub.isPro) {
+          setIsProUser(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetchLeagues();
@@ -31,9 +49,10 @@ export default function LeaguesPage() {
       const data = await res.json();
       if (data.success && data.data) {
         setLeagues(data.data);
-        // Select first league by default if none selected
-        if (!selectedLeague && data.data.length > 0) {
-          setSelectedLeague(data.data[0]);
+        // Select first free league by default
+        const firstFree = data.data.find((l: League) => l.tier === 'free') || data.data[0];
+        if (!selectedLeague && firstFree) {
+          setSelectedLeague(firstFree);
         }
       }
     } catch (err) {
@@ -41,12 +60,28 @@ export default function LeaguesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const filteredLeagues = leagues.filter((l) =>
     l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (l.country && l.country.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  // Group by country
+  const groupedLeagues = filteredLeagues.reduce((acc, league) => {
+    const country = league.country || 'International';
+    if (!acc[country]) acc[country] = [];
+    acc[country].push(league);
+    return acc;
+  }, {} as Record<string, League[]>);
+
+  // Sort countries (International/Europe/Asia first, then alphabetically)
+  const sortedCountries = Object.keys(groupedLeagues).sort((a, b) => {
+    const priority = ['International', 'Europe', 'Asia'];
+    if (priority.includes(a) && !priority.includes(b)) return -1;
+    if (!priority.includes(a) && priority.includes(b)) return 1;
+    return a.localeCompare(b);
+  });
 
   return (
     <div className="space-y-8 pb-16">
@@ -55,7 +90,7 @@ export default function LeaguesPage() {
         <div>
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading whitespace-nowrap">
-              Sports Competitions & Leagues
+              Sports Competitions
             </h1>
             <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-primary-600/20 text-primary-600 border border-primary-600/40 whitespace-nowrap shrink-0 shadow-[0_0_15px_rgba(19,133,97,0.15)] flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-primary-600 animate-pulse"></span>
@@ -77,42 +112,22 @@ export default function LeaguesPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[var(--color-brand-emerald)] placeholder-gray-500 shadow-inner"
             />
-            <svg className="w-4 h-4 text-gray-500 absolute right-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
           </div>
 
           <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800 w-full sm:w-auto font-mono shrink-0 overflow-x-auto max-w-full">
-            <button
-              onClick={() => setSelectedSport('all')}
-              className={`flex-1 sm:flex-initial px-5 py-2.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
-                selectedSport === 'all'
-                  ? 'bg-primary-600 text-white'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
-              }`}
-            >
-              ALL MARKETS
-            </button>
-            <button
-              onClick={() => setSelectedSport('football')}
-              className={`flex-1 sm:flex-initial px-5 py-2.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
-                selectedSport === 'football'
-                  ? 'bg-primary-600 text-white'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
-              }`}
-            >
-              FOOTBALL
-            </button>
-            <button
-              onClick={() => setSelectedSport('basketball')}
-              className={`flex-1 sm:flex-initial px-5 py-2.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
-                selectedSport === 'basketball'
-                  ? 'bg-primary-600 text-white'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
-              }`}
-            >
-              BASKETBALL
-            </button>
+            {['all', 'football', 'basketball'].map(sport => (
+              <button
+                key={sport}
+                onClick={() => setSelectedSport(sport)}
+                className={`flex-1 sm:flex-initial px-5 py-2.5 rounded-md text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider ${
+                  selectedSport === sport
+                    ? 'bg-primary-600 text-white'
+                    : 'text-zinc-400 hover:text-white hover:bg-[#121215]'
+                }`}
+              >
+                {sport === 'all' ? 'ALL MARKETS' : sport}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -131,53 +146,67 @@ export default function LeaguesPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* League Directory List (Left Column) */}
-          <div className="lg:col-span-1 space-y-3 max-h-[700px] overflow-y-auto px-1.5 py-1.5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-1">
-              Available Competitions ({filteredLeagues.length})
-            </div>
-            {filteredLeagues.map((league) => {
-              const isSelected = selectedLeague?.id === league.id;
-              return (
-                <div
-                  key={league.id}
-                  onClick={() => setSelectedLeague(league)}
-                  className={`p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all duration-200 ${
-                    isSelected
-                      ? 'bg-gradient-to-r from-emerald-950/70 via-black to-black border-[var(--color-brand-emerald)] shadow-md shadow-[var(--color-brand-emerald)]/15 ring-1 ring-[var(--color-brand-emerald)]/40'
-                      : 'bg-[var(--color-background-surface)] border-white/10 hover:border-white/20 hover:bg-white/5'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white border border-white/10 flex items-center justify-center p-1.5 shrink-0">
-                      {league.logo ? (
-                        <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
-                      ) : (
-                        <span className="text-lg">{league.sport.slug === 'football' ? '⚽' : '🏀'}</span>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-white leading-tight">{league.name}</h3>
-                      <span className="text-[11px] text-gray-400 flex items-center gap-1 mt-0.5">
-                        <span>{league.country || 'International'}</span>
-                        <span>•</span>
-                        <span className="uppercase text-[10px] text-[var(--color-brand-emerald)] font-semibold">
-                          {league.sport.name}
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="text-right">
-                    <div className="text-xs font-bold text-white">
-                      {league._count?.matches ?? 0} <span className="text-gray-500 font-normal">games</span>
-                    </div>
-                    <div className="text-[10px] text-[var(--color-brand-electricGreen)] font-medium mt-0.5">
-                      {league._count?.predictions ?? 0} AI picks
-                    </div>
-                  </div>
+          <div className="lg:col-span-1 space-y-6 max-h-[700px] overflow-y-auto px-1.5 py-1.5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {sortedCountries.map(country => (
+              <div key={country} className="space-y-3">
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-1 sticky top-0 bg-black/80 backdrop-blur pb-1 pt-2 z-10">
+                  {country}
                 </div>
-              );
-            })}
+                {groupedLeagues[country].map((league) => {
+                  const isSelected = selectedLeague?.id === league.id;
+                  const isProLocked = league.tier === 'pro' && !isProUser;
+                  
+                  return (
+                    <div
+                      key={league.id}
+                      onClick={() => setSelectedLeague(league)}
+                      className={`p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all duration-200 ${
+                        isSelected
+                          ? 'bg-gradient-to-r from-emerald-950/70 via-black to-black border-[var(--color-brand-emerald)] shadow-md shadow-[var(--color-brand-emerald)]/15 ring-1 ring-[var(--color-brand-emerald)]/40'
+                          : 'bg-[var(--color-background-surface)] border-white/10 hover:border-white/20 hover:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-white border border-white/10 flex items-center justify-center p-1.5 shrink-0">
+                          {league.logo ? (
+                            <img src={league.logo} alt={league.name} className="w-full h-full object-contain" />
+                          ) : (
+                            <span className="text-lg">{league.sport.slug === 'football' ? '⚽' : '🏀'}</span>
+                          )}
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-white leading-tight flex items-center gap-2">
+                            {league.name}
+                            {league.tier === 'pro' && (
+                              <span className="text-amber-400"><LockIcon size={12} /></span>
+                            )}
+                          </h3>
+                          <span className="text-[11px] text-gray-400 flex items-center gap-1 mt-0.5">
+                            <span className="uppercase text-[10px] text-[var(--color-brand-emerald)] font-semibold">
+                              {league.sport.name}
+                            </span>
+                            {league.tier === 'pro' && (
+                              <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">
+                                Pro
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <div className="text-xs font-bold text-white">
+                          {league._count?.matches ?? 0} <span className="text-gray-500 font-normal">games</span>
+                        </div>
+                        <div className="text-[10px] text-[var(--color-brand-electricGreen)] font-medium mt-0.5">
+                          {league._count?.predictions ?? 0} AI picks
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
 
           {/* Selected League Fixtures View (Right Column) */}
@@ -213,99 +242,102 @@ export default function LeaguesPage() {
                       className="px-4 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all flex items-center gap-1.5"
                     >
                       <span>View Live Feed</span>
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
                     </Link>
                   </div>
                 </div>
 
-                {/* Fixtures List */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    <span>Upcoming & Live Fixtures</span>
-                    <span>AI Prediction & Confidence</span>
+                {/* Upsell or Fixtures */}
+                {selectedLeague.tier === 'pro' && !isProUser ? (
+                  <div className="py-8">
+                    <ProUpsellBanner context={`Get deep AI analysis, predictions, and form intelligence for ${selectedLeague.name} and 20+ other elite competitions.`} />
                   </div>
-
-                  {!selectedLeague.matches || selectedLeague.matches.length === 0 ? (
-                    <div className="text-center py-14 border border-dashed border-white/10 rounded-xl bg-black/20">
-                      <p className="text-gray-400 text-sm font-medium">No active scheduled fixtures for {selectedLeague.name} right now.</p>
-                      <p className="text-xs text-gray-500 mt-1">Check back soon or explore another competition from the left panel.</p>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between text-xs font-bold text-gray-400 uppercase tracking-wider">
+                      <span>Upcoming & Live Fixtures</span>
+                      <span>AI Prediction & Confidence</span>
                     </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {selectedLeague.matches.map((match: any) => {
-                        const topPrediction = match.predictions && match.predictions.length > 0 ? match.predictions[0] : null;
-                        const isLive = match.status === 'IN_PROGRESS' || match.status === 'LIVE';
 
-                        return (
-                          <div
-                            key={match.id}
-                            className="p-4 rounded-xl bg-black/40 border border-white/5 hover:border-white/15 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-                          >
-                            <div className="flex items-center gap-4 w-full sm:w-auto">
-                              <div className="text-center shrink-0 w-12">
-                                <div className="text-[11px] text-gray-400 uppercase font-semibold">
-                                  {new Date(match.matchDate).toLocaleDateString([], { month: 'short', day: 'numeric' })}
-                                </div>
-                                <div className="text-xs font-bold text-white mt-0.5">
-                                  {new Date(match.matchDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </div>
-                              </div>
+                    {!selectedLeague.matches || selectedLeague.matches.length === 0 ? (
+                      <div className="text-center py-14 border border-dashed border-white/10 rounded-xl bg-black/20">
+                        <p className="text-gray-400 text-sm font-medium">No active scheduled fixtures for {selectedLeague.name} right now.</p>
+                        <p className="text-xs text-gray-500 mt-1">Check back soon or explore another competition from the left panel.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {selectedLeague.matches.map((match: any) => {
+                          const topPrediction = match.predictions && match.predictions.length > 0 ? match.predictions[0] : null;
+                          const isLive = match.status === 'IN_PROGRESS' || match.status === 'LIVE';
 
-                              <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
-
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-sm font-bold text-white">{match.homeTeam?.name || 'Home Team'}</span>
-                                  <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-white/10 text-gray-300">vs</span>
-                                  <span className="text-sm font-bold text-white">{match.awayTeam?.name || 'Away Team'}</span>
-                                </div>
-                                <div className="flex items-center gap-2 mt-1">
-                                  {isLive ? (
-                                    <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-red-500/20 text-red-400 animate-pulse border border-red-500/30">
-                                      ● LIVE SCORE: {match.homeScore ?? 0} - {match.awayScore ?? 0}
-                                    </span>
-                                  ) : (
-                                    <span className="text-[11px] text-gray-500 font-medium uppercase">
-                                      Status: {match.status}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Prediction Badge */}
-                            <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-3 sm:pt-0 border-white/5">
-                              {topPrediction ? (
-                                <div className={`px-3.5 py-2 rounded-xl border flex items-center gap-2.5 shadow-md ${
-                                  topPrediction.isPremium
-                                    ? 'bg-gradient-to-r from-amber-950/40 to-black border-amber-500/40 text-amber-300'
-                                    : 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
-                                }`}>
-                                  <div>
-                                    <div className="text-[10px] uppercase font-bold tracking-wider opacity-75">
-                                      {topPrediction.isPremium ? '👑 Pro Pick' : '⚡ AI Signal'}
-                                    </div>
-                                    <div className="text-xs font-extrabold flex items-center gap-1.5 mt-0.5">
-                                      <span>{topPrediction.selection}</span>
-                                      <span>•</span>
-                                      <span className="text-[var(--color-brand-electricGreen)]">{topPrediction.confidence}% Conf</span>
-                                    </div>
+                          return (
+                            <div
+                              key={match.id}
+                              className="p-4 rounded-xl bg-black/40 border border-white/5 hover:border-white/15 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                            >
+                              <div className="flex items-center gap-4 w-full sm:w-auto">
+                                <div className="text-center shrink-0 w-12">
+                                  <div className="text-[11px] text-gray-400 uppercase font-semibold">
+                                    {new Date(match.matchDate).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                                  </div>
+                                  <div className="text-xs font-bold text-white mt-0.5">
+                                    {new Date(match.matchDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                   </div>
                                 </div>
-                              ) : (
-                                <span className="text-xs text-gray-500 font-medium italic px-3 py-1.5 rounded-lg bg-white/5 border border-white/5">
-                                  Analyzing Odds...
-                                </span>
-                              )}
+
+                                <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
+
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm font-bold text-white">{match.homeTeam?.name || 'Home Team'}</span>
+                                    <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-white/10 text-gray-300">vs</span>
+                                    <span className="text-sm font-bold text-white">{match.awayTeam?.name || 'Away Team'}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    {isLive ? (
+                                      <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-red-500/20 text-red-400 animate-pulse border border-red-500/30">
+                                        ● LIVE SCORE: {match.homeScore ?? 0} - {match.awayScore ?? 0}
+                                      </span>
+                                    ) : (
+                                      <span className="text-[11px] text-gray-500 font-medium uppercase">
+                                        Status: {match.status}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Prediction Badge */}
+                              <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-3 sm:pt-0 border-white/5">
+                                {topPrediction ? (
+                                  <div className={`px-3.5 py-2 rounded-xl border flex items-center gap-2.5 shadow-md ${
+                                    topPrediction.isPremium
+                                      ? 'bg-gradient-to-r from-amber-950/40 to-black border-amber-500/40 text-amber-300'
+                                      : 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
+                                  }`}>
+                                    <div>
+                                      <div className="text-[10px] uppercase font-bold tracking-wider opacity-75">
+                                        {topPrediction.isPremium ? '👑 Pro Pick' : '⚡ AI Signal'}
+                                      </div>
+                                      <div className="text-xs font-extrabold flex items-center gap-1.5 mt-0.5">
+                                        <span>{topPrediction.selection}</span>
+                                        <span>•</span>
+                                        <span className="text-[var(--color-brand-electricGreen)]">{topPrediction.confidence}% Conf</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <span className="text-xs text-gray-500 font-medium italic px-3 py-1.5 rounded-lg bg-white/5 border border-white/5">
+                                    Analyzing Odds...
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
               </>
             ) : (
               <div className="text-center py-20 text-gray-500">

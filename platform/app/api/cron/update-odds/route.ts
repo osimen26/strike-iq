@@ -69,6 +69,7 @@ export async function GET(request: Request) {
         const contextData = {
           fixture: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
           league: match.league.name,
+          country: match.league.country || "International",
           sport: match.sport.name,
           matchDate: match.matchDate,
           status: match.status,

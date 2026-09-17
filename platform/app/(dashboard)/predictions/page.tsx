@@ -8,6 +8,9 @@ import SignInModal from "@/components/auth/SignInModal";
 
 export default function PredictionsFeed() {
   const [activeSport, setActiveSport] = useState("All");
+  const [activeLeague, setActiveLeague] = useState("All");
+  const [dateFilter, setDateFilter] = useState("All"); 
+  const [minConfidence, setMinConfidence] = useState(0); 
   const [searchQuery, setSearchQuery] = useState("");
   const [predictions, setPredictions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,17 +48,35 @@ export default function PredictionsFeed() {
       .finally(() => setLoading(false));
   }, []);
 
+  const uniqueLeagues = Array.from(new Set(predictions.map((p) => p.league)))
+    .filter(Boolean)
+    .sort() as string[];
+
   const filtered = predictions.filter((pred) => {
     const matchesSport =
       activeSport === "All" ||
       (activeSport === "Football" && pred.sport === "football") ||
       (activeSport === "Basketball" && pred.sport === "basketball");
+      
     const matchesSearch =
       !searchQuery ||
       pred.homeTeam?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pred.awayTeam?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pred.league?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSport && matchesSearch;
+      
+    const matchesLeague = activeLeague === "All" || pred.league === activeLeague;
+    
+    const conf = pred.confidence || 0;
+    const matchesConfidence = conf >= minConfidence;
+    
+    let matchesDate = true;
+    if (dateFilter === "Upcoming") {
+      if (pred.status === "FINISHED" || pred.status === "COMPLETED") matchesDate = false;
+    } else if (dateFilter === "Past") {
+      if (pred.status !== "FINISHED" && pred.status !== "COMPLETED") matchesDate = false;
+    }
+
+    return matchesSport && matchesSearch && matchesLeague && matchesConfidence && matchesDate;
   });
 
   return (
@@ -86,21 +107,63 @@ export default function PredictionsFeed() {
         </div>
       </div>
 
-      {/* Sport Filters */}
-      <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800 self-start shrink-0 overflow-x-auto max-w-full font-mono">
-        {["All", "Football", "Basketball"].map((sport) => (
-          <button
-            key={sport}
-            onClick={() => setActiveSport(sport)}
-            className={`px-5 py-2 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap uppercase tracking-wider ${
-              activeSport === sport
-                ? "bg-primary-600 text-white"
-                : "text-zinc-400 hover:text-white hover:bg-[#121215]"
-            }`}
+      {/* Advanced Filters */}
+      <div className="flex flex-col md:flex-row gap-4">
+        {/* Sport Filters */}
+        <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800 shrink-0 font-mono">
+          {["All", "Football", "Basketball"].map((sport) => (
+            <button
+              key={sport}
+              onClick={() => {
+                setActiveSport(sport);
+                setActiveLeague("All"); // Reset league when sport changes
+              }}
+              className={`px-4 py-2 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap uppercase tracking-wider ${
+                activeSport === sport
+                  ? "bg-primary-600 text-white"
+                  : "text-zinc-400 hover:text-white hover:bg-[#121215]"
+              }`}
+            >
+              {sport === "All" ? "ALL SPORTS" : sport}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap gap-3 font-mono text-xs w-full md:w-auto">
+          {/* League Dropdown */}
+          <select
+            value={activeLeague}
+            onChange={(e) => setActiveLeague(e.target.value)}
+            className="bg-[#09090b] border border-zinc-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-primary-600 appearance-none flex-1 min-w-[140px]"
           >
-            {sport === "All" ? "ALL MARKETS" : sport.toUpperCase()}
-          </button>
-        ))}
+            <option value="All">ALL LEAGUES</option>
+            {uniqueLeagues.map(league => (
+              <option key={league} value={league}>{league.toUpperCase()}</option>
+            ))}
+          </select>
+
+          {/* Date Filter */}
+          <select
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="bg-[#09090b] border border-zinc-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-primary-600 appearance-none flex-1 min-w-[120px]"
+          >
+            <option value="All">ALL DATES</option>
+            <option value="Upcoming">UPCOMING</option>
+            <option value="Past">PAST RESULTS</option>
+          </select>
+
+          {/* Confidence Filter */}
+          <select
+            value={minConfidence}
+            onChange={(e) => setMinConfidence(Number(e.target.value))}
+            className="bg-[#09090b] border border-zinc-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-primary-600 appearance-none flex-1 min-w-[140px]"
+          >
+            <option value={0}>ALL CONFIDENCE</option>
+            <option value={70}>70%+ CONFIDENCE</option>
+            <option value={80}>80%+ CONFIDENCE (VIP)</option>
+          </select>
+        </div>
       </div>
 
       {/* Feed */}
@@ -113,21 +176,17 @@ export default function PredictionsFeed() {
         <div className="p-12 mt-4 rounded-xl bg-[#09090b] border border-dashed border-zinc-800 text-center flex flex-col items-center justify-center text-zinc-400 font-mono">
           <span className="text-5xl mb-4 opacity-50">⚽</span>
           <h3 className="text-base text-white font-heading tracking-wide uppercase mb-2">
-            No {activeSport !== "All" ? activeSport.toUpperCase() : ""} Predictions Found
+            No Predictions Found
           </h3>
           <p className="text-xs max-w-md text-zinc-400 leading-relaxed font-sans mb-6">
-            {searchQuery
-              ? `No results for "${searchQuery}". Try a different search term.`
-              : "No predictions available for this market right now. Check back soon for new freemium daily slips and VIP picks."}
+            Adjust your filters or try a different search term.
           </p>
-          {(activeSport !== "All" || searchQuery) && (
-            <button
-              onClick={() => { setActiveSport("All"); setSearchQuery(""); }}
-              className="px-5 py-2 rounded-lg bg-primary-600 text-white text-xs font-mono font-bold hover:bg-[#0f6b4d] transition-all uppercase tracking-wider"
-            >
-              View All Markets
-            </button>
-          )}
+          <button
+            onClick={() => { setActiveSport("All"); setActiveLeague("All"); setDateFilter("All"); setMinConfidence(0); setSearchQuery(""); }}
+            className="px-5 py-2 rounded-lg bg-primary-600 text-white text-xs font-mono font-bold hover:bg-[#0f6b4d] transition-all uppercase tracking-wider"
+          >
+            Clear Filters
+          </button>
         </div>
       ) : (
         <div className="space-y-4">

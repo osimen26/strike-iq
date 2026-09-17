@@ -148,22 +148,22 @@ export function MatchCardVerdict({
                     window.location.href = "/dashboard/subscription";
                   }
                 }}
-                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#09090b]/95 rounded-lg border border-zinc-800 p-3 text-center cursor-pointer hover:bg-black transition-all group/lock animate-fadeIn"
+                className="absolute -inset-2 z-30 flex flex-col items-center justify-center bg-black/40 backdrop-blur-md rounded-xl border border-white/5 p-3 text-center cursor-pointer hover:bg-black/60 transition-all duration-300 group/lock animate-fadeIn shadow-2xl"
               >
-                <div className="w-8 h-8 rounded-xl bg-[#121215] border border-zinc-800 flex items-center justify-center mb-1 transition-transform">
-                  <LockIcon size={16} className="text-primary-600" />
+                <div className="w-8 h-8 rounded-full bg-primary-600/10 border border-primary-600/30 flex items-center justify-center mb-2 shadow-[0_0_15px_rgba(var(--color-primary-600),0.2)]">
+                  <LockIcon size={14} className="text-primary-600" />
                 </div>
-                <span className="text-[11px] font-mono font-bold text-white uppercase tracking-wider mb-0.5">
+                <span className="text-[11px] font-mono font-bold text-white uppercase tracking-wider mb-1 shadow-sm">
                   {match.bookingCode
                     ? `${match.bookmaker || "VIP"} CODE LOCKED`
                     : "VIP GAME VERDICT LOCKED"}
                 </span>
-                <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-primary-600 tracking-widest">
-                  <ZapIcon size={12} />
+                <span className="flex items-center gap-1 text-[9px] font-mono font-bold text-primary-500 tracking-widest bg-primary-950/40 px-2 py-0.5 rounded-full border border-primary-900/50">
+                  <ZapIcon size={10} />
                   <span>
                     {requiresGuestAuth
-                      ? "SIGN IN OR REGISTER TO VIEW VERDICT"
-                      : `UPGRADE TO PRO (${proPriceText}) TO UNLOCK`}
+                      ? "SIGN IN TO UNLOCK"
+                      : `UPGRADE TO PRO TO UNLOCK`}
                   </span>
                 </span>
               </div>

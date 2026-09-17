@@ -82,6 +82,9 @@ model League {
   country     String?
   logo        String?
   isActive    Boolean  @default(true)
+  tier        String   @default("free")  // "free" | "pro"
+  providerKey String?                    // The Odds API sport_key
+  priority    Int      @default(50)       // Lower = higher priority in UI
   matches     Match[]
   predictions Prediction[]
   

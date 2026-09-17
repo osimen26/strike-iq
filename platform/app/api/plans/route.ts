@@ -85,7 +85,7 @@ export async function GET(req: Request) {
       plans = seededPlans;
     }
 
-    const localizedPlans = plans.map((plan) => {
+    const localizedPlans = plans.map((plan: any) => {
       const loc = getLocalizedPlanPrice(plan.name, plan.interval || 'MONTHLY', targetCountry);
       return {
         ...plan,
