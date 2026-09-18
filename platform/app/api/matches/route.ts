@@ -22,11 +22,12 @@ export async function GET(request: Request) {
   try {
     // The Odds API endpoint for upcoming matches across sports
     // We request 'upcoming' which gives the next 8 matches across multiple sports
-    // We can also query specific sports like 'soccer_epl' or 'basketball_nba'
-    const url = `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${API_KEY}&regions=us,eu&markets=h2h&oddsFormat=decimal`;
+    // COST OPTIMIZATION (Free Tier limit 500/mo):
+    // - Changed regions=us,eu to regions=eu (Cuts cost from 2 credits to 1 credit per request)
+    const url = `https://api.the-odds-api.com/v4/sports/${sport}/odds/?apiKey=${API_KEY}&regions=eu&markets=h2h&oddsFormat=decimal`;
 
     const res = await fetch(url, {
-      next: { revalidate: 3600 } // Cache for 1 hour to save API credits
+      next: { revalidate: 10800 } // Cache for 3 hours to guarantee < 500 requests per month
     });
 
     if (!res.ok) {

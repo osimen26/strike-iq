@@ -34,7 +34,7 @@ export async function GET(request: Request) {
     for (const comp of syncComps) {
       const sportKey = comp.providerKey;
       console.log(`[SYNC_MATCHES] Fetching odds for ${sportKey}...`);
-      const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${apiKey}&regions=us,eu&markets=h2h&oddsFormat=decimal`;
+      const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${apiKey}&regions=eu&markets=h2h&oddsFormat=decimal`;
       
       const res = await fetch(url);
       if (!res.ok) {
