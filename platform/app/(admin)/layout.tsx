@@ -65,7 +65,7 @@ export default async function AdminLayout({
         <header className="hidden md:flex h-16 border-b border-white/10 bg-black/20 items-center px-8 shrink-0">
           <h2 className="text-lg font-semibold text-gray-300">System Control Panel</h2>
         </header>
-        <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-auto min-w-0">
+        <main className="flex-1 p-4 pt-20 sm:p-6 md:p-8 md:pt-8 overflow-auto min-w-0">
           {children}
         </main>
       </div>

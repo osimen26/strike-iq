@@ -46,7 +46,7 @@ export default function AdminSidebar() {
   return (
     <>
       {/* MOBILE TOP HEADER (md:hidden) */}
-      <header className="md:hidden h-16 bg-[#0c0c0e] border-b border-zinc-800/80 px-4 flex items-center justify-between sticky top-0 z-40 shrink-0 shadow-md">
+      <header className="md:hidden h-16 bg-[#0c0c0e] border-b border-zinc-800/80 px-4 flex items-center justify-between fixed top-0 left-0 right-0 z-[60] shadow-md">
         <div className="flex items-center space-x-2 text-primary-600 font-heading text-lg">
           <span className="text-xl text-primary-600">
             <SettingsIcon size={20} />
@@ -75,7 +75,7 @@ export default function AdminSidebar() {
       {/* MOBILE BACKDROP & DRAWER (md:hidden) */}
       {mobileMenuOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col"
+          className="md:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex flex-col"
           onClick={() => setMobileMenuOpen(false)}
         >
           <div 

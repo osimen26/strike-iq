@@ -47,7 +47,7 @@ export default function Sidebar() {
       {/* Mobile Hamburger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="lg:hidden fixed top-3 left-4 z-50 p-2 bg-[#09090b] rounded-md border border-zinc-800 text-white hover:bg-zinc-800 transition-colors"
+        className="lg:hidden fixed top-3 left-4 z-[60] p-2 bg-[#09090b] rounded-md border border-zinc-800 text-white hover:bg-zinc-800 transition-colors"
         aria-label="Open menu"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,14 +58,14 @@ export default function Sidebar() {
       {/* Mobile Overlay */}
       {isOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/80 z-40 transition-opacity"
+          className="lg:hidden fixed inset-0 bg-black/80 z-[60] transition-opacity"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Sidebar Container */}
       <div className={`
-        fixed top-0 left-0 h-screen w-64 bg-black border-r border-zinc-800/80 flex flex-col z-50 transition-transform duration-300 ease-in-out
+        fixed top-0 left-0 h-screen w-64 bg-black border-r border-zinc-800/80 flex flex-col z-[60] transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="p-6 flex items-center justify-between border-b border-zinc-900">
