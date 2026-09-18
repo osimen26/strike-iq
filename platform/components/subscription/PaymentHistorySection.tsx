@@ -2,7 +2,17 @@
 
 import React from "react";
 import Link from "next/link";
-import type { Plan, PaymentRecord } from "@/types";
+import type { PaymentRecord } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface PaymentHistorySectionProps {
   payments: PaymentRecord[];
@@ -17,22 +27,22 @@ function currencySymbol(code: string) {
   return "$";
 }
 
-// ─── Status badge ─────────────────────────────────────────────────────────────
+// ─── Status badge using shadcn Badge ─────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
-  const cls =
+  const styles =
     status === "SUCCESSFUL"
-      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+      ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25"
       : status === "PENDING"
-      ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-      : "bg-red-500/20 text-red-400 border border-red-500/30";
+      ? "bg-amber-500/20 text-amber-400 border-amber-500/30 hover:bg-amber-500/25"
+      : "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/25";
   return (
-    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${cls}`}>
+    <Badge className={`text-[10px] font-extrabold uppercase ${styles}`}>
       {status}
-    </span>
+    </Badge>
   );
 }
 
-// ─── Paginated Table ──────────────────────────────────────────────────────────
+// ─── Paginated Table using shadcn Table ───────────────────────────────────────
 const PAGE_SIZE = 5;
 
 function PaginatedTable({ payments }: { payments: PaymentRecord[] }) {
@@ -44,53 +54,49 @@ function PaginatedTable({ payments }: { payments: PaymentRecord[] }) {
 
   return (
     <div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-white/10 text-[11px] uppercase tracking-wider text-gray-400 bg-black/20">
-              <th className="py-3 px-4 font-semibold">Date</th>
-              <th className="py-3 px-4 font-semibold">Reference</th>
-              <th className="py-3 px-4 font-semibold">Plan</th>
-              <th className="py-3 px-4 font-semibold">Amount</th>
-              <th className="py-3 px-4 font-semibold">Method</th>
-              <th className="py-3 px-4 font-semibold text-right">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5 text-xs">
+      <div className="overflow-x-auto rounded-lg border border-zinc-800/60">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b border-white/10 bg-black/20 hover:bg-black/20">
+              <TableHead className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold py-3">Date</TableHead>
+              <TableHead className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold py-3">Reference</TableHead>
+              <TableHead className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold py-3">Plan</TableHead>
+              <TableHead className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold py-3">Amount</TableHead>
+              <TableHead className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold py-3">Method</TableHead>
+              <TableHead className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold py-3 text-right">Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {visible.map((tx) => (
-              <tr key={tx.id} className="hover:bg-white/5 transition-colors">
-                <td className="py-3.5 px-4 text-gray-300">
+              <TableRow key={tx.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                <TableCell className="py-3.5 text-gray-300 text-xs">
                   {new Date(tx.createdAt).toLocaleDateString()}{" "}
                   <span className="text-gray-500 text-[10px]">
-                    {new Date(tx.createdAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {new Date(tx.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </span>
-                </td>
-                <td className="py-3.5 px-4 font-mono text-[11px] text-gray-400 max-w-[200px] truncate">
+                </TableCell>
+                <TableCell className="py-3.5 font-mono text-[11px] text-gray-400 max-w-[200px] truncate">
                   {tx.reference}
-                </td>
-                <td className="py-3.5 px-4 font-bold text-white">
+                </TableCell>
+                <TableCell className="py-3.5 font-bold text-white text-xs">
                   {tx.plan?.name || "Pro Plan"}
-                </td>
-                <td className="py-3.5 px-4 font-bold text-[var(--color-brand-electricGreen)]">
-                  {currencySymbol(tx.currency)}
-                  {tx.amount.toFixed(2)}
-                </td>
-                <td className="py-3.5 px-4 text-gray-300 uppercase">
+                </TableCell>
+                <TableCell className="py-3.5 font-bold text-primary-600 text-xs">
+                  {currencySymbol(tx.currency)}{tx.amount.toFixed(2)}
+                </TableCell>
+                <TableCell className="py-3.5 text-gray-300 uppercase text-xs">
                   {tx.paymentMethod || "Card / Bank"}
-                </td>
-                <td className="py-3.5 px-4 text-right">
+                </TableCell>
+                <TableCell className="py-3.5 text-right">
                   <StatusBadge status={tx.status} />
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination Controls using shadcn Button */}
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-5 pt-4 border-t border-white/10">
           <p className="text-xs text-gray-500 font-mono">
@@ -99,40 +105,40 @@ function PaginatedTable({ payments }: { payments: PaymentRecord[] }) {
             of{" "}
             <span className="text-white font-bold">{payments.length}</span> transactions
           </p>
-
           <div className="flex items-center gap-1.5">
-            {/* Prev */}
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-gray-300 font-mono font-bold transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="bg-white/5 border-white/10 text-gray-300 font-mono text-xs h-8 hover:bg-white/10 disabled:opacity-30"
             >
               ← Prev
-            </button>
-
-            {/* Page number buttons */}
+            </Button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button
+              <Button
                 key={p}
+                variant={p === page ? "default" : "outline"}
+                size="sm"
                 onClick={() => setPage(p)}
-                className={`w-7 h-7 rounded-md text-xs font-mono font-bold transition-colors ${
+                className={`w-8 h-8 text-xs font-mono font-bold p-0 ${
                   p === page
-                    ? "bg-[#10b981] text-white shadow-[0_0_10px_rgba(16,185,129,0.3)]"
-                    : "bg-white/5 hover:bg-white/10 text-gray-400 border border-white/10"
+                    ? "bg-primary-600 hover:bg-primary-600/90 text-white border-0 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                    : "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10"
                 }`}
               >
                 {p}
-              </button>
+              </Button>
             ))}
-
-            {/* Next */}
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-gray-300 font-mono font-bold transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="bg-white/5 border-white/10 text-gray-300 font-mono text-xs h-8 hover:bg-white/10 disabled:opacity-30"
             >
               Next →
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -181,11 +187,10 @@ export function PaymentHistorySection({ payments }: PaymentHistorySectionProps) 
             risk management alerts.
           </p>
         </div>
-        <Link
-          href="mailto:syndicate@strikeiq.ai"
-          className="px-6 py-3 rounded-xl font-bold text-xs uppercase bg-white text-black hover:bg-gray-200 transition-all shrink-0 shadow-lg"
-        >
-          Talk to Syndicate Desk
+        <Link href="mailto:syndicate@strikeiq.ai">
+          <Button className="bg-white text-black hover:bg-gray-200 font-bold text-xs uppercase shrink-0 shadow-lg rounded-xl px-6 py-3 h-auto">
+            Talk to Syndicate Desk
+          </Button>
         </Link>
       </div>
     </>

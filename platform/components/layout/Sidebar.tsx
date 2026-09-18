@@ -11,6 +11,8 @@ import {
   CrownIcon,
   SettingsIcon,
 } from "@/components/icons/Icons";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const navigation = [
   { name: "Predictions Feed", href: "/dashboard", icon: <ZapIcon size={18} /> },
@@ -98,16 +100,18 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* Bottom CTA — only shown to free users */}
+        {/* Bottom CTA */}
         <div className="p-4 border-t border-zinc-900">
           {isPro === true ? (
             // Pro user — show status badge instead of upgrade prompt
             <div className="p-4 rounded-xl bg-[#09090b] border border-primary-600/40 shadow-md">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-primary-600">Pro Active</span>
+                <Badge variant="outline" className="text-[10px] font-mono border-primary-600/50 text-primary-600 uppercase tracking-wider bg-primary-600/10">
+                  Pro Active
+                </Badge>
                 <span className="text-primary-600"><CrownIcon size={16} /></span>
               </div>
-              <p className="text-[11px] text-zinc-400 leading-relaxed font-sans">
+              <p className="text-[11px] text-zinc-400 leading-relaxed font-sans mt-2">
                 You have full access to all AI rationales and premium picks.
               </p>
             </div>
@@ -115,17 +119,20 @@ export default function Sidebar() {
             // Free user or loading — show upgrade CTA
             <div className="p-4 rounded-xl bg-[#09090b] border border-zinc-800/80 shadow-md">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-primary-600">Pro Tier</span>
+                <Badge variant="outline" className="text-[10px] font-mono border-zinc-700 text-zinc-400 uppercase tracking-wider bg-zinc-900">
+                  Pro Tier
+                </Badge>
                 <span className="text-primary-600"><CrownIcon size={16} /></span>
               </div>
-              <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed font-sans">Unlock real-time AI rationales and high-confidence predictions.</p>
-              <Link
-                href="/dashboard/subscription"
-                className="block w-full text-center py-2.5 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm"
-              >
-                <span className="flex items-center justify-center gap-1.5">
-                  UPGRADE PRO &rarr;
-                </span>
+              <p className="text-[11px] text-zinc-400 mb-3 mt-2 leading-relaxed font-sans">
+                Unlock real-time AI rationales and high-confidence predictions.
+              </p>
+              <Link href="/dashboard/subscription" className="w-full">
+                <Button className="w-full bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest shadow-sm">
+                  <span className="flex items-center justify-center gap-1.5">
+                    UPGRADE PRO &rarr;
+                  </span>
+                </Button>
               </Link>
             </div>
           )}

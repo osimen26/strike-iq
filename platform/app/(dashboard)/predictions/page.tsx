@@ -5,6 +5,8 @@ import Link from "next/link";
 import { MatchCard } from "@/components/dashboard/MatchCard";
 import { createClient } from "@/lib/supabase/client";
 import SignInModal from "@/components/auth/SignInModal";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PredictionsFeed() {
   const [activeSport, setActiveSport] = useState("All");
@@ -23,14 +25,9 @@ export default function PredictionsFeed() {
       setUser(data.user);
     });
 
-    // Check if user is pro
     fetch("/api/subscriptions/current")
       .then((r) => r.json())
-      .then((sub) => {
-        if (sub.success && sub.isPro) {
-          setIsProUser(true);
-        }
-      })
+      .then((sub) => { if (sub.success && sub.isPro) setIsProUser(true); })
       .catch(() => {});
 
     fetch("/api/feed")
@@ -64,14 +61,14 @@ export default function PredictionsFeed() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-zinc-900 pb-6">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono text-primary-600 font-bold uppercase tracking-wider mb-2">
-            <span className="w-2 h-2 rounded-full bg-primary-600 animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-primary-600 animate-pulse" />
             AI PREDICTION TERMINAL // ALL MARKETS
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white font-heading uppercase tracking-tight">
             AI PREDICTIONS FEED
           </h1>
           <p className="text-zinc-400 text-sm font-mono mt-1">
-            Discover high-value quantitative betting opportunities & freemium daily booking codes powered by Strike IQ.
+            Discover high-value quantitative betting opportunities &amp; freemium daily booking codes powered by Strike IQ.
           </p>
         </div>
         <div className="relative w-full md:w-72">
@@ -86,28 +83,58 @@ export default function PredictionsFeed() {
         </div>
       </div>
 
-      {/* Sport Filters */}
-      <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800 self-start shrink-0 overflow-x-auto max-w-full font-mono">
-        {["All", "Football", "Basketball"].map((sport) => (
-          <button
-            key={sport}
-            onClick={() => setActiveSport(sport)}
-            className={`px-5 py-2 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap uppercase tracking-wider ${
-              activeSport === sport
-                ? "bg-primary-600 text-white"
-                : "text-zinc-400 hover:text-white hover:bg-[#121215]"
-            }`}
-          >
-            {sport === "All" ? "ALL MARKETS" : sport.toUpperCase()}
-          </button>
-        ))}
-      </div>
+      {/* Sport Filters — shadcn Tabs */}
+      <Tabs value={activeSport} onValueChange={setActiveSport} className="w-auto">
+        <TabsList className="bg-[#09090b] border border-zinc-800 h-auto p-1 gap-0.5">
+          {["All", "Football", "Basketball"].map((sport) => (
+            <TabsTrigger
+              key={sport}
+              value={sport}
+              className="font-mono text-xs font-bold uppercase tracking-wider px-5 py-2 data-[state=active]:bg-primary-600 data-[state=active]:text-white data-[state=inactive]:text-zinc-400 data-[state=inactive]:hover:text-white rounded-md transition-all"
+            >
+              {sport === "All" ? "ALL MARKETS" : sport.toUpperCase()}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
       {/* Feed */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-[#09090b] rounded-xl border border-zinc-800/80">
-          <div className="w-10 h-10 border-2 border-zinc-800 border-t-[var(--primary-600)] rounded-full animate-spin mb-4"></div>
-          <p className="text-zinc-400 font-mono text-xs uppercase tracking-widest animate-pulse">Syncing Quantitative Models...</p>
+        /* Skeleton loading cards */
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="rounded-xl bg-[#09090b] border border-zinc-800/90 p-5 sm:p-6">
+              <div className="flex flex-col lg:flex-row justify-between gap-6">
+                <div className="flex-1 flex gap-6">
+                  <div className="flex flex-col gap-2 w-32">
+                    <Skeleton className="h-3 w-20 bg-zinc-800" />
+                    <Skeleton className="h-3 w-14 bg-zinc-800" />
+                  </div>
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="flex flex-col items-center gap-2 w-2/5">
+                      <Skeleton className="w-12 h-12 rounded-lg bg-zinc-800" />
+                      <Skeleton className="h-3 w-20 bg-zinc-800" />
+                    </div>
+                    <Skeleton className="h-5 w-8 bg-zinc-800 rounded" />
+                    <div className="flex flex-col items-center gap-2 w-2/5">
+                      <Skeleton className="w-12 h-12 rounded-lg bg-zinc-800" />
+                      <Skeleton className="h-3 w-20 bg-zinc-800" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col gap-2 items-end">
+                    <Skeleton className="h-5 w-24 bg-zinc-800 rounded-full" />
+                    <Skeleton className="h-8 w-40 bg-zinc-800 rounded-lg" />
+                  </div>
+                  <Skeleton className="w-14 h-14 rounded-full bg-zinc-800" />
+                </div>
+              </div>
+            </div>
+          ))}
+          <p className="text-center text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">
+            Syncing Quantitative Models...
+          </p>
         </div>
       ) : filtered.length === 0 ? (
         <div className="p-12 mt-4 rounded-xl bg-[#09090b] border border-dashed border-zinc-800 text-center flex flex-col items-center justify-center text-zinc-400 font-mono">
