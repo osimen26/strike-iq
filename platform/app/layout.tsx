@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Tilt_Warp, Geist_Mono, Geist } from "next/font/google";
+import { Inter, Tilt_Warp, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
 const inter = Inter({
-  variable: "--font-main",
+  variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
   fallback: ["system-ui", "sans-serif"],
@@ -152,7 +150,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", inter.variable, tiltWarp.variable, geistMono.variable, "font-sans", geist.variable)}
+      className={cn("h-full", "antialiased", inter.variable, tiltWarp.variable, geistMono.variable, "font-sans")}
     >
       <head>
         <script
