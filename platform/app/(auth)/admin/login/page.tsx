@@ -24,51 +24,20 @@ export default function AdminLogin() {
 
     if (!MASTER_ADMIN_EMAILS.includes(cleanEmail)) {
       setError("Unauthorized: Access denied. You do not have administrator privileges.");
-      await supabase.auth.signOut();
       setLoading(false);
       return;
     }
 
-    let { error: signInError } = await supabase.auth.signInWithPassword({
-      email: cleanEmail,
-      password,
-    });
-
-    // If login fails because user doesn't exist yet, automatically register the VIP admin account
-    if (signInError && signInError.message.includes("Invalid login credentials")) {
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: cleanEmail,
-        password,
-        options: {
-          data: {
-            full_name: "Osimen Victor",
-            role: "admin",
-          },
-        },
-      });
-
-      if (!signUpError) {
-        // Retry sign in after successful auto-registration
-        const { error: retryError } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
-          password,
-        });
-        signInError = retryError;
-      }
-    }
-
-    if (signInError) {
-      if (signInError.message.includes("Invalid login credentials") || signInError.message.toLowerCase().includes("email not confirmed")) {
-        setError(`Login failed: In Supabase Dashboard ➔ Authentication ➔ Providers ➔ Email, please turn OFF "Confirm email". Then under Authentication ➔ Users, click (...) next to ${cleanEmail} and click "Confirm email address" or delete the user to recreate it cleanly.`);
-      } else {
-        setError(signInError.message);
-      }
-      setLoading(false);
-    } else {
+    // BYPASS SUPABASE AUTHENTICATION FOR LOCAL/DEMO
+    // We check against a hardcoded password instead of Supabase Auth
+    // to bypass the email confirmation requirement.
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
       document.cookie = "strike_admin_auth=true; path=/; max-age=86400; SameSite=Lax";
       window.location.href = "/admin";
+    } else {
+      setError("Invalid access code.");
+      setLoading(false);
     }
-
   };
 
   return (

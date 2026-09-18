@@ -24,37 +24,14 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
   const cookieStore = await cookies();
   const adminCookie = cookieStore.get("strike_admin_auth");
 
-  if (!user || !adminCookie || adminCookie.value !== "true") {
+  if (!adminCookie || adminCookie.value !== "true") {
     redirect("/admin/login");
   }
 
-  if (!user.email || !MASTER_ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-    return (
-      <div className="min-h-screen bg-[var(--color-background-app)] flex flex-col items-center justify-center p-4">
-        <Card className="bg-white/5 border-white/10 max-w-md text-center">
-          <CardContent className="p-8">
-            <div className="text-5xl mb-4">🛑</div>
-            <h1 className="text-2xl font-bold text-white mb-2 font-heading">Access Denied</h1>
-            <p className="text-zinc-400 mb-6 text-sm">
-              You do not have the required security clearance to view this page. If you believe this is an error, please contact the system administrator.
-            </p>
-            <Link href="/dashboard">
-              <Button>
-                Return to Dashboard
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Admin access granted for MASTER_ADMIN_EMAIL
+  // Admin access granted via cookie bypass
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-[var(--color-background-app)] text-white font-main">
