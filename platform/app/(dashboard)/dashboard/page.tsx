@@ -3,18 +3,18 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
-import { getTeamLogo, getLeagueLogo } from "@/lib/logos";
 import {
   ZapIcon,
-  LockIcon,
-  TicketIcon,
-  CopyIcon,
   CrownIcon,
-  SparklesIcon,
   ChartBarIcon,
 } from "@/components/icons/Icons";
 import { MatchCard } from "@/components/dashboard/MatchCard";
 import SignInModal from "@/components/auth/SignInModal";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PredictionsFeed() {
   const [user, setUser] = useState<User | null>(null);
@@ -30,19 +30,14 @@ export default function PredictionsFeed() {
   const isGuest = !user;
 
   useEffect(() => {
-    // Fetch the real user and their subscription status in parallel
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-    });
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
 
     fetch('/api/subscriptions/current')
       .then((r) => r.json())
       .then((sub) => {
-        if (sub.success && sub.isPro) {
-          setIsProUser(true);
-        }
+        if (sub.success && sub.isPro) setIsProUser(true);
       })
-      .catch(() => {}); // Non-critical — free tier is the safe fallback
+      .catch(() => {});
 
     const fetchFeed = async () => {
       try {
@@ -88,70 +83,109 @@ export default function PredictionsFeed() {
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white font-heading tracking-tight mb-2 flex items-center gap-3 uppercase">
             STRATEGY DESK: <span className="text-primary-600">{user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || "STRATEGIST"}</span>
-            {isProUser && <span className="px-2 py-0.5 bg-primary-600/20 text-primary-600 border border-primary-600/40 rounded text-[10px] font-mono uppercase tracking-widest font-bold">PRO MEMBER</span>}
+            {isProUser && (
+              <Badge className="bg-primary-600/20 text-primary-600 border-primary-600/40 text-[10px] font-mono uppercase tracking-widest font-bold">
+                PRO MEMBER
+              </Badge>
+            )}
           </h1>
-          <p className="text-zinc-400 text-sm font-mono">Real-time quantitative odds, Strike-IQ proprietary match analytics, and high-confidence algorithmic betting rationales across elite global leagues.</p>
+          <p className="text-zinc-400 text-sm font-mono">
+            Real-time quantitative odds, Strike-IQ proprietary match analytics, and high-confidence algorithmic betting rationales across elite global leagues.
+          </p>
         </div>
         
-        {/* Sleek Filters */}
-        <div className="flex bg-[#09090b] p-1 rounded-lg border border-zinc-800 self-start shrink-0 overflow-x-auto max-w-full font-mono">
-          {["All", "Football", "Basketball"].map(filter => (
-            <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={`px-5 py-2 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap uppercase tracking-wider ${
-                activeFilter === filter 
-                  ? "bg-primary-600 text-white" 
-                  : "text-zinc-400 hover:text-white hover:bg-[#121215]"
-              }`}
-            >
-              {filter === "All" ? "ALL MARKETS" : filter.toUpperCase()}
-            </button>
-          ))}
-        </div>
+        {/* Sleek Filters using shadcn Tabs */}
+        <Tabs value={activeFilter} onValueChange={setActiveFilter} className="w-auto">
+          <TabsList className="bg-[#09090b] border border-zinc-800 h-auto p-1 gap-0.5">
+            {["All", "Football", "Basketball"].map(filter => (
+              <TabsTrigger
+                key={filter}
+                value={filter}
+                className="font-mono text-xs font-bold uppercase tracking-wider px-5 py-2 data-[state=active]:bg-primary-600 data-[state=active]:text-white data-[state=inactive]:text-zinc-400 data-[state=inactive]:hover:text-white rounded-md transition-all"
+              >
+                {filter === "All" ? "ALL MARKETS" : filter.toUpperCase()}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       </div>
 
       {/* AI Market Intelligence Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-[#09090b] border border-zinc-800 rounded-xl p-5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10"><ZapIcon size={40} /></div>
-          <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Active AI Signals</h3>
-          <div className="text-3xl font-extrabold text-white">{filteredMatches.length} <span className="text-sm font-normal text-zinc-500">picks</span></div>
-          <div className="text-[10px] text-primary-500 font-mono mt-2 flex items-center gap-1">
-             <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></span> LIVE SCANNERS ACTIVE
-          </div>
-        </div>
-        <div className="bg-[#09090b] border border-zinc-800 rounded-xl p-5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10"><CrownIcon size={40} /></div>
-          <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Pro Competitions</h3>
-          <div className="text-3xl font-extrabold text-white">20+ <span className="text-sm font-normal text-zinc-500">leagues</span></div>
-          <div className="text-[10px] text-amber-500 font-mono mt-2 flex items-center gap-1">
-             {isProUser ? 'VIP ACCESS UNLOCKED' : 'PRO SUBSCRIPTION REQUIRED'}
-          </div>
-        </div>
-        <div className="bg-[#09090b] border border-zinc-800 rounded-xl p-5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10"><ChartBarIcon size={40} /></div>
-          <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Model Accuracy (7D)</h3>
-          <div className="text-3xl font-extrabold text-white">82.4% <span className="text-sm font-normal text-zinc-500">win rate</span></div>
-          <div className="text-[10px] text-primary-500 font-mono mt-2 flex items-center gap-1">
-             STRIKE-IQ QUANT V4
-          </div>
-        </div>
+        <Card className="bg-[#09090b] border-zinc-800 relative overflow-hidden">
+          <CardContent className="p-5">
+            <div className="absolute top-0 right-0 p-4 opacity-10"><ZapIcon size={40} /></div>
+            <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Active AI Signals</h3>
+            <div className="text-3xl font-extrabold text-white">{filteredMatches.length} <span className="text-sm font-normal text-zinc-500">picks</span></div>
+            <div className="text-[10px] text-primary-500 font-mono mt-2 flex items-center gap-1">
+               <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></span> LIVE SCANNERS ACTIVE
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-[#09090b] border-zinc-800 relative overflow-hidden">
+          <CardContent className="p-5">
+            <div className="absolute top-0 right-0 p-4 opacity-10"><CrownIcon size={40} /></div>
+            <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Pro Competitions</h3>
+            <div className="text-3xl font-extrabold text-white">20+ <span className="text-sm font-normal text-zinc-500">leagues</span></div>
+            <div className="text-[10px] text-amber-500 font-mono mt-2 flex items-center gap-1">
+               {isProUser ? 'VIP ACCESS UNLOCKED' : 'PRO SUBSCRIPTION REQUIRED'}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-[#09090b] border-zinc-800 relative overflow-hidden">
+          <CardContent className="p-5">
+            <div className="absolute top-0 right-0 p-4 opacity-10"><ChartBarIcon size={40} /></div>
+            <h3 className="text-xs font-mono text-zinc-400 font-bold uppercase mb-1">Model Accuracy (7D)</h3>
+            <div className="text-3xl font-extrabold text-white">82.4% <span className="text-sm font-normal text-zinc-500">win rate</span></div>
+            <div className="text-[10px] text-primary-500 font-mono mt-2 flex items-center gap-1">
+               STRIKE-IQ QUANT V4
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Predictions Feed list */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-[#09090b] rounded-xl border border-zinc-800/80">
-          <div className="w-10 h-10 border-2 border-zinc-800 border-t-[var(--primary-600)] rounded-full animate-spin mb-4"></div>
-          <p className="text-zinc-400 font-mono text-xs uppercase tracking-widest animate-pulse">SYNCING QUANTITATIVE MODELS...</p>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="rounded-xl bg-[#09090b] border border-zinc-800/90 p-5 sm:p-6">
+              <div className="flex flex-col lg:flex-row justify-between gap-6">
+                <div className="flex-1 flex gap-6">
+                  <div className="flex flex-col gap-2 w-32">
+                    <Skeleton className="h-3 w-20 bg-zinc-800" />
+                    <Skeleton className="h-3 w-14 bg-zinc-800" />
+                  </div>
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="flex flex-col items-center gap-2 w-2/5">
+                      <Skeleton className="w-12 h-12 rounded-lg bg-zinc-800" />
+                      <Skeleton className="h-3 w-20 bg-zinc-800" />
+                    </div>
+                    <Skeleton className="h-5 w-8 bg-zinc-800 rounded" />
+                    <div className="flex flex-col items-center gap-2 w-2/5">
+                      <Skeleton className="w-12 h-12 rounded-lg bg-zinc-800" />
+                      <Skeleton className="h-3 w-20 bg-zinc-800" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col gap-2 items-end">
+                    <Skeleton className="h-5 w-24 bg-zinc-800 rounded-full" />
+                    <Skeleton className="h-8 w-40 bg-zinc-800 rounded-lg" />
+                  </div>
+                  <Skeleton className="w-14 h-14 rounded-full bg-zinc-800" />
+                </div>
+              </div>
+            </div>
+          ))}
+          <p className="text-center text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">
+            SYNCING QUANTITATIVE MODELS...
+          </p>
         </div>
       ) : (
         <div className="space-y-4">
           {filteredMatches.length > 0 ? (
             filteredMatches.map(match => {
-              // Lock the match if it's a Pro Pick and the user is NOT a Pro User
               const isLocked = match.isProPick && !isProUser;
-              
               return (
                 <MatchCard 
                   key={match.id} 
@@ -172,9 +206,12 @@ export default function PredictionsFeed() {
                 Our proprietary Strike-IQ quantitative engines are continuously scanning upcoming schedules and market odds. New high-confidence algorithmic predictions will appear here automatically once lines open.
               </p>
               {activeFilter !== "All" && (
-                <button onClick={() => setActiveFilter("All")} className="px-5 py-2 rounded-lg bg-primary-600 text-white text-xs font-mono font-bold hover:bg-[#0f6b4d] transition-all uppercase tracking-wider">
+                <Button 
+                  onClick={() => setActiveFilter("All")} 
+                  className="bg-primary-600 hover:bg-[#0f6b4d] text-white text-xs font-mono font-bold uppercase tracking-wider h-auto py-2 px-5"
+                >
                   View All Markets
-                </button>
+                </Button>
               )}
             </div>
           )}

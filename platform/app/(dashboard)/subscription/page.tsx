@@ -2,12 +2,15 @@
 
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { ZapIcon, CrownIcon, CheckCircleIcon, XCircleIcon } from '@/components/icons/Icons';
+import { ZapIcon, CheckCircleIcon, XCircleIcon } from '@/components/icons/Icons';
 import { useRegionalPricing } from '@/lib/pricing/useRegionalPricing';
 import { PaymentHistorySection } from '@/components/subscription/PaymentHistorySection';
 import { SubscriptionModals } from '@/components/subscription/SubscriptionModals';
 import type { Plan, PaymentRecord } from '@/types';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function SubscriptionContent() {
   const searchParams = useSearchParams();
@@ -192,10 +195,10 @@ function SubscriptionContent() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight font-heading">
               Subscription & Pro Access
             </h1>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-[var(--color-brand-emerald)]/20 to-[var(--color-brand-electricGreen)]/20 border border-[var(--color-brand-emerald)]/40 text-[var(--color-brand-electricGreen)] animate-pulse flex items-center gap-1.5">
+            <Badge variant="outline" className="px-3 py-1 bg-gradient-to-r from-[var(--color-brand-emerald)]/20 to-[var(--color-brand-electricGreen)]/20 border-[var(--color-brand-emerald)]/40 text-[var(--color-brand-electricGreen)] animate-pulse flex items-center gap-1.5 text-[10px] font-bold uppercase">
               <span>INSTANT PRO ACCESS</span>
               <ZapIcon size={14} />
-            </span>
+            </Badge>
           </div>
           <div className="mt-3">
             <p className="text-[var(--color-accent-mutedSage)] text-sm md:text-base">
@@ -205,37 +208,40 @@ function SubscriptionContent() {
         </div>
 
         {/* Current Tier Status Card */}
-        <div className="w-full md:w-auto bg-black/40 border border-[var(--color-brand-emerald)]/30 rounded-xl px-5 py-3 flex items-center justify-between md:justify-start gap-6 shadow-lg shadow-[var(--color-brand-emerald)]/5">
-          <div>
-            <div className="text-[11px] text-gray-400 uppercase font-semibold tracking-wider">Current Status</div>
-            <div className="text-lg font-bold text-white flex items-center gap-2 mt-0.5">
-              {planName === 'Free' ? (
-                <span className="text-gray-300">Free Tier</span>
-              ) : (
-                <span className="text-[var(--color-brand-electricGreen)] flex items-center gap-1.5">
-                  <ZapIcon size={16} />
-                  <span>{planName}</span>
-                </span>
-              )}
-            </div>
-          </div>
-          {planName !== 'Free' && (
-            <div className="flex items-center gap-4 border-l border-white/10 pl-5">
-              <div className="text-right">
-                <div className="text-[11px] text-gray-400 uppercase font-semibold">Remaining Access</div>
-                <div className="text-sm font-bold text-white mt-0.5">{daysRemaining} Days Active</div>
+        <Card className="w-full md:w-auto bg-black/40 border-[var(--color-brand-emerald)]/30 shadow-lg shadow-[var(--color-brand-emerald)]/5">
+          <CardContent className="px-5 py-3 flex items-center justify-between md:justify-start gap-6 p-0 h-full">
+            <div className="p-3">
+              <div className="text-[11px] text-zinc-400 uppercase font-semibold tracking-wider">Current Status</div>
+              <div className="text-lg font-bold text-white flex items-center gap-2 mt-0.5">
+                {planName === 'Free' ? (
+                  <span className="text-zinc-300">Free Tier</span>
+                ) : (
+                  <span className="text-[var(--color-brand-electricGreen)] flex items-center gap-1.5">
+                    <ZapIcon size={16} />
+                    <span>{planName}</span>
+                  </span>
+                )}
               </div>
-              <button
-                onClick={() => setShowCancelConfirm(true)}
-                disabled={isCancelling}
-                className="px-3 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/80 border border-red-500/40 text-red-300 text-xs font-bold transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Stop recurring subscription billing"
-              >
-                {isCancelling ? 'Cancelling...' : '🛑 Stop Auto-Renewal'}
-              </button>
             </div>
-          )}
-        </div>
+            {planName !== 'Free' && (
+              <div className="flex items-center gap-4 border-l border-white/10 pl-5 p-3 h-full">
+                <div className="text-right">
+                  <div className="text-[11px] text-zinc-400 uppercase font-semibold">Remaining Access</div>
+                  <div className="text-sm font-bold text-white mt-0.5">{daysRemaining} Days Active</div>
+                </div>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setShowCancelConfirm(true)}
+                  disabled={isCancelling}
+                  className="px-3 py-1.5 h-auto text-xs font-bold"
+                >
+                  {isCancelling ? 'Cancelling...' : '🛑 Stop Auto-Renewal'}
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Alert Banner */}
@@ -250,9 +256,9 @@ function SubscriptionContent() {
           }`}
         >
           <span className="font-medium">{alertMsg.text}</span>
-          <button onClick={() => setAlertMsg(null)} className="text-white/60 hover:text-white text-xs ml-4">
+          <Button variant="link" onClick={() => setAlertMsg(null)} className="text-white/60 hover:text-white text-xs ml-4 h-auto p-0">
             ✕
-          </button>
+          </Button>
         </div>
       )}
 
@@ -291,8 +297,9 @@ function SubscriptionContent() {
 
       {/* Plans Grid */}
       {loading ? (
-        <div className="flex justify-center items-center py-24">
-          <div className="w-10 h-10 border-4 border-[var(--color-brand-emerald)] border-t-transparent rounded-full animate-spin"></div>
+        <div className="flex flex-col justify-center items-center py-24 gap-4">
+          <Skeleton className="w-12 h-12 rounded-full bg-zinc-800" />
+          <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">Loading Plans...</p>
         </div>
       ) : (
         <div className="flex flex-wrap justify-center gap-8 items-stretch max-w-5xl mx-auto">
@@ -301,108 +308,113 @@ function SubscriptionContent() {
             const isPro = plan.price > 0;
 
             return (
-              <div
+              <Card
                 key={plan.id}
-                className={`relative rounded-2xl p-7 flex flex-col justify-between transition-all duration-300 w-full sm:w-[380px] max-w-full ${
+                className={`relative flex flex-col justify-between transition-all duration-300 w-full sm:w-[380px] max-w-full ${
                   isPro
                     ? 'bg-gradient-to-b from-emerald-950/30 to-black/80 border-2 border-[var(--color-brand-emerald)]/50 shadow-2xl shadow-[var(--color-brand-emerald)]/10 hover:border-[var(--color-brand-emerald)] hover:scale-[1.01]'
-                    : 'bg-[var(--color-background-surface)] border border-white/10 hover:border-white/20'
+                    : 'bg-[var(--color-background-surface)] border-white/10 hover:border-white/20'
                 }`}
               >
                 {/* Pro Badge */}
                 {isPro && (
-                  <div className="absolute -top-3 right-6 bg-emerald-400 text-black text-[10px] font-extrabold px-3 py-1 rounded uppercase tracking-widest shadow-md flex items-center gap-1.5 font-mono">
+                  <Badge className="absolute -top-3 right-6 bg-emerald-400 hover:bg-emerald-400 text-black text-[10px] font-extrabold px-3 py-1 uppercase tracking-widest shadow-md flex items-center gap-1.5 font-mono">
                     <ZapIcon size={13} className="text-emerald-900 shrink-0" />
                     <span>RECOMMENDED</span>
-                  </div>
+                  </Badge>
                 )}
 
-                <div>
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-extrabold text-white tracking-tight">{plan.name.replace(/ Plan Monthly| Plan Yearly/i, '')}</h3>
-                  </div>
-                  <p className="text-xs text-zinc-400 mt-2 min-h-[32px] leading-relaxed">
-                    {plan.description}
-                  </p>
-
-                  {/* Price */}
-                  <div className="mt-6 flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-emerald-400">
-                      {plan.formattedPrice?.replace(/[0-9.,]/g, '').trim() || '$'}
-                    </span>
-                    <span className="text-5xl font-extrabold tracking-tighter text-white">
-                      {plan.formattedPrice?.replace(/[^0-9.,]/g, '') || plan.price}
-                    </span>
-                    <span className="text-xs text-zinc-500 font-mono uppercase tracking-widest ml-1">
-                      /{plan.interval === 'YEARLY' ? 'year' : 'mo'}
-                    </span>
-                  </div>
-                  {plan.interval === 'YEARLY' && plan.price > 0 && (
-                    <div className="text-[11px] text-[var(--color-brand-electricGreen)] font-semibold mt-1">
-                      {plan.savingsBadge ? `${plan.savingsBadge} vs Monthly` : 'Billed annually'}
+                <CardContent className="p-7 flex flex-col h-full justify-between">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-extrabold text-white tracking-tight">{plan.name.replace(/ Plan Monthly| Plan Yearly/i, '')}</h3>
                     </div>
-                  )}
+                    <p className="text-xs text-zinc-400 mt-2 min-h-[32px] leading-relaxed">
+                      {plan.description}
+                    </p>
 
-                  <div className="h-px bg-white/10 my-6"></div>
-
-                  {/* Feature Checklist */}
-                  <div className="space-y-4">
-                    <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-mono">
-                      What&apos;s Included:
-                    </div>
-                    <ul className="space-y-3">
-                      {plan.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-3 text-sm text-zinc-300 font-medium">
-                          <CheckCircleIcon size={16} className="text-[var(--color-brand-emerald)] shrink-0 mt-0.5" />
-                          <span className="leading-relaxed">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* CTA Button */}
-                <div className="mt-8">
-                  {isCurrent ? (
-                    <div className="space-y-2">
-                      <button
-                        disabled
-                        className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-white/10 text-gray-400 border border-white/5 cursor-not-allowed flex items-center justify-center gap-2"
-                      >
-                        <CheckCircleIcon size={15} className="text-emerald-400 shrink-0" />
-                        <span>Current Plan</span>
-                      </button>
-                      {isPro && (
-                        <button
-                          onClick={() => setShowCancelConfirm(true)}
-                          disabled={isCancelling}
-                          className="w-full py-2 px-3 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-300 text-[11px] font-semibold border border-red-500/30 transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
-                        >
-                          <XCircleIcon size={14} className="text-red-400 shrink-0" />
-                          <span>{isCancelling ? 'Cancelling...' : 'Cancel Auto-Renewal'}</span>
-                        </button>
-                      )}
-                    </div>
-                  ) : plan.price === 0 ? (
-                    <button
-                      disabled
-                      className="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase bg-white/5 text-gray-400 border border-white/5 cursor-not-allowed"
-                    >
-                      Free Standard Tier
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleUpgrade(plan)}
-                      disabled={upgradingId === plan.id}
-                      className="w-full py-3.5 px-4 bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-70"
-                    >
-                      <span>
-                        {upgradingId === plan.id ? 'SECURING CHECKOUT...' : 'UPGRADE PRO \u2192'}
+                    {/* Price */}
+                    <div className="mt-6 flex items-baseline gap-1">
+                      <span className="text-2xl font-bold text-emerald-400">
+                        {plan.formattedPrice?.replace(/[0-9.,]/g, '').trim() || '$'}
                       </span>
-                    </button>
-                  )}
-                </div>
-              </div>
+                      <span className="text-5xl font-extrabold tracking-tighter text-white">
+                        {plan.formattedPrice?.replace(/[^0-9.,]/g, '') || plan.price}
+                      </span>
+                      <span className="text-xs text-zinc-500 font-mono uppercase tracking-widest ml-1">
+                        /{plan.interval === 'YEARLY' ? 'year' : 'mo'}
+                      </span>
+                    </div>
+                    {plan.interval === 'YEARLY' && plan.price > 0 && (
+                      <div className="text-[11px] text-[var(--color-brand-electricGreen)] font-semibold mt-1">
+                        {plan.savingsBadge ? `${plan.savingsBadge} vs Monthly` : 'Billed annually'}
+                      </div>
+                    )}
+
+                    <div className="h-px bg-white/10 my-6"></div>
+
+                    {/* Feature Checklist */}
+                    <div className="space-y-4">
+                      <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-mono">
+                        What&apos;s Included:
+                      </div>
+                      <ul className="space-y-3">
+                        {plan.features.map((feature, idx) => (
+                          <li key={idx} className="flex items-start gap-3 text-sm text-zinc-300 font-medium">
+                            <CheckCircleIcon size={16} className="text-[var(--color-brand-emerald)] shrink-0 mt-0.5" />
+                            <span className="leading-relaxed">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="mt-8">
+                    {isCurrent ? (
+                      <div className="space-y-2">
+                        <Button
+                          disabled
+                          variant="outline"
+                          className="w-full font-bold text-xs uppercase bg-white/10 text-zinc-400 border-white/5 cursor-not-allowed flex items-center justify-center gap-2 h-12"
+                        >
+                          <CheckCircleIcon size={15} className="text-emerald-400 shrink-0" />
+                          <span>Current Plan</span>
+                        </Button>
+                        {isPro && (
+                          <Button
+                            variant="outline"
+                            onClick={() => setShowCancelConfirm(true)}
+                            disabled={isCancelling}
+                            className="w-full bg-red-950/40 hover:bg-red-900/60 hover:text-white text-red-300 text-[11px] font-semibold border-red-500/30 flex items-center justify-center gap-1.5 h-10"
+                          >
+                            <XCircleIcon size={14} className="text-red-400 shrink-0" />
+                            <span>{isCancelling ? 'Cancelling...' : 'Cancel Auto-Renewal'}</span>
+                          </Button>
+                        )}
+                      </div>
+                    ) : plan.price === 0 ? (
+                      <Button
+                        disabled
+                        variant="outline"
+                        className="w-full font-bold text-xs uppercase bg-white/5 text-zinc-400 border-white/5 cursor-not-allowed h-12"
+                      >
+                        Free Standard Tier
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => handleUpgrade(plan)}
+                        disabled={upgradingId === plan.id}
+                        className="w-full bg-[#10b981] hover:bg-[#059669] text-white text-xs font-mono font-bold rounded-full uppercase tracking-widest shadow-sm flex items-center justify-center gap-2 h-12"
+                      >
+                        <span>
+                          {upgradingId === plan.id ? 'SECURING CHECKOUT...' : 'UPGRADE PRO \u2192'}
+                        </span>
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
@@ -429,7 +441,7 @@ function SubscriptionContent() {
 
 export default function SubscriptionPage() {
   return (
-    <Suspense fallback={<div className="p-12 text-center text-gray-500">Loading subscription portal...</div>}>
+    <Suspense fallback={<div className="p-12 text-center text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">Loading subscription portal...</div>}>
       <SubscriptionContent />
     </Suspense>
   );

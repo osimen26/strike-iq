@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Notification = {
   id: string;
@@ -30,8 +33,8 @@ function getIcon(type: string) {
     case "PAYMENT":          return { icon: "💳", bg: "bg-blue-500/20",                   text: "text-blue-400" };
     case "SYSTEM":           return { icon: "🚀", bg: "bg-purple-500/20",                 text: "text-purple-400" };
     case "RESULT":           return { icon: "✅", bg: "bg-green-500/20",                  text: "text-green-400" };
-    case "KICKOFF":          return { icon: "⏰", bg: "bg-orange-500/20",                 text: "text-orange-400" };
-    default:                 return { icon: "ℹ️", bg: "bg-gray-500/20",                   text: "text-gray-400" };
+    case "KICKOFF":          return { icon: "⏰", bg: "bg-amber-500/20",                 text: "text-amber-400" };
+    default:                 return { icon: "ℹ️", bg: "bg-zinc-500/20",                   text: "text-zinc-400" };
   }
 }
 
@@ -83,37 +86,40 @@ export default function NotificationsPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-12">
       {/* Header */}
-      <div className="flex justify-between items-end">
+      <div className="flex justify-between items-end border-b border-zinc-800 pb-6">
         <div>
           <h1 className="text-3xl font-bold text-white font-heading">Notifications</h1>
-          <p className="text-[var(--color-accent-mutedSage)] mt-1 text-sm">
+          <p className="text-zinc-400 mt-1 text-sm font-mono">
             {unreadCount > 0 ? `You have ${unreadCount} unread alert${unreadCount > 1 ? "s" : ""}.` : "You're all caught up!"}
           </p>
         </div>
         {unreadCount > 0 && (
-          <button
+          <Button
+            variant="link"
             onClick={markAllRead}
             disabled={marking}
-            className="text-sm text-[var(--color-brand-mint)] hover:underline disabled:opacity-50 transition-opacity"
+            className="text-sm text-primary-400 font-bold h-auto p-0"
           >
             {marking ? "Marking..." : "Mark all as read"}
-          </button>
+          </Button>
         )}
       </div>
 
       {/* Feed */}
       <div className="space-y-3 mt-4">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-white/10 border-t-[var(--color-brand-emerald)] rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-400 text-sm animate-pulse">Loading notifications...</p>
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <Skeleton className="w-12 h-12 rounded-full bg-zinc-800" />
+            <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest animate-pulse">Loading notifications...</p>
           </div>
         ) : notifications.length === 0 ? (
-          <div className="text-center py-16 bg-[var(--color-background-surface)] rounded-2xl border border-dashed border-white/10 flex flex-col items-center">
-            <span className="text-5xl mb-4 opacity-40">🔔</span>
-            <h3 className="text-white font-bold text-lg font-heading mb-1">No notifications yet</h3>
-            <p className="text-gray-500 text-sm">When new Pro Picks drop, you'll be the first to know!</p>
-          </div>
+          <Card className="bg-[var(--color-background-surface)] border-dashed border-white/10">
+            <CardContent className="text-center py-16 flex flex-col items-center p-6">
+              <span className="text-5xl mb-4 opacity-40">🔔</span>
+              <h3 className="text-white font-bold text-lg font-heading mb-1">No notifications yet</h3>
+              <p className="text-zinc-500 text-sm">When new Pro Picks drop, you'll be the first to know!</p>
+            </CardContent>
+          </Card>
         ) : (
           notifications.map((n) => {
             const { icon, bg, text } = getIcon(n.type);
@@ -125,41 +131,47 @@ export default function NotificationsPage() {
                 key={n.id}
                 {...wrapperProps}
                 onClick={() => !n.isRead && markOneRead(n.id)}
-                className={`block p-4 rounded-xl border transition-all cursor-pointer ${
+                className={`block transition-all cursor-pointer ${
                   n.isRead
-                    ? "bg-black/20 border-white/5 opacity-60 hover:opacity-80"
-                    : "bg-[var(--color-background-surface)] border-[var(--color-brand-emerald)]/30 hover:border-[var(--color-brand-emerald)]/60 shadow-lg"
+                    ? "opacity-60 hover:opacity-80"
+                    : "shadow-lg"
                 }`}
               >
-                <div className="flex items-start gap-4">
-                  {/* Icon */}
-                  <div className={`shrink-0 w-10 h-10 rounded-xl ${bg} ${text} flex items-center justify-center text-lg`}>
-                    {icon}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className={`font-semibold text-sm leading-snug ${n.isRead ? "text-gray-300" : "text-white"}`}>
-                        {n.title}
-                      </h3>
-                      <span className="text-xs text-gray-500 shrink-0 mt-0.5">{timeAgo(n.createdAt)}</span>
+                <Card className={`${
+                  n.isRead 
+                    ? "bg-black/20 border-white/5" 
+                    : "bg-[var(--color-background-surface)] border-primary-600/30 hover:border-primary-600/60"
+                }`}>
+                  <CardContent className="p-4 flex items-start gap-4">
+                    {/* Icon */}
+                    <div className={`shrink-0 w-10 h-10 rounded-xl ${bg} ${text} flex items-center justify-center text-lg`}>
+                      {icon}
                     </div>
-                    <p className={`text-sm mt-1 leading-relaxed ${n.isRead ? "text-gray-500" : "text-gray-400"}`}>
-                      {n.message}
-                    </p>
-                    {n.link && !n.isRead && (
-                      <span className="inline-block mt-2 text-xs font-semibold text-[var(--color-brand-mint)] hover:underline">
-                        View now →
-                      </span>
-                    )}
-                  </div>
 
-                  {/* Unread dot */}
-                  {!n.isRead && (
-                    <div className="shrink-0 w-2.5 h-2.5 rounded-full bg-[var(--color-brand-mint)] mt-1.5 animate-pulse"></div>
-                  )}
-                </div>
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className={`font-semibold text-sm leading-snug ${n.isRead ? "text-zinc-300" : "text-white"}`}>
+                          {n.title}
+                        </h3>
+                        <span className="text-xs text-zinc-500 shrink-0 mt-0.5">{timeAgo(n.createdAt)}</span>
+                      </div>
+                      <p className={`text-sm mt-1 leading-relaxed ${n.isRead ? "text-zinc-500" : "text-zinc-400"}`}>
+                        {n.message}
+                      </p>
+                      {n.link && !n.isRead && (
+                        <span className="inline-block mt-2 text-xs font-semibold text-primary-400 hover:underline">
+                          View now →
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Unread dot */}
+                    {!n.isRead && (
+                      <div className="shrink-0 w-2.5 h-2.5 rounded-full bg-primary-400 mt-1.5 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.6)]"></div>
+                    )}
+                  </CardContent>
+                </Card>
               </Wrapper>
             );
           })
