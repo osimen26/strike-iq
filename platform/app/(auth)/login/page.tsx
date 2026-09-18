@@ -88,7 +88,7 @@ export default function Login() {
           variant="outline"
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="flex-1 flex items-center justify-center gap-3 border-border-glass bg-background-glass rounded-lg p-3 hover:bg-white/10 transition-colors disabled:opacity-50 h-12 text-zinc-200 hover:text-white"
+          className="flex-1 flex items-center justify-center gap-3 bg-[#09090b] border-zinc-800 rounded-xl p-3 hover:bg-zinc-900 hover:border-zinc-700 transition-all disabled:opacity-50 h-12 text-zinc-300 hover:text-white"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -102,9 +102,9 @@ export default function Login() {
 
       {/* Divider */}
       <div className="flex items-center w-full gap-3">
-        <div className="flex-1 border-t border-border-glass"></div>
-        <span className="text-zinc-500 text-sm font-medium uppercase">Or</span>
-        <div className="flex-1 border-t border-border-glass"></div>
+        <div className="flex-1 border-t border-zinc-800"></div>
+        <span className="text-zinc-600 text-xs font-mono font-medium uppercase tracking-wider">Or</span>
+        <div className="flex-1 border-t border-zinc-800"></div>
       </div>
 
       <form onSubmit={handleLogin} className="flex flex-col gap-5 w-full" noValidate>
@@ -115,8 +115,8 @@ export default function Login() {
         )}
 
         {/* Email */}
-        <div className="flex flex-col gap-2 w-full">
-          <Label htmlFor="login-email" className="text-zinc-300">Email</Label>
+        <div className="flex flex-col gap-2 w-full group">
+          <Label htmlFor="login-email" className="text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Email Address</Label>
           <Input
             id="login-email"
             type="email"
@@ -124,16 +124,16 @@ export default function Login() {
             autoComplete="email"
             value={email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-            className="w-full bg-background-glass border-border-glass rounded-lg px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-primary-600 focus:ring-1 focus:ring-primary-600 transition-colors h-12"
+            className="w-full bg-[#09090b] border-zinc-800 rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all h-12"
             placeholder="eg. johnfrans@gmail.com"
           />
         </div>
 
         {/* Password */}
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-full group">
           <div className="flex items-center justify-between">
-            <Label htmlFor="login-password" className="text-zinc-300">Password</Label>
-            <Link href="/forgot-password" className="text-zinc-400 hover:text-white text-sm hover:underline">Forgot password?</Link>
+            <Label htmlFor="login-password" className="text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Password</Label>
+            <Link href="/forgot-password" className="text-emerald-500 hover:text-emerald-400 text-xs font-medium hover:underline transition-colors">Forgot password?</Link>
           </div>
           <div className="relative w-full">
             <Input
@@ -143,7 +143,7 @@ export default function Login() {
               autoComplete="current-password"
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-              className="w-full bg-background-glass border-border-glass rounded-lg pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-primary-600 focus:ring-1 focus:ring-primary-600 transition-colors h-12"
+              className="w-full bg-[#09090b] border-zinc-800 rounded-xl pl-4 pr-12 py-3 text-white text-sm placeholder:text-zinc-600 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all h-12"
               placeholder="Enter your password"
             />
             <button 
@@ -164,16 +164,16 @@ export default function Login() {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full bg-primary-600 text-white font-semibold text-[16px] rounded-lg hover:bg-[#0f6b4d] transition-all mt-2 shadow-[0_0_15px_rgba(19,133,97,0.3)] h-12"
+          className="w-full bg-emerald-600 text-white font-semibold text-sm rounded-xl hover:bg-emerald-500 hover:scale-[1.01] transition-all mt-4 shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] h-12"
         >
-          {loading ? "Logging in..." : "Log In"}
+          {loading ? "Logging in..." : "Secure Log In"}
         </Button>
       </form>
 
       {/* Footer */}
-      <p className="text-center text-sm text-zinc-400">
+      <p className="text-center text-sm text-zinc-500 mt-2">
         Don't have an account?{" "}
-        <Link href="/register" className="text-primary-600 font-semibold hover:underline decoration-[var(--primary-600)] underline-offset-4">
+        <Link href="/register" className="text-emerald-500 font-semibold hover:text-emerald-400 hover:underline decoration-emerald-500/30 underline-offset-4 transition-colors">
           Sign up
         </Link>
       </p>
