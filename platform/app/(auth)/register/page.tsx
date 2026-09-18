@@ -69,8 +69,10 @@ export default function Register() {
         setVerificationSent(true);
         setLoading(false);
       } else {
-        window.location.href = "/dashboard";
+        router.push("/dashboard");
+        router.refresh();
       }
+    }
   };
 
   const handleGoogleLogin = async () => {
