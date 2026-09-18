@@ -155,7 +155,7 @@ function SubscriptionContent() {
     
     try {
       setUpgradingId(plan.id);
-      setAlertMsg({ type: 'info', text: `Initiating secure checkout for ${plan.name}...` });
+      setAlertMsg(null); // Clear any old alerts, button state handles the loading UI
 
       const res = await fetch('/api/payments/checkout', {
         method: 'POST',
