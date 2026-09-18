@@ -310,7 +310,7 @@ function SubscriptionContent() {
             return (
               <Card
                 key={plan.id}
-                className={`relative flex flex-col justify-between transition-all duration-300 w-full sm:w-[380px] max-w-full overflow-hidden ${
+                className={`relative flex flex-col justify-between transition-all duration-300 w-full sm:w-[380px] max-w-full ${
                   isPro
                     ? 'bg-gradient-to-br from-[#064e3b]/40 via-black to-[#09090b] border-2 border-emerald-500/40 shadow-2xl shadow-emerald-900/20 hover:border-emerald-400 hover:scale-[1.02]'
                     : 'bg-[#18181b] border-white/10 hover:border-white/20'
@@ -318,7 +318,9 @@ function SubscriptionContent() {
               >
                 {/* Background glow effect for Pro card */}
                 {isPro && (
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+                  <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
+                  </div>
                 )}
                 {/* Pro Badge */}
                 {isPro && (
