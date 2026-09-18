@@ -90,7 +90,7 @@ export default function PredictionsFeed() {
             <TabsTrigger
               key={sport}
               value={sport}
-              className="font-mono text-xs font-bold uppercase tracking-wider px-5 py-2 data-[state=active]:bg-primary-600 data-[state=active]:text-white data-[state=inactive]:text-zinc-400 data-[state=inactive]:hover:text-white rounded-md transition-all"
+              className="font-mono text-xs font-bold uppercase tracking-wider px-5 py-2 text-zinc-400 hover:text-white data-active:bg-white data-active:text-black rounded-md transition-all"
             >
               {sport === "All" ? "ALL MARKETS" : sport.toUpperCase()}
             </TabsTrigger>

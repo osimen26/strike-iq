@@ -110,13 +110,13 @@ function ProfileContent() {
         {/* Tab Navigation */}
         <Tabs value={activeTab} onValueChange={(val: any) => setActiveTab(val)} className="w-full md:w-auto">
           <TabsList className="bg-[#09090b] border border-zinc-800 h-auto p-1 gap-0.5 w-full flex">
-            <TabsTrigger value="profile" className="flex-1 md:flex-initial font-mono text-xs font-bold uppercase tracking-widest px-4 py-1.5 data-[state=active]:bg-primary-600 data-[state=active]:text-black">
+            <TabsTrigger value="profile" className="flex-1 md:flex-initial font-mono text-xs font-bold uppercase tracking-widest px-4 py-1.5 text-zinc-400 hover:text-white data-active:bg-white data-active:text-black">
               Account Security
             </TabsTrigger>
-            <TabsTrigger value="settings" className="flex-1 md:flex-initial font-mono text-xs font-bold uppercase tracking-widest px-4 py-1.5 data-[state=active]:bg-primary-600 data-[state=active]:text-black">
+            <TabsTrigger value="settings" className="flex-1 md:flex-initial font-mono text-xs font-bold uppercase tracking-widest px-4 py-1.5 text-zinc-400 hover:text-white data-active:bg-white data-active:text-black">
               Alert Settings
             </TabsTrigger>
-            <TabsTrigger value="bookmarks" className="flex-1 md:flex-initial font-mono text-xs font-bold uppercase tracking-widest px-4 py-1.5 data-[state=active]:bg-primary-600 data-[state=active]:text-black">
+            <TabsTrigger value="bookmarks" className="flex-1 md:flex-initial font-mono text-xs font-bold uppercase tracking-widest px-4 py-1.5 text-zinc-400 hover:text-white data-active:bg-white data-active:text-black">
               Saved Picks
             </TabsTrigger>
           </TabsList>
@@ -287,9 +287,9 @@ function ProfileContent() {
               </div>
               <Tabs value={oddsFormat} onValueChange={setOddsFormat} className="w-auto">
                 <TabsList className="bg-black/60 border border-zinc-800 h-9 p-1">
-                  <TabsTrigger value="DECIMAL" className="text-xs font-bold data-[state=active]:bg-primary-600 data-[state=active]:text-black">Decimal</TabsTrigger>
-                  <TabsTrigger value="FRACTIONAL" className="text-xs font-bold data-[state=active]:bg-primary-600 data-[state=active]:text-black">Fractional</TabsTrigger>
-                  <TabsTrigger value="AMERICAN" className="text-xs font-bold data-[state=active]:bg-primary-600 data-[state=active]:text-black">American</TabsTrigger>
+                  <TabsTrigger value="DECIMAL" className="text-xs font-bold text-zinc-400 hover:text-white data-active:bg-white data-active:text-black">Decimal</TabsTrigger>
+                  <TabsTrigger value="FRACTIONAL" className="text-xs font-bold text-zinc-400 hover:text-white data-active:bg-white data-active:text-black">Fractional</TabsTrigger>
+                  <TabsTrigger value="AMERICAN" className="text-xs font-bold text-zinc-400 hover:text-white data-active:bg-white data-active:text-black">American</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>

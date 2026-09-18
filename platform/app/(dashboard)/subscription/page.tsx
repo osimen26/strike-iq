@@ -310,12 +310,16 @@ function SubscriptionContent() {
             return (
               <Card
                 key={plan.id}
-                className={`relative flex flex-col justify-between transition-all duration-300 w-full sm:w-[380px] max-w-full ${
+                className={`relative flex flex-col justify-between transition-all duration-300 w-full sm:w-[380px] max-w-full overflow-hidden ${
                   isPro
-                    ? 'bg-gradient-to-b from-emerald-950/30 to-black/80 border-2 border-[var(--color-brand-emerald)]/50 shadow-2xl shadow-[var(--color-brand-emerald)]/10 hover:border-[var(--color-brand-emerald)] hover:scale-[1.01]'
-                    : 'bg-[var(--color-background-surface)] border-white/10 hover:border-white/20'
+                    ? 'bg-gradient-to-br from-[#064e3b]/40 via-black to-[#09090b] border-2 border-emerald-500/40 shadow-2xl shadow-emerald-900/20 hover:border-emerald-400 hover:scale-[1.02]'
+                    : 'bg-[#18181b] border-white/10 hover:border-white/20'
                 }`}
               >
+                {/* Background glow effect for Pro card */}
+                {isPro && (
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+                )}
                 {/* Pro Badge */}
                 {isPro && (
                   <Badge className="absolute -top-3 right-6 bg-emerald-400 hover:bg-emerald-400 text-black text-[10px] font-extrabold px-3 py-1 uppercase tracking-widest shadow-md flex items-center gap-1.5 font-mono">
@@ -359,7 +363,7 @@ function SubscriptionContent() {
                         What&apos;s Included:
                       </div>
                       <ul className="space-y-3">
-                        {plan.features.map((feature, idx) => (
+                        {plan.features.map((feature: string, idx: number) => (
                           <li key={idx} className="flex items-start gap-3 text-sm text-zinc-300 font-medium">
                             <CheckCircleIcon size={16} className="text-[var(--color-brand-emerald)] shrink-0 mt-0.5" />
                             <span className="leading-relaxed">{feature}</span>

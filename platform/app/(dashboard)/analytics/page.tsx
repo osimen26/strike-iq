@@ -121,8 +121,10 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Upgrade CTA banner for free users */}
-      <Card className="bg-gradient-to-r from-[var(--primary-600)]/20 to-[var(--primary-600)]/5 border-primary-600/40 shadow-[0_0_20px_rgba(19,133,97,0.1)]">
-        <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <Card className="bg-gradient-to-br from-emerald-950/40 via-black/80 to-[#09090b] border border-emerald-500/30 shadow-[0_0_20px_rgba(19,133,97,0.1)] relative overflow-hidden">
+        {/* Glow effect */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+        <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
           <div className="flex items-start gap-3">
             <span className="text-2xl shrink-0">👑</span>
             <div>
