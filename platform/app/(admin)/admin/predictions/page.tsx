@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TargetIcon, SparklesIcon, TrashIcon, RefreshCwIcon, GiftIcon, ZapIcon, CrownIcon } from "@/components/icons/Icons";
 
 interface DraftGame {
@@ -462,7 +466,7 @@ export default function AddPredictionPage() {
 
       {/* Mode Switcher Tabs */}
       <div className="flex flex-col sm:flex-row bg-[#121215] border border-zinc-800 p-1.5 rounded-xl mb-8 gap-1.5 sm:gap-0">
-        <button
+        <Button variant="outline"
           type="button"
           onClick={() => {
             setPublishMode("game");
@@ -477,8 +481,8 @@ export default function AddPredictionPage() {
         >
           <span>⚽</span>
           <span>Match Fixture & AI Slate Builder</span>
-        </button>
-        <button
+        </Button>
+        <Button variant="outline"
           type="button"
           onClick={() => {
             setPublishMode("booking_code");
@@ -493,11 +497,11 @@ export default function AddPredictionPage() {
         >
           <span>🎟️</span>
           <span>Independent Booking Code</span>
-        </button>
+        </Button>
       </div>
 
       {/* AUDIENCE TIER & NOTIFICATION CONTROLS (INTERACTIVE STRATEGY DESK) */}
-      <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-6 mb-8 shadow-2xl space-y-5">
+      <div className="bg-[#121215] border-zinc-800 rounded-2xl p-6 mb-8 shadow-2xl space-y-5">
         {/* Header Row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800/80 pb-4 gap-4">
           <div>
@@ -671,13 +675,13 @@ export default function AddPredictionPage() {
                     </div>
                   </div>
                 </div>
-                <button
+                <Button variant="outline"
                   type="button"
                   onClick={() => handleRemoveFromDraft(game.id)}
                   className="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold rounded transition-colors shrink-0 cursor-pointer"
                 >
                   Remove
-                </button>
+                </Button>
               </div>
             ))}
           </div>
@@ -711,14 +715,14 @@ export default function AddPredictionPage() {
             </div>
           </div>
 
-          <button
+          <Button
             type="button"
             onClick={handlePublishBatchSlate}
             disabled={publishingBatch}
             className="w-full py-4 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_25px_rgba(19,133,97,0.4)] disabled:opacity-50 text-base uppercase font-mono tracking-wider cursor-pointer"
           >
             {publishingBatch ? `Publishing All ${draftSlate.length} Games...` : `🚀 Publish All ${draftSlate.length} Queued Games to Pro Feed (1-Click Batch)`}
-          </button>
+          </Button>
         </div>
       )}
 
@@ -758,25 +762,25 @@ export default function AddPredictionPage() {
                     </div>
                   </div>
                 </div>
-                <button
+                <Button variant="outline"
                   type="button"
                   onClick={() => handleRemoveCodeFromQueue(codeItem.id)}
                   className="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold rounded transition-colors shrink-0 cursor-pointer"
                 >
                   Remove
-                </button>
+                </Button>
               </div>
             ))}
           </div>
 
-          <button
+          <Button
             type="button"
             onClick={handlePublishBatchCodes}
             disabled={publishingBatchCodes}
             className="w-full py-4 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all shadow-[0_0_25px_rgba(19,133,97,0.4)] disabled:opacity-50 text-base uppercase font-mono tracking-wider cursor-pointer"
           >
             {publishingBatchCodes ? `Publishing All ${draftCodes.length} Queued Booking Codes...` : `🚀 Publish All ${draftCodes.length} Queued Booking Codes at Once (Free & Pro Batch)`}
-          </button>
+          </Button>
         </div>
       )}
 
@@ -870,16 +874,16 @@ export default function AddPredictionPage() {
           </div>
 
           <div className="pt-4 border-t border-zinc-800/80 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <button
+            <Button variant="outline"
               type="button"
               onClick={handleAddCodeToQueue}
               className="py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition-all text-base border border-zinc-600 shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>+ Add Code to Batch Queue</span>
               <span className="text-xs bg-zinc-900 px-2 py-0.5 rounded text-primary-600 font-mono">Multi-Code</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="button"
               onClick={handlePublishBookingCode}
               disabled={publishingCode}
@@ -887,14 +891,14 @@ export default function AddPredictionPage() {
             >
               <ZapIcon size={18} />
               <span>{publishingCode ? "Publishing VIP Code..." : "Publish Single Code Instantly"}</span>
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
         /* MODE 1: STEP-BY-STEP MATCH FIXTURE -> ANALYSIS -> AI VERDICT -> ADD TO SLATE / PUBLISH */
         <form onSubmit={handleSubmitSingle} className="space-y-6">
           {/* STEP 1: Fixture & Competition */}
-          <div className="bg-[#121215] border border-zinc-800 rounded-xl p-6 space-y-6">
+          <div className="bg-[#121215] border-zinc-800 rounded-xl p-6 space-y-6">
             <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-4">
               <span className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-600 flex items-center justify-center font-mono text-xs font-bold">1</span>
               <span className="text-base font-bold text-white tracking-wide">⚽ Fixture & Competition</span>
@@ -957,7 +961,7 @@ export default function AddPredictionPage() {
           </div>
 
           {/* STEP 2: Per-Game Analysis & Tags */}
-          <div className="bg-[#121215] border border-zinc-800 rounded-xl p-6 space-y-6">
+          <div className="bg-[#121215] border-zinc-800 rounded-xl p-6 space-y-6">
             <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-4">
               <span className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-600 flex items-center justify-center font-mono text-xs font-bold">2</span>
               <span className="text-base font-bold text-white tracking-wide">📝 Per-Game Analysis & Tags</span>
@@ -969,14 +973,14 @@ export default function AddPredictionPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs text-zinc-400 font-medium">Quick Add:</span>
                 {["High EV", "Pro Pick", "Value Bet", "Bankroll Builder", "Top 5 Leagues Lock", "UCL Lock"].map((tag) => (
-                  <button
+                  <Button variant="outline"
                     key={tag}
                     type="button"
                     onClick={() => addQuickTag(tag)}
                     className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded border border-zinc-700 transition-colors cursor-pointer"
                   >
                     + {tag}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -988,14 +992,14 @@ export default function AddPredictionPage() {
           </div>
 
           {/* STEP 3: AI Verdict & Confidence Rating */}
-          <div className="bg-[#121215] border border-zinc-800 rounded-xl p-6 space-y-6">
+          <div className="bg-[#121215] border-zinc-800 rounded-xl p-6 space-y-6">
             <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
               <div className="flex items-center gap-2">
                 <span className="w-6 h-6 rounded-full bg-primary-600/20 text-primary-600 flex items-center justify-center font-mono text-xs font-bold">3</span>
                 <TargetIcon size={18} className="text-primary-600" />
                 <span className="text-base font-bold text-white tracking-wide">AI Verdict & Confidence Rating</span>
               </div>
-              <button
+              <Button
                 type="button"
                 onClick={handleGenerateAI}
                 disabled={generatingAI}
@@ -1003,7 +1007,7 @@ export default function AddPredictionPage() {
               >
                 <SparklesIcon size={14} />
                 <span>{generatingAI ? "AI Analyzing..." : "Auto-Generate AI Verdict & Confidence"}</span>
-              </button>
+              </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1029,23 +1033,23 @@ export default function AddPredictionPage() {
 
           {/* STEP 4: Add to Multi-Game Slate Queue OR Single Publish */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <button
+            <Button variant="outline"
               type="button"
               onClick={handleAddToDraftSlate}
               className="py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition-all text-base border border-zinc-600 shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>+ Add Game to Pro Slate Queue</span>
               <span className="text-xs bg-zinc-900 px-2 py-0.5 rounded text-primary-600 font-mono">Multi-Game Mode</span>
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
               className="py-4 bg-primary-600 hover:bg-[#0f6b4d] text-white font-bold rounded-xl transition-all disabled:opacity-50 text-base shadow-[0_0_20px_rgba(19,133,97,0.3)] flex items-center justify-center gap-2 cursor-pointer"
             >
               <ZapIcon size={18} />
               <span>Publish Single Game Instantly</span>
-            </button>
+            </Button>
           </div>
         </form>
       )}
@@ -1060,14 +1064,14 @@ export default function AddPredictionPage() {
             </h2>
             <p className="text-xs text-zinc-400 mt-1">Review, edit, or instantly delete any published game or VIP booking code.</p>
           </div>
-          <button
+          <Button variant="outline"
             type="button"
             onClick={loadLivePredictions}
             className="text-xs text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded border border-zinc-700 transition-colors cursor-pointer flex items-center gap-1.5"
           >
             <RefreshCwIcon size={13} />
             <span>Refresh List</span>
-          </button>
+          </Button>
         </div>
 
         {livePredictions.length === 0 ? (
@@ -1077,26 +1081,26 @@ export default function AddPredictionPage() {
         ) : (
           <div className="bg-[#121215] rounded-xl border border-zinc-800 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-black/40 border-b border-zinc-800 text-xs font-bold text-zinc-400 uppercase tracking-wider">
-                    <th className="px-5 py-3.5">Prediction / Pick</th>
-                    <th className="px-5 py-3.5">League / Type</th>
-                    <th className="px-5 py-3.5">Code / Bookmaker</th>
-                    <th className="px-5 py-3.5 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-800/70">
+              <Table className="w-full text-left border-collapse">
+                <TableHeader>
+                  <TableRow className="bg-black/40 border-b border-zinc-800 text-xs font-bold text-zinc-400 uppercase tracking-wider">
+                    <TableHead className="px-5 py-3.5">Prediction / Pick</TableHead>
+                    <TableHead className="px-5 py-3.5">League / Type</TableHead>
+                    <TableHead className="px-5 py-3.5">Code / Bookmaker</TableHead>
+                    <TableHead className="px-5 py-3.5 text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="divide-y divide-zinc-800/70">
                   {livePredictions.map((p) => (
-                    <tr key={p.id} className="hover:bg-white/5 transition-colors">
-                      <td className="px-5 py-3.5">
+                    <TableRow key={p.id} className="hover:bg-white/5 transition-colors">
+                      <TableCell className="px-5 py-3.5">
                         <div className="font-bold text-white text-sm">{p.home_team} <span className="text-zinc-500">vs</span> {p.away_team}</div>
                         <div className="text-xs text-primary-600 font-semibold mt-0.5">{p.prediction} ({p.confidence}%)</div>
-                      </td>
-                      <td className="px-5 py-3.5 text-xs text-zinc-300">
+                      </TableCell>
+                      <TableCell className="px-5 py-3.5 text-xs text-zinc-300">
                         {p.league}
-                      </td>
-                      <td className="px-5 py-3.5">
+                      </TableCell>
+                      <TableCell className="px-5 py-3.5">
                         {p.booking_code ? (
                           <span className="font-mono text-xs bg-zinc-800 text-emerald-400 px-2 py-1 rounded font-bold">
                             {p.booking_code} ({p.bookmaker})
@@ -1104,8 +1108,8 @@ export default function AddPredictionPage() {
                         ) : (
                           <span className="text-xs text-zinc-600">—</span>
                         )}
-                      </td>
-                      <td className="px-5 py-3.5 text-right">
+                      </TableCell>
+                      <TableCell className="px-5 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <Link
                             href={`/admin/predictions/${p.id}/edit`}
@@ -1113,7 +1117,7 @@ export default function AddPredictionPage() {
                           >
                             Edit
                           </Link>
-                          <button
+                          <Button variant="outline"
                             type="button"
                             onClick={() => handleDeleteLivePrediction(p.id)}
                             disabled={deletingId === p.id}
@@ -1121,13 +1125,13 @@ export default function AddPredictionPage() {
                           >
                             <TrashIcon size={13} />
                             <span>{deletingId === p.id ? "Deleting..." : "Delete"}</span>
-                          </button>
+                          </Button>
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           </div>
         )}

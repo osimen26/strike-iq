@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 import { MASTER_ADMIN_EMAIL, MASTER_ADMIN_EMAILS } from "@/lib/security/adminGuard";
 import type { Metadata } from "next";
 import AdminSidebar from "./AdminSidebar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Prevent static prerendering — admin pages require Supabase client at runtime
 export const dynamic = "force-dynamic";
@@ -34,16 +36,20 @@ export default async function AdminLayout({
   if (!user.email || !MASTER_ADMIN_EMAILS.includes(user.email.toLowerCase())) {
     return (
       <div className="min-h-screen bg-[var(--color-background-app)] flex flex-col items-center justify-center p-4">
-        <div className="bg-white/5 border border-white/10 p-8 rounded-2xl max-w-md text-center">
-          <div className="text-5xl mb-4">🛑</div>
-          <h1 className="text-2xl font-bold text-white mb-2 font-heading">Access Denied</h1>
-          <p className="text-gray-400 mb-6 text-sm">
-            You do not have the required security clearance to view this page. If you believe this is an error, please contact the system administrator.
-          </p>
-          <Link href="/dashboard" className="px-6 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-lg transition-colors inline-block">
-            Return to Dashboard
-          </Link>
-        </div>
+        <Card className="bg-white/5 border-white/10 max-w-md text-center">
+          <CardContent className="p-8">
+            <div className="text-5xl mb-4">🛑</div>
+            <h1 className="text-2xl font-bold text-white mb-2 font-heading">Access Denied</h1>
+            <p className="text-zinc-400 mb-6 text-sm">
+              You do not have the required security clearance to view this page. If you believe this is an error, please contact the system administrator.
+            </p>
+            <Link href="/dashboard">
+              <Button>
+                Return to Dashboard
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     );
   }

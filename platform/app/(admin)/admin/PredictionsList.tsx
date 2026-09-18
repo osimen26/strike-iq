@@ -4,6 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { getLeagueLogo } from "@/lib/logos";
 import { TrashIcon, GiftIcon, CrownIcon, TicketIcon, HourglassIcon, CheckCircleIcon, XCircleIcon, AlertCircleIcon } from "@/components/icons/Icons";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function PredictionsList({ initialPredictions }: { initialPredictions: any[] }) {
   const [predictions, setPredictions] = useState(initialPredictions);
@@ -36,35 +40,39 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
 
   if (predictions.length === 0) {
     return (
-      <div className="p-12 text-center bg-white/5 border border-white/10 rounded-xl">
-        <p className="text-gray-400">You haven't added any Pro Predictions yet.</p>
-        <Link href="/admin/predictions" className="mt-4 inline-block px-6 py-2 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-lg transition-colors">
-          + Add First Prediction
-        </Link>
-      </div>
+      <Card className="bg-white/5 border-white/10 rounded-xl">
+        <CardContent className="p-12 text-center">
+          <p className="text-zinc-400 mb-4">You haven't added any Pro Predictions yet.</p>
+          <Link href="/admin/predictions">
+            <Button className="bg-primary-600 hover:bg-primary-500 text-white font-bold">
+              + Add First Prediction
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-black/40 border-b border-white/10 text-xs font-bold text-gray-400 uppercase tracking-wider">
-              <th className="px-6 py-4">Match</th>
-              <th className="px-6 py-4">League</th>
-              <th className="px-6 py-4">Date & Time</th>
-              <th className="px-6 py-4">Pick (Confidence)</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/10">
+    <Card className="bg-white/5 rounded-xl border-white/10 overflow-hidden">
+      <CardContent className="p-0 overflow-x-auto">
+        <Table>
+          <TableHeader className="bg-black/40 border-b border-white/10">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-wider h-auto">Match</TableHead>
+              <TableHead className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-wider h-auto">League</TableHead>
+              <TableHead className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-wider h-auto">Date & Time</TableHead>
+              <TableHead className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-wider h-auto">Pick (Confidence)</TableHead>
+              <TableHead className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-wider h-auto">Status</TableHead>
+              <TableHead className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-wider h-auto text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-white/10">
             {predictions.map((p) => {
               const isFreeTier = p.tags?.some((t: string) => String(t).toUpperCase().includes("FREE"));
               return (
-                <tr key={p.id} className="hover:bg-white/5 transition-colors">
-                  <td className="px-6 py-4">
+                <TableRow key={p.id} className="hover:bg-white/5 transition-colors border-0">
+                  <TableCell className="px-6 py-4">
                     <div className="flex items-center gap-2 mb-1">
                       <div className="w-6 h-6 flex items-center justify-center shrink-0">
                         <img src={getLeagueLogo(p.league, p.sport)} alt={p.league} className="max-w-full max-h-full object-contain opacity-80" />
@@ -72,69 +80,70 @@ export default function PredictionsList({ initialPredictions }: { initialPredict
                       <span className="font-semibold text-white whitespace-nowrap">{p.home_team} vs {p.away_team}</span>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap mt-1">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1 ${
+                      <Badge variant="outline" className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1 h-auto ${
                         isFreeTier 
-                          ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40" 
-                          : "bg-primary-600/20 text-primary-600 border border-primary-600/40"
+                          ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/40" 
+                          : "bg-primary-600/20 text-primary-600 border-primary-600/40"
                       }`}>
                         {isFreeTier ? (
                           <><GiftIcon size={11} className="text-cyan-400" /><span>FREE MARKETING CODE</span></>
                         ) : (
                           <><CrownIcon size={11} className="text-primary-600" /><span>VIP PRO LOCK</span></>
                         )}
-                      </span>
+                      </Badge>
                       {p.booking_code && (
-                        <span className="px-2 py-0.5 rounded bg-black/60 text-zinc-300 border border-zinc-700 text-[10px] font-mono font-bold uppercase flex items-center gap-1">
+                        <Badge variant="outline" className="px-2 py-0.5 rounded bg-black/60 text-zinc-300 border-zinc-700 text-[10px] font-mono font-bold uppercase flex items-center gap-1 h-auto">
                           <TicketIcon size={12} className="text-emerald-400" />
                           <span>{p.bookmaker || 'CODE'}:</span>
                           <span className="text-emerald-400 font-bold">{p.booking_code}</span>
-                        </span>
+                        </Badge>
                       )}
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-gray-300 text-sm">{p.league}</span>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <span className="text-zinc-300 text-sm">{p.league}</span>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
                     <div className="text-sm text-white">{p.match_date}</div>
-                    <div className="text-xs text-gray-500 font-mono">{p.match_time}</div>
-                  </td>
-                  <td className="px-6 py-4">
+                    <div className="text-xs text-zinc-500 font-mono">{p.match_time}</div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-primary-300 font-bold text-sm">{p.prediction}</span>
-                      <span className="text-xs text-gray-400">{p.confidence}% Confidence</span>
+                      <span className="text-xs text-zinc-400">{p.confidence}% Confidence</span>
                     </div>
-                  </td>
-                <td className="px-6 py-4">
-                  {p.status === 'WON' && <span className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono text-xs font-bold border border-emerald-500/30 flex items-center gap-1.5 w-fit"><CheckCircleIcon size={14} /><span>WON</span></span>}
-                  {p.status === 'LOST' && <span className="px-2.5 py-1 rounded bg-red-500/20 text-red-400 font-mono text-xs font-bold border border-red-500/30 flex items-center gap-1.5 w-fit"><XCircleIcon size={14} /><span>LOST</span></span>}
-                  {p.status === 'VOID' && <span className="px-2.5 py-1 rounded bg-zinc-500/20 text-zinc-400 font-mono text-xs font-bold border border-zinc-500/30 flex items-center gap-1.5 w-fit"><AlertCircleIcon size={14} /><span>VOID</span></span>}
-                  {(!p.status || p.status === 'PENDING') && <span className="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 font-mono text-xs font-bold border border-amber-500/30 flex items-center gap-1.5 w-fit"><HourglassIcon size={14} /><span>PENDING</span></span>}
-                </td>
-                <td className="px-6 py-4 text-right">
-                  <div className="flex items-center justify-end gap-3">
-                    <Link 
-                      href={`/admin/predictions/${p.id}/edit`}
-                      className="text-sm font-medium text-gray-300 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors"
-                    >
-                      Edit
-                    </Link>
-                    <button 
-                      onClick={() => handleDelete(p.id)}
-                      disabled={deletingId === p.id}
-                      className="text-sm font-medium text-red-400 hover:text-red-300 px-3 py-1.5 rounded-lg border border-red-500/20 hover:bg-red-500/10 transition-colors disabled:opacity-50 flex items-center gap-1.5"
-                    >
-                      <TrashIcon size={15} />
-                      <span>{deletingId === p.id ? "Deleting..." : "Delete"}</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {p.status === 'WON' && <Badge variant="outline" className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 font-mono text-xs font-bold border-emerald-500/30 flex items-center gap-1.5 w-fit h-auto"><CheckCircleIcon size={14} /><span>WON</span></Badge>}
+                    {p.status === 'LOST' && <Badge variant="outline" className="px-2.5 py-1 rounded bg-red-500/20 text-red-400 font-mono text-xs font-bold border-red-500/30 flex items-center gap-1.5 w-fit h-auto"><XCircleIcon size={14} /><span>LOST</span></Badge>}
+                    {p.status === 'VOID' && <Badge variant="outline" className="px-2.5 py-1 rounded bg-zinc-500/20 text-zinc-400 font-mono text-xs font-bold border-zinc-500/30 flex items-center gap-1.5 w-fit h-auto"><AlertCircleIcon size={14} /><span>VOID</span></Badge>}
+                    {(!p.status || p.status === 'PENDING') && <Badge variant="outline" className="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 font-mono text-xs font-bold border-amber-500/30 flex items-center gap-1.5 w-fit h-auto"><HourglassIcon size={14} /><span>PENDING</span></Badge>}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-3">
+                      <Link href={`/admin/predictions/${p.id}/edit`}>
+                        <Button variant="outline" size="sm" className="h-8 px-3 rounded-lg border-white/10 hover:bg-white/10 text-zinc-300">
+                          Edit
+                        </Button>
+                      </Link>
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(p.id)}
+                        disabled={deletingId === p.id}
+                        className="h-8 px-3 rounded-lg border-red-500/20 hover:bg-red-500/10 text-red-400 hover:text-red-300 flex items-center gap-1.5 disabled:opacity-50"
+                      >
+                        <TrashIcon size={15} />
+                        <span>{deletingId === p.id ? "Deleting..." : "Delete"}</span>
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 }
