@@ -69,6 +69,8 @@ export default function AdminLogin() {
       window.location.href = "/admin";
     }
 
+  };
+
   return (
     <div className="w-full flex flex-col gap-8 font-main text-white">
       
